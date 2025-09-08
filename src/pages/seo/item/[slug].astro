@@ -3,29 +3,9 @@
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { loadAllPoints } from "../../../lib/load-data";
 
-export async function getStaticPaths() {
  
-  const all = await loadAllPoints();
+export const prerender = false;
 
-  // local helpers so we don't rearrange the rest of your file
-  const slugify = (s) =>
-    String(s || "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
-  const buildSlug = (p) => {
-    if (p.slug) return p.slug;
-    const bits = [slugify(p.name || ""), p.id ?? p.usfsId ?? p._id ?? p.rec_id ?? ""].filter(Boolean);
-    return bits.join("--");
-  };
-
-  return all
-    .filter((p) => p && (p.name || p.slug)) // safety
-    .map((p) => ({
-      params: { slug: buildSlug(p) },
-      props:  { item: p }, // pass the record to the page
-    }));
-}
 
 const { slug } = Astro.params;
 const all = await loadAllPoints();
