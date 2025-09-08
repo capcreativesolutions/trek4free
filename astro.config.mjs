@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://trek4free.com',
-  output: 'server',
+  output: 'static',
   adapter: netlify(),
   integrations: [sitemap()],
 });
