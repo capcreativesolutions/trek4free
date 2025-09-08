@@ -20,6 +20,31 @@ const STATE_NAMES: Record<string,string> = {
 };
 const pretty = (st: string) => STATE_NAMES[st] || st.toUpperCase();
 
+export async function getStaticPaths() {
+  const all = await loadAllPoints();
+
+ // Use a local constant here so we don't depend on module order
+  const LOCAL_PAGE_SIZE = 24;
+
+  // Count freecamp points per state
+  const counts = new Map<string, number>();
+  for (const p of all) {
+    if (p?.type !== "freecamp") continue;
+    const st = String(p.state || "unknown").toLowerCase();
+    counts.set(st, (counts.get(st) || 0) + 1);
+  }
+
+  // Generate one path per page for each state
+  const paths = [];
+  for (const [st, count] of counts) {
+    const pages = Math.max(1, Math.ceil(count / LOCAL_PAGE_SIZE));
+    for (let i = 1; i <= pages; i++) {
+      paths.push({ params: { state: st, page: String(i) } });
+    }
+  }
+  return paths;
+}
+
 const { state, page } = Astro.params as { state: string; page: string };
 const abbr = (state || "unknown").toLowerCase();
 const pageNum = Math.max(1, Number(page) || 1);

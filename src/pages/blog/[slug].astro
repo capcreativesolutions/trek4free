@@ -1,12 +1,23 @@
 ---
 import Layout from '../../layouts/BaseLayout.astro';
-import { getEntryBySlug } from 'astro:content';
+import { getEntryBySlug, getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((p) => ({
+    params: { slug: p.slug },
+    props:  { entry: p },   // pass the collection entry in at build time
+  }));
+}
 
 const { slug } = Astro.params;
-if (!slug) throw new Error('Missing slug');
+const { entry: provided } = Astro.props;
 
-const entry = await getEntryBySlug('blog', slug);
-if (!entry) throw new Error(`No blog post for slug "${slug}"`);
+// Prefer the pre-passed entry (SSG). Fallback to runtime lookup in dev.
+const entry = provided ?? (slug ? await getEntryBySlug('blog', slug) : null);
+
+if (!entry) throw new Error(slug ? `No blog post for slug "${slug}"` : 'Missing slug');
+
 
 const { Content } = await entry.render();
 const data = entry.data ?? {};

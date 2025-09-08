@@ -33,9 +33,19 @@ type Ev = {
   lastUpdated?: string;
 };
 
+export async function getStaticPaths() {
+  const events = (await import('../../../public/data/events/events.json')).default;
+  const list = Array.isArray(events) ? events : [];
+  return list.map((e) => ({
+    params: { id: e.id },
+    props:  { ev: e },     // pass the event into the page
+  }));
+}
+
 const { id } = Astro.params;
 const list: Ev[] = Array.isArray(events) ? events : [];
-const ev: Ev | null = list.find(e => e.id === id) ?? null;
+const { ev: provided } = Astro.props;
+const ev: Ev | null = provided ?? (list.find(e => e.id === id) ?? null);
 
 if (!ev) {
   Astro.response.status = 404;
