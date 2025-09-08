@@ -1,0 +1,53 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Trek4Free – Tools Control Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root { color-scheme: dark; }
+  body{font-family:system-ui,Segoe UI,Roboto,Inter,Arial;margin:0;background:#0f1113;color:#e7e7e7}
+  .wrap{max-width:980px;margin:32px auto;padding:0 16px}
+  h1{margin:0 0 8px}
+  .muted{color:#aab0b6}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .card{background:#15181c;border:1px solid #23262c;border-radius:14px;padding:16px}
+  .cmd{font-family:ui-monospace,Consolas,Menlo,monospace;background:#0c0f12;border:1px solid #1a1d21;border-radius:10px;padding:10px}
+  button{background:linear-gradient(90deg,#FFB224,#FF8B1A);color:#111;border:0;padding:8px 12px;border-radius:10px;font-weight:800;cursor:pointer}
+  a.btn{display:inline-block;text-decoration:none;background:#1b1f24;color:#d9dfe6;border:1px solid #23262c;padding:8px 12px;border-radius:10px}
+</style>
+<div class="wrap">
+  <h1>Trek4Free – Tools Control Panel</h1>
+  <p class="muted">Click a button to copy the exact command, or use the provided <code>.cmd</code>/<code>.ps1</code> launchers for true double-click runs.</p>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Grab Images (multi-source)</h3>
+      <p class="muted">Writes <code>images_patch.json</code>, does host filtering, avoids duplicates.</p>
+      <pre class="cmd" id="cmd1">node tools/grab-event-images.v3.mjs public/data/events/events.json public/images/events images_patch.json</pre>
+      <button onclick="copy('cmd1')">Copy command</button>
+    </div>
+    <div class="card">
+      <h3>Grab Dates</h3>
+      <p class="muted">Parses JSON-LD/meta/text. Writes <code>patch_dates.json</code>.</p>
+      <pre class="cmd" id="cmd2">node tools/grab-event-dates.v2.mjs public/data/events/events.json public/data/events/patch_dates.json --verbose</pre>
+      <button onclick="copy('cmd2')">Copy command</button>
+    </div>
+    <div class="card">
+      <h3>De-dupe Downloaded Images</h3>
+      <p class="muted">Removes exact/near duplicates in <code>/public/images/events</code>. Dry-run first.</p>
+      <pre class="cmd" id="cmd3">node tools/dedupe-images.mjs public/images/events --mode=move --out=public/images/_dupes --threshold=6 --dry</pre>
+      <button onclick="copy('cmd3')">Copy command</button>
+    </div>
+  </div>
+
+  <h3 style="margin-top:24px">Patching (in-browser)</h3>
+  <p>
+    <a class="btn" href="./events-dates-merger.html">Open Dates Patch Applier</a>
+    <a class="btn" href="./events-images-merger.html">Open Images Patch Applier</a>
+  </p>
+</div>
+<script>
+function copy(id){
+  const t=document.getElementById(id).textContent.trim();
+  navigator.clipboard.writeText(t).then(()=>alert("Copied:\n\n"+t));
+}
+</script>

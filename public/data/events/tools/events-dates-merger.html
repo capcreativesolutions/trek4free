@@ -1,0 +1,123 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Trek4Free — Dates Patch Applier</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body{font-family:system-ui,Segoe UI,Roboto,Inter,Arial;background:#0f1113;color:#e7e7e7;margin:0}
+  .wrap{max-width:900px;margin:32px auto;padding:0 14px}
+  .card{background:#15181c;border:1px solid #22262b;border-radius:14px;padding:16px;margin:14px 0}
+  h1{margin:0 0 8px}
+  label{font-weight:700}
+  input[type=file]{display:block;width:100%;padding:10px;border:1px dashed #22262b;border-radius:10px;background:#111418}
+  button{background:linear-gradient(90deg,#FFB224,#FF8B1A);color:#111;border:0;padding:10px 14px;border-radius:10px;font-weight:800;cursor:pointer}
+  .secondary{background:#1b1f24;color:#d9dfe6;border:1px solid #22262b}
+  pre{white-space:pre-wrap;background:#0c0f12;border:1px solid #1a1d21;border-radius:10px;padding:12px}
+  .ok{color:#38d39f}.bad{color:#ff5a5a}.muted{color:#aab0b6}
+</style>
+<div class="wrap">
+  <h1>Dates Patch Applier</h1>
+  <p class="muted">Merge <strong>patch_dates.json</strong> into your full <strong>events.json</strong> by <code>id</code>, updating only <code>dateStart</code>, <code>dateEnd</code>, and (optionally) <code>timezone</code>. No other fields are touched.</p>
+
+  <div class="card">
+    <label>1) Select your base <code>events.json</code></label>
+    <input id="base" type="file" accept=".json">
+  </div>
+
+  <div class="card">
+    <label>2) Select your <code>patch_dates.json</code></label>
+    <input id="patch" type="file" accept=".json">
+  </div>
+
+  <div class="card">
+    <label><input id="onlyWhenEmpty" type="checkbox"> Only set dates when missing</label><br>
+    <label><input id="updateTZ" type="checkbox" checked> Apply <code>timezone</code> from patch when present</label><br>
+    <label><input id="touchUpdated" type="checkbox" checked> Update <code>lastUpdated</code> to today for changed records</label><br><br>
+    <button id="run">Apply Patch</button>
+    <button id="dl" class="secondary" disabled>Download Patched events.json</button>
+  </div>
+
+  <div id="report"></div>
+  <div id="preview"></div>
+</div>
+
+<script>
+const today = new Date().toISOString().slice(0,10);
+const isISO = s => /^\d{4}-\d{2}-\d{2}$/.test(s||"");
+const readText = f => new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsText(f); });
+
+let mergedText = "";
+
+document.getElementById("run").onclick = async () => {
+  const baseF = document.getElementById("base").files[0];
+  const patchF= document.getElementById("patch").files[0];
+  if(!baseF || !patchF){ alert("Pick both files first."); return; }
+
+  let base, patch;
+  try { base = JSON.parse(await readText(baseF)); } catch(e){ alert("Base events.json is not valid JSON"); return; }
+  try { patch = JSON.parse(await readText(patchF)); } catch(e){ alert("Patch file is not valid JSON"); return; }
+
+  if(!Array.isArray(base)){ alert("Base file must be a JSON array of events."); return; }
+  if(!Array.isArray(patch)){ alert("Patch file must be a JSON array of {id, dateStart, dateEnd, timezone}."); return; }
+
+  const onlyWhenEmpty = document.getElementById("onlyWhenEmpty").checked;
+  const updateTZ      = document.getElementById("updateTZ").checked;
+  const touchUpdated  = document.getElementById("touchUpdated").checked;
+
+  const pmap = new Map(patch.map(p=>[p.id,p]));
+  let changed = 0, skipped = 0, missing = 0, invalid = 0;
+
+  const out = base.map(ev => {
+    const p = pmap.get(ev.id);
+    if(!p){ return ev; }
+
+    // validate patch dates
+    const ds = p.dateStart ?? null;
+    const de = p.dateEnd   ?? (ds || null);
+    if (ds && !isISO(ds)) { invalid++; return ev; }
+    if (de && !isISO(de)) { invalid++; return ev; }
+
+    const next = { ...ev };
+    let did = false;
+
+    if (ds && (!onlyWhenEmpty || !next.dateStart)) {
+      next.dateStart = ds; did = true;
+    }
+    if (de && (!onlyWhenEmpty || !next.dateEnd)) {
+      next.dateEnd = de; did = true;
+    }
+    if (updateTZ && p.timezone && (!next.timezone || next.timezone!==p.timezone)) {
+      next.timezone = p.timezone; did = true;
+    }
+
+    if (did) {
+      if (touchUpdated) next.lastUpdated = today;
+      changed++;
+      return next;
+    } else {
+      skipped++;
+      return ev;
+    }
+  });
+
+  // count missing
+  for (const p of patch){ if(!base.find(e=>e.id===p.id)) missing++; }
+
+  // output
+  mergedText = JSON.stringify(out, null, 2) + "\n";
+  document.getElementById("dl").disabled = false;
+
+  document.getElementById("report").innerHTML =
+    `<div class="card"><p><span class="ok">✔ Patch applied.</span></p>
+      <p>Changed: <b>${changed}</b> • Skipped (no change): <b>${skipped}</b> • Patch ids not found in base: <b>${missing}</b> • Patch rows with invalid dates: <b>${invalid}</b></p></div>`;
+  document.getElementById("preview").innerHTML =
+    `<div class="card"><h3>Preview</h3><pre>${mergedText.slice(0, 4000)}</pre></div>`;
+};
+
+document.getElementById("dl").onclick = () => {
+  if(!mergedText) return;
+  const blob = new Blob([mergedText], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = Object.assign(document.createElement("a"), { href:url, download:"events.json" });
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+};
+</script>

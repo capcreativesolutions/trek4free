@@ -1,0 +1,15 @@
+# robots.txt for Trek4Free
+# Prevents web crawlers and AI bots from indexing or scraping the data folder
+
+User-agent: *
+Disallow: /data/
+Disallow: /public/data/
+Disallow: /trail-notes
+Disallow: /api/
+Crawl-delay: 10
+
+# Allow standard pages for SEO
+Allow: /
+
+# Optional: Add contact info for ethical bots
+Sitemap: https://yourdomain.netlify.app/sitemap.xml

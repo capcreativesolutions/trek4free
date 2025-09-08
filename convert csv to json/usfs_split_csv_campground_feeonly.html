@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Split USFS CSV into Free and Paid JSON</title>
+</head>
+<body>
+  <h2>Split USFS CSV into Free and Paid JSON</h2>
+  <input type="file" id="csvFile" accept=".csv" />
+  <button onclick="processCSV()">Convert & Split</button>
+  <div id="status" style="margin-top:10px;"></div>
+  <br />
+  <a id="downloadFree" style="display:none" download="freecamping-usfs.json">Download Free Camping JSON</a><br />
+  <a id="downloadPaid" style="display:none" download="campgrounds-usfs.json">Download Paid Campgrounds JSON</a>
+
+  <script>
+    function processCSV() {
+      const fileInput = document.getElementById("csvFile");
+      const status = document.getElementById("status");
+      if (!fileInput.files.length) return alert("Please select a CSV file.");
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const lines = e.target.result.split(/\r?\n/)
+          .filter(line => line.trim() !== "" && line.includes(","));
+
+        const headers = lines[0].split(",").map(h => h.trim());
+        const getIndex = label => headers.findIndex(h => h === label);
+
+        const feeIndex = getIndex("FEE_CHARGE");
+        const nameIndex = getIndex("SITE_NAME");
+        const recareaDescIndex = getIndex("RECAREA_DE");
+        const latIndex = getIndex("LATITUDE");
+        const lonIndex = getIndex("LONGITUDE");
+        const typeIndex = getIndex("SITE_TYPE");
+        const countIndex = getIndex("TOTAL_CAPA");
+        const feeDescIndex = getIndex("FEE_DESCRI");
+        const bathroomIndex = getIndex("RESTROOM_A");
+        const waterIndex = getIndex("WATER_AVAI");
+        const accessIndex = getIndex("PACK_IN_OU");
+        const dirIndex = getIndex("DIRECTIONS");
+
+        if (feeIndex === -1) {
+          status.innerHTML = "❌ Error: Could not find FEE_CHARGE column. Check CSV formatting.";
+          return;
+        }
+
+        const free = [], paid = [];
+        let skippedCount = 0, processedCount = 0;
+
+        for (let i = 1; i < lines.length; i++) {
+          const row = lines[i].split(",");
+
+          if (row.length < headers.length || !row[latIndex] || !row[lonIndex]) {
+            skippedCount++;
+            continue;
+          }
+
+          const feeVal = row[feeIndex]?.trim().toUpperCase();
+
+          const obj = {
+            id: `usfs-${i}`,
+            name: row[nameIndex],
+            description: row[recareaDescIndex]?.trim() || "",
+            latitude: parseFloat(row[latIndex]),
+            longitude: parseFloat(row[lonIndex]),
+            site_type: row[typeIndex],
+            fee: feeVal === "Y" ? "Fee Required" :
+                 feeVal === "N" ? "No Fee" : "Unknown",
+            fee_description: row[feeDescIndex] || "",
+            site_count: parseInt(row[countIndex]) || 0,
+            bathrooms: row[bathroomIndex] || "Not specified",
+            water: row[waterIndex] || "Not specified",
+            state: "",
+            directions: row[dirIndex] || "",
+            season: "",
+            source: "USFS RecSites"
+          };
+
+          if (feeVal === "N") {
+            free.push(obj);
+          } else {
+            paid.push(obj);
+          }
+
+          processedCount++;
+        }
+
+        function download(arr, elementId, filename) {
+          const blob = new Blob([JSON.stringify(arr, null, 2)], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const link = document.getElementById(elementId);
+          link.href = url;
+          link.style.display = "inline";
+        }
+
+        download(free, "downloadFree", "freecamping-usfs.json");
+        download(paid, "downloadPaid", "campgrounds-usfs.json");
+
+        status.innerHTML = `
+          🟣 Total processed (valid structure): ${processedCount + skippedCount}<br />
+          🟡 Free camping: ${free.length}<br />
+          🟢 Paid campgrounds: ${paid.length}<br />
+          🔴 Skipped (invalid/missing fields): ${skippedCount}
+        `;
+      };
+
+      reader.readAsText(fileInput.files[0]);
+    }
+  </script>
+</body>
+</html>
+

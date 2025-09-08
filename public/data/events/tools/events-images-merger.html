@@ -1,0 +1,153 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Trek4Free — Images Patch Applier</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body{font-family:system-ui,Segoe UI,Roboto,Inter,Arial;background:#0f1113;color:#e7e7e7;margin:0}
+  .wrap{max-width:900px;margin:32px auto;padding:0 14px}
+  .card{background:#15181c;border:1px solid #22262b;border-radius:14px;padding:16px;margin:14px 0}
+  h1{margin:0 0 8px}
+  label{font-weight:700}
+  input[type=file]{display:block;width:100%;padding:10px;border:1px dashed #22262b;border-radius:10px;background:#111418}
+  button{background:linear-gradient(90deg,#FFB224,#FF8B1A);color:#111;border:0;padding:10px 14px;border-radius:10px;font-weight:800;cursor:pointer}
+  .secondary{background:#1b1f24;color:#d9dfe6;border:1px solid #22262b}
+  pre{white-space:pre-wrap;background:#0c0f12;border:1px solid #1a1d21;border-radius:10px;padding:12px}
+  .ok{color:#38d39f}.bad{color:#ff5a5a}.muted{color:#aab0b6}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .col{flex:1 1 280px}
+</style>
+<div class="wrap">
+  <h1>Images Patch Applier</h1>
+  <p class="muted">Merge <strong>images_patch.json</strong> into your full <strong>events.json</strong> by <code>id</code>, updating only <code>images[]</code>. De‑dupes URLs and validates http(s).</p>
+
+  <div class="card">
+    <label>1) Base <code>events.json</code></label>
+    <input id="base" type="file" accept=".json">
+  </div>
+
+  <div class="card">
+    <label>2) <code>images_patch.json</code></label>
+    <input id="patch" type="file" accept=".json">
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <div class="col">
+        <label>Merge mode</label><br>
+        <label><input type="radio" name="mode" value="append" checked> Append unique (keep existing)</label><br>
+        <label><input type="radio" name="mode" value="replace"> Replace existing (use patch only)</label><br>
+        <label><input type="radio" name="mode" value="fill"> Only set when empty</label>
+      </div>
+      <div class="col">
+        <label><input id="touchUpdated" type="checkbox" checked> Update <code>lastUpdated</code> on changed records</label><br>
+        <label><input id="dropBroken" type="checkbox" checked> Drop non-http(s) entries from patch</label><br>
+        <label><input id="limit3" type="checkbox"> Limit to 3 images per event</label>
+      </div>
+      <div class="col" style="display:flex;align-items:end;gap:8px">
+        <button id="run">Apply Patch</button>
+        <button id="dl" class="secondary" disabled>Download Patched events.json</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="report"></div>
+  <div id="preview"></div>
+</div>
+
+<script>
+const today = new Date().toISOString().slice(0,10);
+const isHttp = s => /^https?:\/\//i.test(s||"");
+const readText = f => new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsText(f); });
+
+let mergedText = "";
+
+document.getElementById("run").onclick = async () => {
+  const baseF = document.getElementById("base").files[0];
+  const patchF= document.getElementById("patch").files[0];
+  if(!baseF || !patchF){ alert("Pick both files first."); return; }
+
+  let base, patch;
+  try { base = JSON.parse(await readText(baseF)); } catch { alert("Base events.json is not valid JSON"); return; }
+  try { patch = JSON.parse(await readText(patchF)); } catch { alert("Patch file is not valid JSON"); return; }
+  if(!Array.isArray(base)){ alert("Base file must be a JSON array of events."); return; }
+  if(!Array.isArray(patch)){ alert("Patch must be an array of {id, images[]}"); return; }
+
+  const mode = [...document.querySelectorAll('input[name="mode"]')].find(r=>r.checked).value;
+  const touch = document.getElementById("touchUpdated").checked;
+  const dropBroken = document.getElementById("dropBroken").checked;
+  const limit3 = document.getElementById("limit3").checked;
+
+  // prepare patch map
+  const pmap = new Map();
+  let invalidRows = 0, droppedUrls = 0;
+  for (const row of patch){
+    if (!row || !row.id) { invalidRows++; continue; }
+    let imgs = Array.isArray(row.images) ? row.images.slice() : [];
+    if (dropBroken) imgs = imgs.filter(u => isHttp(u));
+    droppedUrls += (row.images?.length || 0) - imgs.length;
+    // de-dupe within patch row
+    const seen = new Set(); imgs = imgs.filter(u => !seen.has(u) && seen.add(u));
+    pmap.set(row.id, imgs);
+  }
+
+  let changed=0, skipped=0, missing=0;
+
+  const out = base.map(ev => {
+    const imgs = pmap.get(ev.id);
+    if (!imgs) return ev; // this id not in patch
+
+    const next = { ...ev };
+    next.images = Array.isArray(next.images) ? next.images.slice() : [];
+
+    let did = false;
+    if (mode === "replace") {
+      next.images = imgs.slice();
+      did = true;
+    } else if (mode === "fill") {
+      if (!next.images.length && imgs.length) {
+        next.images = imgs.slice();
+        did = true;
+      } else {
+        skipped++;
+        return ev;
+      }
+    } else { // append unique
+      const set = new Set(next.images);
+      let added = 0;
+      for (const u of imgs) { if (!set.has(u)) { set.add(u); added++; } }
+      if (added>0) {
+        next.images = [...set];
+        did = true;
+      }
+    }
+
+    if (limit3 && next.images.length > 3) next.images = next.images.slice(0,3);
+
+    if (did) { if (touch) next.lastUpdated = today; changed++; return next; }
+    skipped++; return ev;
+  });
+
+  // count ids in patch not present in base
+  for (const id of pmap.keys()) {
+    if (!base.find(e=>e.id===id)) missing++;
+  }
+
+  mergedText = JSON.stringify(out, null, 2) + "\n";
+  document.getElementById("dl").disabled = false;
+
+  document.getElementById("report").innerHTML =
+    `<div class="card"><p><span class="ok">✔ Images patch applied.</span></p>
+      <p>Changed: <b>${changed}</b> • Skipped: <b>${skipped}</b> • Patch ids not in base: <b>${missing}</b> • Invalid patch rows: <b>${invalidRows}</b> • Dropped non-http(s) URLs: <b>${droppedUrls}</b></p>
+      <p class="muted">Mode: <b>${mode}</b>${limit3?' • limited to 3 imgs':''}${touch?' • lastUpdated touched':''}</p></div>`;
+  document.getElementById("preview").innerHTML =
+    `<div class="card"><h3>Preview</h3><pre>${mergedText.slice(0, 4000)}</pre></div>`;
+};
+
+document.getElementById("dl").onclick = () => {
+  if(!mergedText) return;
+  const blob = new Blob([mergedText], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = Object.assign(document.createElement("a"), { href:url, download:"events.json" });
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+};
+</script>

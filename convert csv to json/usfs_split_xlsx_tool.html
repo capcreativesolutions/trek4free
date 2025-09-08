@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Split USFS XLSX into Free, Paid, Backpack JSON</title>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <h2>Split USFS XLSX into Free, Paid, and Backpack JSON</h2>
+  <input type="file" id="xlsxFile" accept=".xlsx" />
+  <button onclick="processXLSX()">Convert & Split</button>
+  <div id="status" style="margin-top:10px;"></div>
+  <br />
+  <a id="downloadFree" style="display:none" download="freecamping-usfs.json">Download Free Camping JSON</a><br />
+  <a id="downloadPaid" style="display:none" download="campgrounds-usfs.json">Download Paid Campgrounds JSON</a><br />
+  <a id="downloadBackpack" style="display:none" download="backpackcamping-usfs.json">Download Backpack Camping JSON</a>
+
+  <script>
+    function processXLSX() {
+      const fileInput = document.getElementById("xlsxFile");
+      const status = document.getElementById("status");
+      if (!fileInput.files.length) return alert("Please select an XLSX file.");
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const rows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+
+        const free = [], paid = [], backpack = [];
+        let skippedCount = 0, processedCount = 0;
+
+        rows.forEach((row, i) => {
+          const lat = parseFloat(row['LATITUDE']);
+          const lon = parseFloat(row['LONGITUDE']);
+          const feeVal = row['FEE_CHARGE']?.trim().toUpperCase();
+          const packIn = row['PACK_IN_OU']?.trim().toUpperCase();
+
+          if (!lat || !lon) {
+            skippedCount++;
+            return;
+          }
+
+          const obj = {
+            id: `usfs-${i + 1}`,
+            name: row['SITE_NAME'],
+            description: row['RECAREA_DE']?.trim() || "",
+            latitude: lat,
+            longitude: lon,
+            site_type: row['SITE_TYPE'],
+            fee: feeVal === "Y" ? "Fee Required" :
+                 feeVal === "N" ? "No Fee" : "Unknown",
+            fee_description: row['FEE_DESCRI'] || "",
+            site_count: parseInt(row['TOTAL_CAPA']) || 0,
+            bathrooms: row['RESTROOM_A'] || "Not specified",
+            water: row['WATER_AVAI'] || "Not specified",
+            state: "",
+            directions: row['DIRECTIONS'] || "",
+            season: "",
+            source: "USFS RecSites"
+          };
+
+          if (packIn === "Y") {
+            backpack.push(obj);
+          } else if (feeVal === "N") {
+            free.push(obj);
+          } else {
+            paid.push(obj);
+          }
+
+          processedCount++;
+        });
+
+        function download(arr, elementId, filename) {
+          const blob = new Blob([JSON.stringify(arr, null, 2)], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const link = document.getElementById(elementId);
+          link.href = url;
+          link.style.display = "inline";
+        }
+
+        download(free, "downloadFree", "freecamping-usfs.json");
+        download(paid, "downloadPaid", "campgrounds-usfs.json");
+        download(backpack, "downloadBackpack", "backpackcamping-usfs.json");
+
+        status.innerHTML = `
+          🟣 Total processed (valid lat/lon): ${processedCount}<br />
+          🟡 Free camping: ${free.length}<br />
+          🟢 Paid campgrounds: ${paid.length}<br />
+          🎒 Backpack camping: ${backpack.length}<br />
+          🔴 Skipped (missing lat/lon): ${skippedCount}
+        `;
+      };
+
+      reader.readAsArrayBuffer(fileInput.files[0]);
+    }
+  </script>
+</body>
+</html>
+

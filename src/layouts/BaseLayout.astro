@@ -1,0 +1,83 @@
+---
+const { title, bodyClass } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title || "Trek4Free"}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@700;800&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet" />
+
+    <!-- Leaflet & MarkerCluster (CSS first) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
+    <!-- JS (deferred) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js" defer></script>
+
+    <!-- SITE CSS — ONE include, and it must be LAST -->
+    <link rel="stylesheet" href="/styles.css?v=9" />
+
+    <slot name="head" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container row">
+        <a href="/" class="logo" aria-label="Trek4Free Home">
+          <img src="/images/hero/topo-dark4.png" alt="" height="40" />
+          <span>Trek4Free</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="/" aria-current={Astro.url.pathname === "/" ? "page" : undefined}>Home</a>
+          <a href="/about" aria-current={Astro.url.pathname.startsWith("/about") ? "page" : undefined}>About</a>
+          <a href="/explore" aria-current={Astro.url.pathname.startsWith("/explore") ? "page" : undefined}>Explore</a>
+          <a href="/trail-notes" aria-current={Astro.url.pathname.startsWith("/trail-notes") ? "page" : undefined}>Trail Notes</a>
+          <a href="/events" aria-current={Astro.url.pathname.startsWith("/events") ? "page" : undefined}>Events</a>
+          <a href="/search" aria-current={Astro.url.pathname.startsWith("/search") ? "page" : undefined}>Search</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class={bodyClass || ""}>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container row">
+        <p class="small">© {new Date().getFullYear()} Trek4Free. All rights reserved.</p>
+        <div class="row">
+          <a class="btn btn-ghost small" href="/privacy">Privacy</a>
+          <a class="btn btn-ghost small" href="/terms">Terms</a>
+        </div>
+      </div>
+    </footer>
+
+{import.meta.env.PROD && (
+  <script>
+    (function () {
+      // keep analytics clean: run only on your live hostnames
+      if (!["trek4free.com", "www.trek4free.com"].includes(location.hostname)) return;
+
+      var s = document.createElement("script");
+      s.defer = true;
+      s.src = "https://static.cloudflareinsights.com/beacon.min.js";
+      s.setAttribute("data-cf-beacon", JSON.stringify({
+        token: "6013306751194f73b6062a131d121911"
+        // spa: true  // not needed for Astro (full page loads), enable only if you add a client router later
+      }));
+      document.body.appendChild(s);
+    })();
+  </script>
+)}
+ 
+ 
+
+</body>
+</html>

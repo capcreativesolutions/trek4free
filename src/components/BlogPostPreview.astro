@@ -1,0 +1,18 @@
+---
+const { post } = Astro.props;
+---
+
+<article class="blog-post-preview">
+  {post.thumbnail && (
+    <img src={post.thumbnail} alt={`Thumbnail for ${post.title}`} class="preview-thumbnail" />
+  )}
+  <div class="preview-text">
+    <h2>
+      <a href={`/blog/${post.slug}`} class="preview-title">
+        {post.title}
+      </a>
+    </h2>
+    <p class="preview-date">{new Date(post.date).toLocaleDateString()}</p>
+    <p class="preview-description">{post.description}</p>
+  </div>
+</article>

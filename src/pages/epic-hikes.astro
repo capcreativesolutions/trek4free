@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout>
+  <head>
+    <title>Trail Notes - Trek4Free</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" />
+  </head>
+
+  <main>
+    <h1 class="page-title">🥾 Trail Notes</h1>
+<p class="page-subtitle">Plan smarter, hike farther, explore confidently.</p>
+    <div class="trail-card-container" id="trailCardContainer">
+      <!-- Trail cards will be injected here dynamically -->
+    </div>
+  </main>
+
+  <script>
+    fetch('/data/epic-trails.json')
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('trailCardContainer');
+        data.trails.forEach(trail => {
+          const card = document.createElement('div');
+          card.classList.add('trail-card');
+
+          const image = document.createElement('img');
+          image.src = trail.image;
+          image.alt = trail.name;
+
+          const title = document.createElement('h2');
+          title.textContent = trail.name;
+
+          const location = document.createElement('p');
+          location.innerHTML = `<strong>Location:</strong> ${trail.location}`;
+
+          const distance = document.createElement('p');
+          distance.innerHTML = `<strong>Distance:</strong> ${trail.distance}`;
+
+          const difficulty = document.createElement('p');
+          difficulty.innerHTML = `<strong>Difficulty:</strong> ${trail.difficulty}`;
+
+          const features = document.createElement('p');
+          features.innerHTML = `<strong>Features:</strong> ${trail.features}`;
+
+          const updated = document.createElement('p');
+          updated.innerHTML = `<strong>Last Updated:</strong> ${trail.updated}`;
+
+          card.appendChild(image);
+          card.appendChild(title);
+          card.appendChild(location);
+          card.appendChild(distance);
+          card.appendChild(difficulty);
+          card.appendChild(features);
+          card.appendChild(updated);
+
+          container.appendChild(card);
+        });
+      })
+      .catch(error => {
+        console.error("Error loading trail data:", error);
+        document.getElementById('trailCardContainer').innerHTML = `<p>Error loading trail data.</p>`;
+      });
+  </script>
+</BaseLayout>

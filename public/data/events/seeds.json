@@ -1,0 +1,133 @@
+{
+  "bridge-day": ["https://officialbridgeday.com/photos/", "https://www.flickr.com/photos/newrivergorgecvb/albums"],
+  "hood-to-coast-relay": ["https://hoodtocoast.com/photos/"],
+  "green-river-narrows-race": ["https://greenrace.us/photos/"]
+}
+{
+  "bridge-day": [
+    "https://www.flickr.com/photos/newrivergorgecvb/albums",
+    "https://officialbridgeday.com/photos/"
+  ],
+  "hood-to-coast-relay": [
+    "https://hoodtocoast.com/photos/"
+  ],
+  "green-river-narrows-race": [
+    "https://greenrace.us/photos/"
+  ],
+  "leadville-trail-100-run": [
+    "https://www.flickr.com/photos/leadvilleraceseries/albums"
+  ],
+  "ouray-ice-festival": [
+    "https://ourayicepark.com/gallery/"
+  ]
+}
+{
+  "mount-marathon-race": [
+    "https://en.wikipedia.org/wiki/Mount_Marathon_Race",
+    "https://www.instagram.com/explore/tags/mountmarathonrace"
+  ],
+  "xterra-appalachian-trail-fest": [
+    "https://www.instagram.com/explore/tags/xterraappalachiantrailfest",
+    "https://www.facebook.com/XTERRAUSA/photos"
+  ],
+  "hogeye-marathon-relays": [
+    "https://m.facebook.com/100064392325587/photos/",
+    "https://www.instagram.com/thehogeyemarathon"
+  ],
+  "across-the-years": [
+    "https://www.flickr.com/search/?text=Across%20the%20Years%20race",
+    "https://www.instagram.com/explore/tags/acrosstheyears"
+  ],
+  "black-canyon-ultras": [
+    "https://www.instagram.com/explore/tags/blackcanyonultra",
+    "https://www.flickr.com/search/?text=Black%20Canyon%20Ultra"
+  ],
+  "cocodona-250": [
+    "https://www.instagram.com/explore/tags/cocodona250",
+    "https://www.facebook.com/Cocodona250/photos"
+  ],
+  "javelina-jundred": [
+    "https://www.instagram.com/explore/tags/javelinajundred",
+    "https://www.facebook.com/javelinajundred/photos"
+  ],
+  "tucson-marathon-50k": [
+    "https://www.facebook.com/TucsonMarathon/photos",
+    "https://www.instagram.com/explore/tags/tucson50k"
+  ],
+  "badwater-135": [
+    "https://www.instagram.com/explore/tags/badwater135",
+    "https://www.flickr.com/search/?text=Badwater%20135"
+  ],
+  "western-states-100": [
+    "https://www.wser.org/official-photos/",
+    "https://run.outsideonline.com/gallery/the-2024-western-states-100-in-pictures/"
+  ],
+  "desert-rats-trail-running-festival": [
+    "https://www.instagram.com/explore/tags/desertratstrailrun",
+    "https://www.facebook.com/TrailRunningFestival/photos"
+  ],
+  "hardrock-hundred-mile-endurance-run": [
+    "https://www.instagram.com/explore/tags/hardrock100",
+    "https://us.fs.usda.gov/detail/sanjuans/specialevents/?cid=FSEPRD863435"
+  ],
+  "imogene-pass-run": [
+    "https://www.instagram.com/explore/tags/imogenepassrun",
+    "https://www.facebook.com/OurayAreaChamber/photos"
+  ],
+  "leadville-trail-100-run": [
+    "https://www.instagram.com/explore/tags/leadville100",
+    "https://www.flickr.com/search/?text=Leadville%20100%20race"
+  ],
+  "pikes-peak-marathon": [
+    "https://pikespeakmarathon.org/photos/",
+    "https://www.instagram.com/explore/tags/pikespeakmarathon"
+  ],
+  "hurt-100": [
+    "https://www.instagram.com/explore/tags/hurt100",
+    "https://www.flickr.com/search/?text=HURT%20100%20race"
+  ],
+  "jfk-50-mile": [
+    "https://www.jfk50mile.org/photos/",
+    "https://www.instagram.com/explore/tags/jfk50mile"
+  ],
+  "great-lakes-paddle-challenge": [
+    "https://www.facebook.com/GreatLakesPaddleChallenge/photos",
+    "https://www.instagram.com/explore/tags/greatlakespaddlechallenge"
+  ],
+  "superior-100-mile-trail-race": [
+    "https://www.superiorfalltrailrace.com/gallery/",
+    "https://www.instagram.com/explore/tags/superiorfalltrailrace"
+  ],
+  "frosty-fifty-trail-races": [
+    "https://www.instagram.com/explore/tags/frostyfiftytrail",
+    "https://www.facebook.com/RunLikeSquirrel/photos"
+  ],
+  "the-barkley-marathons": [
+    "https://www.instagram.com/explore/tags/barkleymarathons",
+    "https://www.flickr.com/search/?text=Barkley%20Marathons"
+  ],
+  "texas-water-safari": [
+    "https://www.instagram.com/explore/tags/texaswatersafari",
+    "https://www.facebook.com/TexasWaterSafari/photos"
+  ],
+  "wasatch-front-100": [
+    "https://www.instagram.com/explore/tags/wasatchfront100",
+    "https://www.facebook.com/wasatch100/photos"
+  ],
+  "blue-ridge-relay": [
+    "https://www.instagram.com/explore/tags/blueridgerelay",
+    "https://www.facebook.com/BlueRidgeRelay/photos"
+  ],
+  "grindstone-trail-running-festival": [
+    "https://www.instagram.com/explore/tags/grindstonefestival",
+    "https://www.facebook.com/TrailRunningFestival/photos"
+  ],
+  "plain-100": [
+    "https://www.instagram.com/explore/tags/plain100",
+    "https://www.facebook.com/Plain100/photos"
+  ],
+  "bighorn-trail-run": [
+    "https://www.instagram.com/explore/tags/bighornmountainsrun",
+    "https://www.facebook.com/BighornMountainsRun/photos"
+  ]
+}

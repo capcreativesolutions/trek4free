@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Trek4Free — Events JSON Validator & Merger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root{
+    --bg:#0f1113; --panel:#15181c; --ink:#e7e7e7; --muted:#aab0b6;
+    --gold:#FFB224; --orange:#FF8B1A; --red:#ff5a5a; --green:#38d39f; --blue:#7db3ff;
+    --border:#22262b;
+  }
+  html,body{background:var(--bg); color:var(--ink); font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; margin:0;}
+  .wrap{max-width:1100px; margin:32px auto; padding:0 14px;}
+  h1{margin:0 0 8px; font-size:clamp(1.6rem,2.6vw,2.2rem);}
+  p.lead{color:var(--muted); margin:0 0 18px;}
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:16px; margin:14px 0; box-shadow:0 10px 24px rgba(0,0,0,.25);}
+  .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center;}
+  .col{flex:1 1 280px;}
+  input[type="file"]{display:block; width:100%; padding:10px; border:1px dashed var(--border); border-radius:10px; background:#111418;}
+  .btn{background:linear-gradient(90deg,var(--gold),var(--orange)); color:#111; border:0; padding:10px 14px; border-radius:10px; font-weight:800; cursor:pointer;}
+  .btn:disabled{opacity:.5; cursor:not-allowed;}
+  .btn.secondary{background:#1b1f24; color:#d9dfe6; border:1px solid var(--border);}
+  .tiny{font-size:.9rem; color:var(--muted);}
+  label{font-weight:700;}
+  .options{display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:10px;}
+  .opt{background:#12161a; border:1px solid var(--border); border-radius:10px; padding:10px;}
+  .opt h4{margin:.1rem 0 .35rem; font-size:1rem;}
+  pre{white-space:pre-wrap; word-wrap:break-word; background:#0c0f12; border:1px solid #1a1d21; border-radius:10px; padding:12px; color:#dfe4ea; overflow:auto;}
+  .ok{color:var(--green);}
+  .bad{color:var(--red);}
+  .warn{color:#ffcc66;}
+  table{width:100%; border-collapse:collapse;}
+  th,td{border-bottom:1px solid #1d2227; padding:8px 6px; vertical-align:top;}
+  th{color:#cfd6dd; text-align:left;}
+  .tag{display:inline-flex; padding:2px 6px; border-radius:999px; background:#1b1f24; border:1px solid var(--border); margin-right:6px;}
+  .footer{color:#9aa3ac; margin-top:12px; font-size:.9rem;}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Events JSON Validator & Merger</h1>
+    <p class="lead">Load one or more JSON files from anywhere on your computer, validate them, and merge into a clean dataset. No uploads — this runs entirely in your browser.</p>
+
+    <div class="card">
+      <div class="row">
+        <div class="col">
+          <label for="fileInput">Select events JSON file(s)</label>
+          <input id="fileInput" type="file" accept=".json" multiple />
+          <div class="tiny">Tip: You can choose a single file (to just validate) or multiple files (to merge & validate).</div>
+        </div>
+        <div>
+          <label for="outName">Output filename</label><br />
+          <input id="outName" type="text" value="events.json" style="background:#0f1216;color:#e7e7e7;border:1px solid var(--border);border-radius:8px;padding:8px;width:210px" />
+        </div>
+        <div>
+          <label>&nbsp;</label><br />
+          <button id="runBtn" class="btn">Validate & Merge</button>
+        </div>
+      </div>
+
+      <div class="options" style="margin-top:10px">
+        <div class="opt">
+          <h4>Duplicate strategy</h4>
+          <label><input type="radio" name="dupe" value="first" checked /> First wins</label><br>
+          <label><input type="radio" name="dupe" value="last" /> Last wins</label>
+        </div>
+        <div class="opt">
+          <h4>Normalization</h4>
+          <label><input type="checkbox" id="normId" /> Auto-kebab <code>id</code></label><br>
+          <label><input type="checkbox" id="normState" /> Uppercase <code>state</code></label><br>
+          <label><input type="checkbox" id="coerceNums" /> Coerce <code>lat/lon</code> to numbers</label>
+        </div>
+        <div class="opt">
+          <h4>Cleanup</h4>
+          <label><input type="checkbox" id="stripProv" checked /> Strip stray <code>provenance</code> blocks</label><br>
+          <label><input type="checkbox" id="trimStr" checked /> Trim whitespace</label>
+        </div>
+      </div>
+    </div>
+
+    <div id="report" class="card" style="display:none">
+      <h3>Validation Report</h3>
+      <div id="summary"></div>
+      <div id="errors"></div>
+      <div id="preview"></div>
+      <div class="row" style="margin-top:12px">
+        <button id="downloadBtn" class="btn" disabled>Download merged JSON</button>
+        <button id="copyBtn" class="btn secondary" disabled>Copy merged JSON</button>
+      </div>
+      <div class="footer">Save the file wherever you want (e.g., <code>public/data/events/events.json</code> or a category file). This tool never writes to disk automatically.</div>
+    </div>
+  </div>
+
+<script>
+
+/* ---- Schema / allowed values ---- */
+const LEVELS = ["Beginner-Friendly","Intermediate","Advanced","Expert"];
+const TYPES = [
+  "Ultrarun","Trail Run","Paddle Race","Whitewater","Rock Climbing","Festival",
+  "Basejump","Hang Gliding","Paragliding","Skydiving","Aerial/Balloons",
+  "Mountain Bike","Off-Road/Vehicle","Multi-sport","Other"
+];
+
+// Keep the core requireds minimal so legacy records still pass
+const REQUIRED = ["id","name","type","city","state","lat","lon","usualDate","freq","level","hook","url"];
+
+const $ = (s)=>document.querySelector(s);
+const fileInput = $("#fileInput");
+const runBtn = $("#runBtn");
+const report = $("#report");
+const summary = $("#summary");
+const errorsBox = $("#errors");
+const preview = $("#preview");
+const downloadBtn = $("#downloadBtn");
+const copyBtn = $("#copyBtn");
+
+function isKebab(s){ return typeof s === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(s); }
+function kebab(s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); }
+function isISODate(s){ return typeof s==="string" && /^\d{4}-\d{2}-\d{2}$/.test(s); }
+function isIanaTz(s){ return typeof s==="string" && /^[A-Za-z_]+(?:\/[A-Za-z0-9_\-+]+)+$/.test(s); }
+function isHttp(s){ return typeof s==="string" && /^https?:\/\//i.test(s); }
+function isEmail(s){ return typeof s==="string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
+function isPhone(s){ return typeof s==="string" && /^[+()\-.\s0-9]{7,}$/.test(s); }
+
+function readFileAsText(file){
+  return new Promise((resolve,reject)=>{
+    const fr = new FileReader();
+    fr.onload = () => resolve(fr.result);
+    fr.onerror = reject;
+    fr.readAsText(file);
+  });
+}
+
+function extractArray(json){
+  if (Array.isArray(json)) return json;
+  if (json && Array.isArray(json.data)) return json.data;
+  if (json && Array.isArray(json.events)) return json.events;
+  return [];
+}
+
+function trimStrings(obj){
+  const out = { ...obj };
+  for (const k in out){
+    const v = out[k];
+    if (typeof v === "string") out[k] = v.trim();
+    else if (Array.isArray(v)) out[k] = v.map(x => typeof x === "string" ? x.trim() : x);
+  }
+  return out;
+}
+
+function normalize(ev, opts){
+  let e = opts.trimStr ? trimStrings(ev) : { ...ev };
+  if (opts.normId && e.id && !isKebab(e.id)) e.id = kebab(e.id);
+  if (opts.normState && e.state) e.state = String(e.state).toUpperCase();
+  if (opts.coerceNums){
+    if (e.lat !== undefined) e.lat = Number(e.lat);
+    if (e.lon !== undefined) e.lon = Number(e.lon);
+  }
+  return e;
+}
+
+function validateArray(arr){
+  const errs = [];
+  const seen = new Set();
+
+  arr.forEach((ev, i) => {
+    const where = `[#${i} id=${ev.id ?? "?"}]`;
+
+    // Requireds
+    for (const f of REQUIRED){
+      if (ev[f] === undefined || ev[f] === null || (typeof ev[f]==="string" && ev[f].trim()==="")){
+        errs.push(`❌ ${where} missing/empty "${f}"`);
+      }
+    }
+
+    // id / duplicates
+    if (ev.id && !isKebab(ev.id)) errs.push(`❌ ${where} id must be kebab-case ("${ev.id}")`);
+    if (ev.id){
+      if (seen.has(ev.id)) errs.push(`❌ ${where} duplicate id "${ev.id}"`);
+      seen.add(ev.id);
+    }
+
+    // type
+    if (ev.type && !Array.isArray(ev.type)) errs.push(`❌ ${where} "type" must be an array`);
+    else if (Array.isArray(ev.type)){
+      ev.type.forEach(t => { if (!TYPES.includes(t)) errs.push(`❌ ${where} invalid type "${t}"`); });
+    }
+
+    // level
+    if (ev.level && !LEVELS.includes(ev.level)) errs.push(`❌ ${where} invalid level "${ev.level}"`);
+
+    // state, coords, url
+    if (ev.state && !/^[A-Z]{2}$/.test(ev.state)) errs.push(`❌ ${where} invalid state "${ev.state}"`);
+    if (typeof ev.lat !== "number" || ev.lat < -90 || ev.lat > 90) errs.push(`❌ ${where} bad latitude "${ev.lat}"`);
+    if (typeof ev.lon !== "number" || ev.lon < -180 || ev.lon > 180) errs.push(`❌ ${where} bad longitude "${ev.lon}"`);
+    if (ev.url && !isHttp(ev.url)) errs.push(`❌ ${where} url must start with http(s)`);
+
+    // --- Enriched optional fields ---
+
+    // dates + timezone
+    if (ev.dateStart !== undefined && ev.dateStart !== null && !isISODate(ev.dateStart))
+      errs.push(`❌ ${where} dateStart must be YYYY-MM-DD or null`);
+    if (ev.dateEnd !== undefined && ev.dateEnd !== null && !isISODate(ev.dateEnd))
+      errs.push(`❌ ${where} dateEnd must be YYYY-MM-DD or null`);
+    if (ev.dateStart && ev.dateEnd && ev.dateEnd < ev.dateStart)
+      errs.push(`❌ ${where} dateEnd is before dateStart`);
+    if (ev.timezone !== undefined && ev.timezone !== null && !isIanaTz(ev.timezone))
+      errs.push(`❌ ${where} timezone must be IANA format, e.g. "America/Denver"`);
+
+    // strings we don't hard-require
+    ["description","cost","registrationUrl","venue","address","lodging","ageRestriction","notes"].forEach(k=>{
+      if (ev[k] !== undefined && ev[k] !== null && typeof ev[k] !== "string")
+        errs.push(`❌ ${where} "${k}" must be a string or null`);
+    });
+    if (ev.registrationUrl && !isHttp(ev.registrationUrl))
+      errs.push(`❌ ${where} registrationUrl must be http(s)`);
+
+    // booleans
+    ["campingNearby","dogFriendly","spectatorFriendly"].forEach(k=>{
+      if (ev[k] !== undefined && ev[k] !== null && typeof ev[k] !== "boolean")
+        errs.push(`❌ ${where} "${k}" must be boolean or null`);
+    });
+
+    // arrays
+    if (ev.tags !== undefined && ev.tags !== null){
+      if (!Array.isArray(ev.tags)) errs.push(`❌ ${where} "tags" must be an array of strings or null`);
+      else ev.tags.forEach(t => { if (typeof t !== "string") errs.push(`❌ ${where} "tags" entries must be strings`); });
+    }
+    if (ev.images !== undefined && ev.images !== null){
+      if (!Array.isArray(ev.images)) errs.push(`❌ ${where} "images" must be an array of http(s) URLs or null`);
+      else ev.images.forEach(u => { if (!isHttp(u)) errs.push(`❌ ${where} images entry is not a http(s) URL`); });
+    }
+    if (ev.sources !== undefined && ev.sources !== null){
+      if (!Array.isArray(ev.sources)) errs.push(`❌ ${where} "sources" must be an array of http(s) URLs or null`);
+      else ev.sources.forEach(u => { if (!isHttp(u)) errs.push(`❌ ${where} sources entry is not a http(s) URL`); });
+    }
+
+    // contacts
+    if (ev.contactEmail !== undefined && ev.contactEmail !== null && !isEmail(ev.contactEmail))
+      errs.push(`❌ ${where} contactEmail is not a valid email`);
+    if (ev.contactPhone !== undefined && ev.contactPhone !== null && !isPhone(ev.contactPhone))
+      errs.push(`❌ ${where} contactPhone looks invalid`);
+
+    // lastUpdated
+    if (ev.lastUpdated !== undefined && ev.lastUpdated !== null && !isISODate(ev.lastUpdated))
+      errs.push(`❌ ${where} lastUpdated must be YYYY-MM-DD or null`);
+  });
+
+  return errs;
+}
+
+const $q = (sel)=>document.querySelector(sel);
+
+function getOpts(){
+  return {
+    normId: $q("#normId").checked,
+    normState: $q("#normState").checked,
+    coerceNums: $q("#coerceNums").checked,
+    trimStr: $q("#trimStr").checked,
+    stripProv: $q("#stripProv").checked,
+    dupeMode: document.querySelector('input[name="dupe"]:checked').value // 'first' | 'last'
+  };
+}
+
+let mergedBlobText = "";
+
+runBtn.addEventListener("click", async () => {
+  summary.innerHTML = ""; errorsBox.innerHTML = ""; preview.innerHTML = ""; report.style.display = "block";
+  downloadBtn.disabled = true; copyBtn.disabled = true; mergedBlobText = "";
+
+  const files = Array.from(fileInput.files || []);
+  if (!files.length){ errorsBox.innerHTML = `<p class="bad">No files selected.</p>`; return; }
+
+  const opts = getOpts();
+
+  const bags = [];
+  for (const f of files){
+    try{
+      const text = await readFileAsText(f);
+      let json; try { json = JSON.parse(text); } catch(e){ throw new Error(`${f.name} is not valid JSON\n${e.message}`); }
+      if (opts.stripProv && json && json.provenance) delete json.provenance;
+      const arr = extractArray(json);
+      if (!Array.isArray(arr)) throw new Error(`${f.name} top-level must be an array or {data:[...]}`);
+      bags.push({ name:f.name, arr });
+    }catch(e){ errorsBox.innerHTML += `<pre class="bad">${e.message}</pre>`; }
+  }
+
+  if (!bags.length){ errorsBox.innerHTML += `<p class="bad">No parsable arrays found.</p>`; return; }
+
+  // Merge with first/last-wins
+  const map = new Map();
+  const order = opts.dupeMode === "first" ? bags : [...bags].reverse();
+  for (const bag of order){
+    for (const raw of bag.arr){
+      if (!raw || typeof raw !== "object" || !raw.id) continue;
+      const ev = normalize(raw, opts);
+      if (opts.dupeMode === "first"){ if (!map.has(ev.id)) map.set(ev.id, ev); }
+      else { map.set(ev.id, ev); }
+    }
+  }
+
+  const merged = Array.from(map.values()).sort((a,b)=>{
+    const s = String(a.state||"").localeCompare(String(b.state||""));
+    return s !== 0 ? s : String(a.name||"").localeCompare(String(b.name||""));
+  });
+
+  const errs = validateArray(merged);
+
+  summary.innerHTML = `
+    <p><span class="${errs.length ? 'bad' : 'ok'}">${errs.length ? '❌ Validation found issues' : '✅ Validation passed'}</span></p>
+    <p>Merged <strong>${bags.length}</strong> file(s) → <span class="tag">${merged.length} events</span>
+       &nbsp;•&nbsp; Duplicate strategy: <strong>${opts.dupeMode === "first" ? 'First wins' : 'Last wins'}</strong></p>
+  `;
+  errorsBox.innerHTML = errs.length ? `<h4>Errors / Warnings</h4><pre class="bad">${errs.join('\n')}</pre>` : `<p class="ok">No errors.</p>`;
+
+  const sample = merged.slice(0,5);
+  preview.innerHTML = `<h4>Preview (first ${sample.length} records)</h4><pre>${JSON.stringify(sample, null, 2)}</pre>`;
+
+  mergedBlobText = JSON.stringify(merged, null, 2) + "\n";
+  downloadBtn.disabled = false;
+  copyBtn.disabled = false;
+});
+
+downloadBtn.addEventListener("click", ()=>{
+  if (!mergedBlobText) return;
+  const blob = new Blob([mergedBlobText], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  const out = document.getElementById("outName").value.trim() || "events.json";
+  a.download = out;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+copyBtn.addEventListener("click", async ()=>{
+  if (!mergedBlobText) return;
+  await navigator.clipboard.writeText(mergedBlobText);
+  copyBtn.textContent = "Copied!";
+  setTimeout(()=> copyBtn.textContent = "Copy merged JSON", 1200);
+});
+
+
+</script>
+</body>
+</html>

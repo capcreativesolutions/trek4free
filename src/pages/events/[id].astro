@@ -1,0 +1,240 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// ⬇️ Data (SSR). If your repo differs, adjust this single path.
+import events from '../../../public/data/events/events.json' assert { type: 'json' };
+
+type Ev = {
+  id: string;
+  name: string;
+  type: string[];
+  city?: string;
+  state?: string;
+  lat?: number;
+  lon?: number;
+  usualDate?: string;
+  dateStart?: string;
+  dateEnd?: string;
+  timezone?: string;
+  hook?: string;
+  description?: string;
+  images?: string[];
+  url?: string;
+  sources?: string[];
+  level?: string;
+  freq?: string;
+  cost?: string;
+  venue?: string;
+  address?: string;
+  dogFriendly?: boolean | string | null;
+  spectatorFriendly?: boolean | string | null;
+  campingNearby?: boolean | string | null;
+  tags?: string[];
+  lastUpdated?: string;
+};
+
+const { id } = Astro.params;
+const list: Ev[] = Array.isArray(events) ? events : [];
+const ev: Ev | null = list.find(e => e.id === id) ?? null;
+
+if (!ev) {
+  Astro.response.status = 404;
+}
+
+function fmtDateRange(ev: Ev) {
+  const s = ev.dateStart ? new Date(ev.dateStart) : null;
+  const e = ev.dateEnd   ? new Date(ev.dateEnd)   : null;
+  const nice = (d: Date) => d.toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' });
+  if (s && e && !isNaN(s.getTime()) && !isNaN(e.getTime())) return `${nice(s)} – ${nice(e)}`;
+  if (s && !isNaN(s.getTime())) return nice(s);
+  return ev.usualDate || '';
+}
+
+// image whitelist
+const IMG_OK = (url: string) => /\.(png|jpe?g|webp|gif)(\?.*)?$/i.test(url);
+const gallery = (Array.isArray(ev?.images) ? ev!.images.filter(IMG_OK) : []);
+const heroImg = gallery[0] ?? '/images/hero/campfire.png';
+
+---
+
+<BaseLayout title={ev ? ev.name : 'Event not found'}>
+  {ev ? (
+    <main class="evd-page">
+      <!-- Hero card with map (left) and key info (right) -->
+      <article class="evd-hero">
+        <aside class="evd-mapcard" id="evd-mapCard"
+          data-lat={Number.isFinite(ev.lat) ? String(ev.lat) : ""}
+          data-lon={Number.isFinite(ev.lon) ? String(ev.lon) : ""}
+          style={!Number.isFinite(ev.lat) || !Number.isFinite(ev.lon) ? "display:none" : ""}
+        >
+          <div id="evd-map"></div>
+        </aside>
+
+        <div class="evd-hero__copy">
+          <h1 class="evd-title">{ev.name}</h1>
+          <p class="evd-loc">
+            {ev.city ? ev.city : ''}{ev.city && ev.state ? ', ' : ''}{ev.state ? ev.state : ''} • {fmtDateRange(ev)}
+          </p>
+
+          {Array.isArray(ev.type) && ev.type.length > 0 && (
+            <div class="evd-chips">
+              {ev.type.map(t => <span class="evd-chip">{t}</span>)}
+            </div>
+          )}
+
+          {ev.hook && <p class="evd-hook">{ev.hook}</p>}
+
+          <!-- Actions: PRINT primary; others secondary -->
+          <div class="evd-actions">
+            <button class="btn btn--primary" id="btn-print">Print / PDF</button>
+            {Number.isFinite(ev.lat) && Number.isFinite(ev.lon) && (
+              <a class="btn" href={`https://www.google.com/maps?q=${ev.lat},${ev.lon}`} target="_blank" rel="noopener">Open in Google Maps</a>
+            )}
+            {Number.isFinite(ev.lat) && Number.isFinite(ev.lon) && (
+              <button class="btn" id="btn-copy" data-coords={`${ev.lat},${ev.lon}`}>Copy coords</button>
+            )}
+          </div>
+        </div>
+      </article>
+
+      <!-- Details first -->
+      {ev.description && (
+        <section class="evd-panel">
+          <p class="evd-desc">{ev.description}</p>
+        </section>
+      )}
+
+      
+      <!-- Fact grid -->
+      <section class="evd-facts evd-panel">
+        <div class="factcol">
+          <p><strong>Level:</strong> {ev.level ?? '—'}</p>
+          <p><strong>Cost:</strong> {ev.cost ?? '—'}</p>
+          <p><strong>Venue:</strong> {ev.venue ?? '—'}</p>
+          <p><strong>Dog friendly:</strong> {ev.dogFriendly ?? '—'}</p>
+        </div>
+        <div class="factcol">
+          <p><strong>Frequency:</strong> {ev.freq ?? '—'}</p>
+          <p><strong>Timezone:</strong> {ev.timezone ?? '—'}</p>
+          <p><strong>Address:</strong> {ev.address ?? '—'}</p>
+          <p><strong>Spectator friendly:</strong> {ev.spectatorFriendly ?? '—'}</p>
+        </div>
+        <div class="factcol">
+          <p><strong>Camping nearby:</strong> {ev.campingNearby ?? '—'}</p>
+          <p><strong>Tags:</strong> {(ev.tags || []).join(', ') || '—'}</p>
+          <p><strong>Last updated:</strong> {ev.lastUpdated ?? '—'}</p>
+        </div>
+      </section>
+
+<!-- Images (after details) -->
+      <section class="evd-gallery">
+        {gallery.slice(0,2).map((src, i) => (
+          <figure class="evd-fig">
+            <img src={src} alt={`${ev.name}`} loading="lazy" />
+          </figure>
+        ))}
+      </section>
+
+
+      <!-- Sources (compact, bottom) -->
+      {Array.isArray(ev.sources) && ev.sources.length > 0 && (
+        <section class="evd-panel evd-sourcebox">
+          <h3>Sources</h3>
+          <ul>
+            {ev.sources.map((s, i) => (
+              <li><a class={i===0 ? 'src-official' : ''} href={s} target="_blank" rel="noopener">{i===0 ? 'Official site' : s}</a></li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </main>
+  ) : (
+    <main class="evd-page">
+      <section class="evd-panel"><h1>Event not found</h1></section>
+    </main>
+  )}
+
+  <style>
+    .evd-page{ --ink:#E87222; --amber:#FFC53D; --bg:#0d0d0d; --panel:#121212; --line:#1b1b1b; color:#eee;}
+    .evd-panel{background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:18px; margin:16px auto; max-width:1100px;}
+    .evd-hero{max-width:1200px; margin:18px auto; display:grid; grid-template-columns:1.4fr 1fr; gap:18px; padding:0 10px;}
+    @media (max-width:980px){ .evd-hero{grid-template-columns:1fr; } }
+    .evd-mapcard{ background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:10px;}
+    #evd-map{min-height:260px; border-radius:12px; overflow:hidden;}
+    .evd-hero__copy{display:flex; flex-direction:column; gap:.45rem; padding:8px;}
+    .evd-title{margin:.2rem 0 .2rem; font-weight:900; font-size:clamp(1.9rem, 3.6vw, 3rem); color:var(--amber); text-shadow:0 2px 0 rgba(0,0,0,.6);}
+    .evd-loc{opacity:.9;}
+    .evd-chips{display:flex; flex-wrap:wrap; gap:.35rem; margin:.2rem 0 .4rem;}
+    .evd-chip{background:#222; color:#e7b04b; border:1px solid #444; padding:.25rem .55rem; border-radius:999px; font-weight:800; font-size:.9rem;}
+    .evd-hook{font-size: 1.25rem; font-weight: 600;color: var(--amber); margin: 1rem 0;line-height: 1.4;}
+    .evd-actions{display:flex; gap:.5rem; margin-top:.35rem; flex-wrap:wrap;}
+    .btn{border:1px solid #2d2d2d; background:#121212; color:#ddd; padding:.55rem .9rem; border-radius:12px; font-weight:800; text-decoration:none; display:inline-flex; align-items:center; gap:.4rem;}
+    .btn--primary{ background:var(--ink); color:#111; border-color:transparent;}
+    .evd-desc{margin:0;}
+    .evd-gallery{max-width:1100px; margin:12px auto; display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:0 10px;}
+    @media (max-width:780px){ .evd-gallery{grid-template-columns:1fr;} }
+    .evd-fig{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:10px;}
+    .evd-fig img{width:100%; height:auto; display:block; border-radius:10px;}
+    .evd-facts{display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px;}
+    @media (max-width:820px){ .evd-facts{grid-template-columns:1fr;} }
+    .factcol p{margin:.25rem 0;}
+    .evd-sourcebox h3{margin:.3rem 0 .6rem;}
+    .evd-sourcebox ul{margin:0; padding-left:1.1rem;}
+    .evd-sourcebox a{color:#ffb357; font-weight:800; text-decoration:none;}
+    .evd-sourcebox a:hover{text-decoration:underline;}
+    .src-official{font-weight:900;}
+    /* Leaflet popup dark */
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip { background:#111; color:#eee; }
+    .leaflet-popup-content { color:#eee; }
+  
+
+
+
+</style>
+
+  <script type="module">
+    // Print
+    document.getElementById('btn-print')?.addEventListener('click', () => window.print());
+
+    // Copy coords
+    const copyBtn = document.getElementById('btn-copy');
+    copyBtn?.addEventListener('click', async () => {
+      const coords = copyBtn.getAttribute('data-coords') || '';
+      if (!coords) return;
+      try { await navigator.clipboard.writeText(coords); copyBtn.textContent = 'Copied!'; setTimeout(()=>copyBtn.textContent='Copy coords',1200); }
+      catch (_) {}
+    });
+
+     // Map
+const card = document.getElementById('evd-mapCard');
+if (card) {
+  const lat = Number(card.getAttribute('data-lat'));
+  const lon = Number(card.getAttribute('data-lon'));
+  if (Number.isFinite(lat) && Number.isFinite(lon)) {
+    // robust import that works whether the module exposes default or named exports
+    const LeafletModule = await import('https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet-src.esm.js');
+    const L = LeafletModule.default ?? LeafletModule;
+
+    // (safety) add Leaflet CSS once if not already present
+    if (!document.querySelector('link[href*="leaflet.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(link);
+    }
+
+    const map = L.map('evd-map').setView([lat, lon], 8); // state/county zoom
+
+
+// county/state-ish zoom
+        L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+          maxZoom: 17,
+          attribution: '&copy; OpenStreetMap contributors, SRTM | &copy; OpenTopoMap (CC-BY-SA)'
+        }).addTo(map);
+        L.marker([lat, lon], {
+          icon: L.divIcon({ className:'', html:'<div style="width:26px;height:26px;border-radius:50%;background:#E87222;border:2px solid #000;box-shadow:0 0 0 2px #222 inset"></div>', iconSize:[26,26], iconAnchor:[13,13] })
+        }).addTo(map);
+      }
+    }
+  </script>
+</BaseLayout>

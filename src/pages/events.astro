@@ -1,0 +1,341 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ALL_EVENTS from "../../public/data/events/events.json"; // adjust if needed
+
+const EVENTS = Array.isArray(ALL_EVENTS) ? ALL_EVENTS : [];
+const CHIP_TYPES = Array.from(new Set(EVENTS.flatMap(e => e.type || []))).sort();
+
+// base64 capsule so HTML parsing can never break our data
+const EV_B64 = Buffer.from(JSON.stringify(EVENTS)).toString("base64");
+---
+
+<BaseLayout title="US Adventure & Endurance Events">
+  <main class="ev-page" data-page="events">
+    <!-- ===== HERO ===== -->
+    <section class="ev-hero">
+      <div class="ev-hero__inner">
+        <h1 class="ev-title">US Adventure &amp; Endurance Events</h1>
+        <p class="ev-lede">
+          A living map + calendar of America’s wildest races and gatherings — ultraruns, paddle epics, balloons, basejump days, and more.
+        </p>
+
+        <div class="ev-toolbar">
+          <!-- SSR chips (round/orange pills) -->
+          <div class="ev-chips" id="ev-typeChips">
+            <button class="ev-chip ev-chip--active" data-type="All">All</button>
+            {CHIP_TYPES.map((t) => <button class="ev-chip" data-type={t}>{t}</button>)}
+          </div>
+
+          <div class="ev-toggle" id="ev-viewToggle">
+            <button class="ev-vt ev-vt--active" data-view="map">Map</button>
+            <button class="ev-vt" data-view="calendar">Calendar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PANELS ===== -->
+    <section class="ev-panel">
+      <div class="ev-wrap">
+        <!-- Map -->
+        <div class="ev-mapwrap" id="ev-mapWrap">
+          <div id="ev-map"></div>
+        </div>
+
+        <!-- Calendar (one month + list) -->
+        <div class="ev-calwrap ev-hidden" id="ev-calWrap">
+          <div class="ev-cal-controls">
+            <button id="ev-prevMonth" aria-label="Previous month">←</button>
+            <div id="ev-monthLabel" class="ev-monthLabel"></div>
+            <button id="ev-nextMonth" aria-label="Next month">→</button>
+          </div>
+
+          <div class="ev-monthbox">
+            <div class="ev-weekdays" id="ev-weekdays">
+              <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+            </div>
+            <div class="ev-weeks" id="ev-weeks">
+              {Array.from({ length: 42 }).map(() => (
+                <div class="ev-day">
+                  <span class="ev-day__num"></span>
+                  <ul class="ev-day__list"></ul>
+                </div>
+              ))}
+            </div>
+            <div class="ev-tbd" id="ev-tbd" hidden>
+              <h3>TBD this month</h3>
+              <ul></ul>
+            </div>
+          </div>
+
+          <!-- Month event list -->
+          <div class="ev-listwrap">
+            <h3 id="ev-listTitle">Events this month</h3>
+            <ul id="ev-list" class="ev-list"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== SCOPED STYLES ===== -->
+  <style>
+    .ev-page{
+      --ev-ink:#E87722;
+      --ev-amber:#FFC53D;
+      --ev-bg:#0d0d0d;
+      --ev-panel:#121212;
+      --ev-line:#1b1b1b;
+    }
+    .ev-page{ background:var(--ev-bg); color:#eee; min-height:100vh; }
+    .ev-wrap{ max-width:1200px; margin:0 auto; padding:0 1rem; }
+
+    .ev-hero{
+      position:relative; padding:72px 0 32px; overflow:hidden;
+      background:
+        radial-gradient(1200px 320px at 50% -10%, rgba(255,139,26,.18), transparent 60%),
+        linear-gradient(180deg, rgba(255,178,36,.06), transparent 60%),
+        #0d0d0e;
+      border-bottom:1px solid #151515;
+    }
+    .ev-hero::after{ content:""; position:absolute; inset:0; background:url('/images/hero/background-mountains-transparent.png') center/cover no-repeat; opacity:.12; pointer-events:none; }
+    .ev-hero__inner{ width:min(1200px,92%); margin:0 auto; position:relative; z-index:1; }
+    .ev-title{ margin:.2rem 0 .35rem; font-weight:900; letter-spacing:.02em; line-height:1.05; font-size:clamp(2rem,3.6vw,3.25rem); color:var(--ev-amber); text-shadow:0 2px 0 rgba(0,0,0,.35);}
+    .ev-lede{ color:#f2e8d4; max-width:940px; }
+    .ev-toolbar{ display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; justify-content:space-between; margin:1rem 0 0; }
+
+    /* Chips */
+    .ev-chips{ display:flex; gap:.5rem; flex-wrap:wrap; }
+    .ev-chip{ background:#171717; border:1px solid #242424; color:#ddd; padding:.5rem .8rem; border-radius:999px; cursor:pointer; font-weight:800; line-height:1; }
+    .ev-chip.ev-chip--active{ background:var(--ev-ink); color:#111; border-color:transparent; }
+
+    /* Toggle */
+    .ev-toggle .ev-vt{ background:#171717; border:1px solid #242424; color:#ddd; padding:.5rem .75rem; border-radius:10px; cursor:pointer; font-weight:800; }
+    .ev-toggle .ev-vt.ev-vt--active{ background:var(--ev-ink); color:#111; border-color:transparent; }
+
+    .ev-panel{ padding:1rem 0 2.5rem; }
+
+    /* Map block */
+    .ev-mapwrap{ background:var(--ev-panel); border:1px solid var(--ev-line); border-radius:16px; overflow:hidden; }
+    #ev-map{ width:100%; height:540px; }
+
+    /* Calendar */
+    .ev-calwrap{ background:var(--ev-panel); border:1px solid var(--ev-line); border-radius:16px; margin-top:16px; padding:14px; }
+    .ev-cal-controls{ display:flex; align-items:center; justify-content:center; gap:12px; }
+    .ev-cal-controls button{ background:#171717; border:1px solid #242424; color:#ddd; padding:.45rem .6rem; border-radius:8px; cursor:pointer; font-weight:800; }
+    .ev-monthLabel{ font-weight:900; color:var(--ev-amber); letter-spacing:.02em; }
+    .ev-monthbox{ border:1px solid #202020; border-radius:12px; background:#141414; overflow:hidden; margin-top:10px; }
+    .ev-weekdays{ display:grid; grid-template-columns:repeat(7, 1fr); background:#131313; border-bottom:1px solid #1f1f1f; }
+    .ev-weekdays > div{ text-align:center; padding:.35rem 0; font-size:.8rem; color:#bdbdbd; }
+    .ev-weeks{ display:grid; grid-template-columns:repeat(7, 1fr); }
+    .ev-day{ min-height:86px; border-right:1px solid #1c1c1c; border-bottom:1px solid #1c1c1c; padding:6px; position:relative; }
+    .ev-day:nth-child(7n){ border-right:none; }
+    .ev-day__num{ position:absolute; top:6px; right:8px; font-size:.78rem; color:#9a9a9a; }
+    .ev-day__list{ margin:18px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:4px; }
+    .ev-event{ background:#1a1a1a; border:1px solid #262626; border-left:4px solid var(--ev-ink); padding:4px 6px; border-radius:6px; font-size:.86rem; }
+    .ev-event a{ color:#e9e9e9; text-decoration:none; font-weight:800; }
+
+    .ev-tbd{ padding:8px; }
+    .ev-tbd h3{ margin:.35rem 0 .25rem; font-size:.95rem; color:#e7b86f; }
+    .ev-tbd ul{ margin:.2rem 0 0 1.1rem; display:grid; gap:4px; }
+
+    .ev-listwrap{ margin-top:16px; }
+    .ev-listwrap h3{ margin:.25rem 0 .5rem; color:#ffd36b; }
+    .ev-list{ list-style:none; margin:0; padding:0; display:grid; gap:8px; }
+    .ev-list li{ background:#141414; border:1px solid #1f1f1f; border-left:4px solid var(--ev-ink); border-radius:10px; padding:10px 12px; }
+    .ev-list a{ color:#E87722; text-decoration:none; font-weight:800; }
+
+    .ev-hidden{ display:none; }
+  </style>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <!-- Base64 capsule -->
+  <template id="ev-data" data-b64={EV_B64}></template>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // ===== Constants for calendar (client-side so they're defined) =====
+      const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+      const MONTHS_LOWER = MONTHS.map(m => m.toLowerCase());
+
+      // ===== Data decode =====
+      const cap = document.getElementById('ev-data');
+      
+const b64   = cap.dataset.b64 || "W10=";              // "[]"
+const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+const EVENTS = JSON.parse(new TextDecoder().decode(bytes));
+
+      // ===== Chips =====
+      const chipsWrap = document.getElementById('ev-typeChips');
+      let activeType = 'All';
+      const byType = (ev) => activeType==='All' || (Array.isArray(ev.type) && ev.type.includes(activeType));
+      chipsWrap.addEventListener('click', (e) => {
+        const btn = e.target.closest('.ev-chip'); if(!btn) return;
+        chipsWrap.querySelectorAll('.ev-chip').forEach(b=>b.classList.remove('ev-chip--active'));
+        btn.classList.add('ev-chip--active');
+        activeType = btn.dataset.type;
+        window.__evMapRedraw?.(byType, /*fit=*/true);
+        buildMonth(currentYear, currentMonth, byType);
+      });
+
+      // ===== View toggle =====
+      const mapWrap = document.getElementById('ev-mapWrap');
+      const calWrap = document.getElementById('ev-calWrap');
+      const tog = document.getElementById('ev-viewToggle');
+      tog.addEventListener('click',(e)=>{
+        const btn = e.target.closest('.ev-vt'); if(!btn) return;
+        tog.querySelectorAll('.ev-vt').forEach(b=>b.classList.remove('ev-vt--active'));
+        btn.classList.add('ev-vt--active');
+        const isMap = btn.dataset.view === 'map';
+        mapWrap.classList.toggle('ev-hidden', !isMap);
+        calWrap.classList.toggle('ev-hidden', isMap);
+        if(isMap) window.__evMapRedraw?.(byType, /*fit=*/false);
+        else buildMonth(currentYear, currentMonth, byType);
+      });
+
+      // ===== Map =====
+      await loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js');
+      initMap(EVENTS);
+
+      function initMap(DATA){
+        const map = L.map('ev-map',{ scrollWheelZoom:true, zoomControl:true }).setView([38,-96], 4);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{ attribution:'&copy; OpenStreetMap' }).addTo(map);
+
+        const icon = L.divIcon({
+          className:'ev-pin',
+          html:'<div style="background:#E87722;border:2px solid #111;color:#111;border-radius:999px;padding:6px 8px;font-weight:900;box-shadow:0 3px 10px rgba(0,0,0,.35)">★</div>',
+          iconSize:[24,24], iconAnchor:[12,12]
+        });
+
+        const layer = L.featureGroup().addTo(map);
+
+        function draw(f = () => true, fit = false){
+          layer.clearLayers();
+          const filtered = DATA.filter(f);
+          filtered.forEach(ev=>{
+            if(!(Number.isFinite(ev.lat) && Number.isFinite(ev.lon))) return;
+            const m = L.marker([ev.lat,ev.lon], {icon}).addTo(layer);
+            const detailsHref = `/events/${ev.id}`;
+            m.bindPopup(`
+              <div style="background:#151515;color:#eee;border-radius:12px;padding:10px 12px;box-shadow:0 10px 24px rgba(0,0,0,.45);border:1px solid #2a2a2a">
+                <h3 style="margin:.2rem 0;color:#fff;font-size:1.2rem;line-height:1.1">${escapeHtml(ev.name)}</h3>
+                <div style="color:#bbb;font-size:.92rem">${escapeHtml(ev.city || '')}${ev.state?', '+escapeHtml(ev.state):''}</div>
+                <div style="margin:.25rem 0 .35rem;color:#ffc53d;font-weight:700">${escapeHtml(ev.usualDate || '')}</div>
+                <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin:.25rem 0">
+                  ${(Array.isArray(ev.type)?ev.type:[]).map(t=>`<span style="display:inline-flex;padding:.22rem .45rem;border-radius:999px;background:#2a1c00;border:1px solid #4a3300;color:#ffd36b;font-size:.8rem">${escapeHtml(t)}</span>`).join('')}
+                </div>
+                ${ev.hook?`<p style="margin:.25rem 0 .6rem;color:#e9e9e9">${escapeHtml(ev.hook)}</p>`:''}
+                <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+                  <a style="color:#E87722;font-weight:800;text-decoration:none" href="${detailsHref}">Details →</a>
+                </div>
+              </div>
+            `, { className: 'evp' });
+          });
+
+          if (fit && filtered.length){
+            try{
+              map.fitBounds(layer.getBounds(),{ padding:[40,40] });
+              if (map.getZoom() < 4) map.setZoom(4);
+            } catch(_) {}
+          }
+        }
+        draw(byType, /*fit=*/false);
+        window.__evMapRedraw = draw;
+      }
+
+      // ===== Calendar (one month) =====
+      const monthLabel = document.getElementById('ev-monthLabel');
+      const weeksEl     = document.getElementById('ev-weeks');
+      const tbdBox      = document.getElementById('ev-tbd');
+      const tbdList     = tbdBox.querySelector('ul');
+      const listTitle   = document.getElementById('ev-listTitle');
+      const listEl      = document.getElementById('ev-list');
+
+      let today = new Date();
+      let currentYear  = today.getFullYear();
+      let currentMonth = today.getMonth();
+
+      document.getElementById('ev-prevMonth').addEventListener('click', ()=>{
+        currentMonth--; if(currentMonth < 0){ currentMonth=11; currentYear--; }
+        buildMonth(currentYear, currentMonth, byType);
+      });
+      document.getElementById('ev-nextMonth').addEventListener('click', ()=>{
+        currentMonth++; if(currentMonth > 11){ currentMonth=0; currentYear++; }
+        buildMonth(currentYear, currentMonth, byType);
+      });
+
+      buildMonth(currentYear, currentMonth, byType);
+
+      function buildMonth(year, month, filterFn){
+        monthLabel.textContent = `${MONTHS[month]} ${year}`;
+        listTitle.textContent  = `Events in ${MONTHS[month]} ${year}`;
+
+        const dayCells = weeksEl.querySelectorAll('.ev-day');
+        const nums     = weeksEl.querySelectorAll('.ev-day__num');
+        const lists    = weeksEl.querySelectorAll('.ev-day__list');
+
+        // reset grid
+        dayCells.forEach(d => { d.removeAttribute('data-day'); });
+        nums.forEach(n => n.textContent = '');
+        lists.forEach(l => l.innerHTML = '');
+        tbdBox.hidden = true;
+        tbdList.innerHTML = '';
+        listEl.innerHTML = '';
+
+        // layout
+        const first = new Date(year, month, 1);
+        const firstDOW = first.getDay();
+        const daysInMonth = new Date(year, month+1, 0).getDate();
+
+        for(let i=0;i<42;i++){
+          const dayNum = i - firstDOW + 1;
+          if(dayNum>=1 && dayNum<=daysInMonth){
+            dayCells[i].dataset.day = String(dayNum);
+            nums[i].textContent = String(dayNum);
+          }
+        }
+
+        // events for month
+        const mEvents = EVENTS.filter(filterFn).filter(ev=>{
+          if (isIso(ev.dateStart)){
+            const dt = new Date(ev.dateStart+'T00:00:00');
+            return dt.getFullYear()===year && dt.getMonth()===month;
+          }
+          const u = (ev.usualDate||'').toLowerCase();
+          return u.includes(MONTHS_LOWER[month]);
+        });
+
+        // place on grid and build list
+        const listRows = [];
+        mEvents.forEach(ev=>{
+          const nameHtml = `<a href="/events/${ev.id}">${escapeHtml(ev.name)}</a>`;
+          if (isIso(ev.dateStart)){
+            const d = new Date(ev.dateStart+'T00:00:00');
+            const dd = d.getDate();
+            const slot = weeksEl.querySelector(`.ev-day[data-day="${dd}"] .ev-day__list`);
+            if (slot){
+              slot.insertAdjacentHTML('beforeend', `<li class="ev-event">${nameHtml}</li>`);
+            } else {
+              tbdBox.hidden = false;
+              tbdList.insertAdjacentHTML('beforeend', `<li>${nameHtml}</li>`);
+            }
+            listRows.push({ sortKey: +d, html:`<li>${nameHtml} <span style="color:#9c9c9c">(${MONTHS[d.getMonth()]} ${dd})</span></li>` });
+          } else {
+            tbdBox.hidden = false;
+            tbdList.insertAdjacentHTML('beforeend', `<li>${nameHtml} <span style="color:#9c9c9c">(${escapeHtml(ev.usualDate||'TBD')})</span></li>`);
+            listRows.push({ sortKey: Number.MAX_SAFE_INTEGER, html:`<li>${nameHtml} <span style="color:#9c9c9c">(${escapeHtml(ev.usualDate||'TBD')})</span></li>` });
+          }
+        });
+
+        listRows.sort((a,b)=>a.sortKey-b.sortKey).forEach(r=>listEl.insertAdjacentHTML('beforeend', r.html));
+      }
+
+      // utils
+      function isIso(s){ return typeof s==='string' && /^\d{4}-\d{2}-\d{2}$/.test(s); }
+      function loadScript(src){ return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+      function escapeHtml(str){ return String(str ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+    });
+  </script>
+</BaseLayout>

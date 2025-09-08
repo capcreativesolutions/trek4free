@@ -1,0 +1,15 @@
+# dependencies & builds
+node_modules/
+dist/
+.astro/
+.netlify/
+.vercel/
+.tmp/
+coverage/
+*.log
+
+# env & OS junk
+.env
+.env.*
+.DS_Store
+Thumbs.db

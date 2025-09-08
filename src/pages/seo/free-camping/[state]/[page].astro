@@ -1,0 +1,197 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import { loadAllPoints } from "../../../../lib/load-data";
+
+const PAGE_SIZE = 24;
+
+const STATE_NAMES: Record<string,string> = {
+  al:"Alabama", ak:"Alaska", az:"Arizona", ar:"Arkansas", ca:"California",
+  co:"Colorado", ct:"Connecticut", de:"Delaware", fl:"Florida", ga:"Georgia",
+  hi:"Hawaii", id:"Idaho", il:"Illinois", in:"Indiana", ia:"Iowa",
+  ks:"Kansas", ky:"Kentucky", la:"Louisiana", me:"Maine", md:"Maryland",
+  ma:"Massachusetts", mi:"Michigan", mn:"Minnesota", ms:"Mississippi",
+  mo:"Missouri", mt:"Montana", ne:"Nebraska", nv:"Nevada",
+  nh:"New Hampshire", nj:"New Jersey", nm:"New Mexico", ny:"New York",
+  nc:"North Carolina", nd:"North Dakota", oh:"Ohio", ok:"Oklahoma",
+  or:"Oregon", pa:"Pennsylvania", ri:"Rhode Island", sc:"South Carolina",
+  sd:"South Dakota", tn:"Tennessee", tx:"Texas", ut:"Utah", vt:"Vermont",
+  va:"Virginia", wa:"Washington", wv:"West Virginia", wi:"Wisconsin", wy:"Wyoming",
+  dc:"District of Columbia", unknown:"Unknown"
+};
+const pretty = (st: string) => STATE_NAMES[st] || st.toUpperCase();
+
+const { state, page } = Astro.params as { state: string; page: string };
+const abbr = (state || "unknown").toLowerCase();
+const pageNum = Math.max(1, Number(page) || 1);
+
+const all = await loadAllPoints();
+
+// Build a slug if a record is missing one (safety)
+const slugify = (s: string) =>
+  (s || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+const toSlug = (p: any) =>
+  p.slug ?? [slugify(p.name || ""), p.id ?? p.usfsId ?? p._id ?? p.rec_id ?? ""]
+    .filter(Boolean)
+    .join("--");
+
+// Filter list for this state
+const list = all
+  .filter((p) => p.type === "freecamp")
+  .filter((p) => {
+    const st = (p.state || "unknown").toLowerCase();
+    return abbr === "unknown" ? st === "unknown" : st === abbr;
+  })
+  .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+
+const total = list.length;
+const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+const start = (pageNum - 1) * PAGE_SIZE;
+const slice = list.slice(start, start + PAGE_SIZE);
+
+const title = `Free Camping in ${pretty(abbr)} | Trek4Free`;
+---
+
+<BaseLayout title={title}>
+  <div class="seo-state">
+    <!-- HERO -->
+    <header class="hero">
+      <span class="hero-art" aria-hidden="true"></span>
+      <div class="hero-inner container">
+        <h1>Free Camping in {pretty(abbr)}</h1>
+        <p class="muted">
+          {total.toLocaleString()} {total === 1 ? "place" : "places"} • Page {pageNum} of {pages}
+        </p>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="container section">
+      {total === 0 ? (
+        <p>No results yet.</p>
+      ) : (
+        <div class="grid">
+          {slice.map((p) => (
+            <a class="card" href={`/seo/item/${toSlug(p)}`}>
+              <div class="title">{p.name}</div>
+              <div class="meta">{(p.location || "").trim() || pretty(abbr)}</div>
+            </a>
+          ))}
+        </div>
+      )}
+
+      {pages > 1 && (
+        <nav class="pager row" style="justify-content:center;margin-top:18px">
+          {pageNum > 1 && (
+            <a class="btn" href={`/seo/free-camping/${abbr}/${pageNum-1}`}>← Prev</a>
+          )}
+          {pageNum < pages && (
+            <a class="btn" href={`/seo/free-camping/${abbr}/${pageNum+1}`}>Next →</a>
+          )}
+        </nav>
+      )}
+
+      <p class="small" style="text-align:center;margin-top:16px">
+        <a href="/seo/free-camping/">← All states</a>
+      </p>
+    </main>
+  </div>
+
+  <style>
+    /* ---------------- Page-scoped styles (STATE PAGE ONLY) ---------------- */
+    .seo-state {
+      --text-100: #f5f5f5;
+      --text-400: #c7c7c7;
+      --card-800: #1a140b;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; color: var(--text-100); }
+
+    /* HERO — bright, flipped art, safe area so subtitle never overlaps */
+    .seo-state .hero {
+      position: relative;
+      min-height: 300px;
+      padding: 56px 16px 28px;
+      /* Reserve room for the image on the right on all viewports */
+      padding-right: min(36vw, 420px);
+      background: radial-gradient(1100px 340px at 8% -80px, rgba(246,183,62,0.18), transparent 60%);
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .seo-state .hero > * { position: relative; z-index: 1; }
+    .seo-state .hero .hero-inner { padding: 0; }
+    .seo-state .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(34px, 6vw, 64px);
+      line-height: 1.05;
+      letter-spacing: .4px;
+      text-shadow: 0 2px 0 rgba(0,0,0,.35);
+    }
+    .seo-state .hero .muted { color: var(--text-400); font-size: 15px; }
+
+    /* The art itself (flipped to put Topo on the right, brighter/contrasty) */
+    .seo-state .hero .hero-art{
+      position: absolute;
+      right: -4vw;
+      top: 50%;
+      width: min(46vw, 820px);
+      aspect-ratio: 16 / 9;
+      transform: translateY(-48%) scaleX(-1);
+      background: url("/images/hero/background-mountains2.png") right center / contain no-repeat;
+      filter: brightness(1.25) contrast(1.08) saturate(1.08);
+      opacity: .96;
+      pointer-events: none;
+    }
+
+    /* Left vignette so the copy stays readable */
+    .seo-state .hero::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,.42) 0%, rgba(0,0,0,0) 46%);
+      pointer-events: none;
+    }
+
+    /* GRID */
+    .seo-state .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap:16px;
+      margin: 18px 0 32px;
+    }
+    .seo-state .card{
+      display:block;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:18px 16px;
+      background: linear-gradient(180deg, rgba(255,183,56,.06), rgba(0,0,0,.20)), var(--card-800);
+      text-decoration:none;
+      transition:transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .2s ease;
+      color: var(--text-100);
+    }
+    .seo-state .card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(255,183,56,.35);
+      box-shadow: 0 6px 24px rgba(255, 122, 26, .18);
+    }
+    .seo-state .title{font-weight:800;font-size:1.05rem;margin-bottom:.25rem}
+    .seo-state .meta{color: var(--text-400)}
+
+    .seo-state .btn{border:1px solid rgba(255,255,255,.22);padding:.45rem .8rem;border-radius:10px;color:var(--text-100);text-decoration:none}
+    .seo-state .btn:hover{border-color:rgba(255,166,0,.55)}
+
+    /* Mobile: scale art down and bump right safe area so subtitle never overlaps */
+    @media (max-width: 980px) {
+      .seo-state .hero {
+        min-height: 240px;
+        padding-right: min(44vw, 300px);
+      }
+      .seo-state .hero .hero-art{
+        width: 68vw;
+        right: -8vw;
+        transform: translateY(-44%) scaleX(-1);
+      }
+      .seo-state .hero .muted { margin-top: 6px; }
+    }
+  </style>
+</BaseLayout>

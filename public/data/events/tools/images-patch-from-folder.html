@@ -1,0 +1,164 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Trek4Free — Build images_patch.json from folder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root { color-scheme: dark }
+  body{font-family:system-ui,Segoe UI,Roboto,Inter,Arial;background:#0f1113;color:#e7e7e7;margin:0}
+  .wrap{max-width:980px;margin:32px auto;padding:0 16px}
+  .card{background:#15181c;border:1px solid #22262b;border-radius:14px;padding:16px;margin:14px 0}
+  h1{margin:0 0 6px}
+  label{font-weight:700}
+  input[type=file]{display:block;width:100%;padding:10px;border:1px dashed #22262b;border-radius:10px;background:#111418}
+  input[type=number],input[type=text]{width:100%;padding:8px;border-radius:10px;border:1px solid #22262b;background:#0c0f12;color:#e7e7e7}
+  .row{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  button{background:linear-gradient(90deg,#FFB224,#FF8B1A);color:#111;border:0;padding:10px 14px;border-radius:10px;font-weight:800;cursor:pointer}
+  .secondary{background:#1b1f24;color:#d9dfe6;border:1px solid #22262b}
+  pre{white-space:pre-wrap;background:#0c0f12;border:1px solid #1a1d21;border-radius:10px;padding:12px;max-height:340px;overflow:auto}
+  .muted{color:#aab0b6}
+</style>
+<div class="wrap">
+  <h1>Build <code>images_patch.json</code> from folder</h1>
+  <p class="muted">Select your full <code>events.json</code> and your images folder (<code>/public/images/events</code>). This creates a patch that the Images Patch Applier can merge.</p>
+
+  <div class="card">
+    <label>1) Pick <code>events.json</code></label>
+    <input id="eventsFile" type="file" accept=".json">
+  </div>
+
+  <div class="card">
+    <label>2) Pick your images folder (<code>/public/images/events</code>)</label>
+    <input id="dir" type="file" webkitdirectory directory multiple>
+    <p class="muted" style="margin:8px 0 0">Tip: this only runs locally in your browser; nothing uploads anywhere.</p>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <div>
+        <label>Max images per event</label>
+        <input id="limit" type="number" min="1" value="3">
+      </div>
+      <div>
+        <label>Minimum width (px)</label>
+        <input id="minw" type="number" min="0" value="400">
+      </div>
+      <div>
+        <label>Minimum height (px)</label>
+        <input id="minh" type="number" min="0" value="300">
+      </div>
+      <div style="grid-column:1/-1">
+        <label>Skip filenames containing any of (comma-separated)</label>
+        <input id="skip" type="text" value="logo,map,route,course,save-the-date,garmin,promo,badge,poster,flyer,schedule">
+      </div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="run">Build patch</button>
+      <button id="dl" class="secondary" disabled>Download images_patch.json</button>
+    </div>
+  </div>
+
+  <div id="report"></div>
+  <div id="preview"></div>
+</div>
+
+<script>
+const readText = f => new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsText(f); });
+const readImgSize = file => new Promise((res)=>{ const url=URL.createObjectURL(file); const img=new Image(); img.onload=()=>{ res({w:img.naturalWidth||0,h:img.naturalHeight||0}); URL.revokeObjectURL(url) }; img.onerror=()=>{ res({w:0,h:0}); URL.revokeObjectURL(url) }; img.src=url; });
+
+let patchText = "";
+
+document.getElementById("run").onclick = async () => {
+  const eventsFile = document.getElementById("eventsFile").files[0];
+  const picked = [...document.getElementById("dir").files];
+  if (!eventsFile || picked.length===0) { alert("Pick both events.json and the images folder."); return; }
+
+  let events;
+  try { events = JSON.parse(await readText(eventsFile)); } catch { alert("events.json is not valid JSON."); return; }
+  const ids = new Set(events.map(e => (e.id||"").toLowerCase()));
+
+  const limit = +document.getElementById("limit").value || 3;
+  const minw = +document.getElementById("minw").value || 0;
+  const minh = +document.getElementById("minh").value || 0;
+  const skipWords = document.getElementById("skip").value.split(",").map(s=>s.trim().toLowerCase()).filter(Boolean);
+
+  // Normalize paths to forward slashes so Windows works
+  const files = picked.map(f => {
+    const rel = (f.webkitRelativePath || f.name).replace(/\\/g, "/");
+    return Object.assign(f, { _rel: rel, _lower: f.name.toLowerCase() });
+  });
+
+  // Only take images under /images/events
+  const imgs = files.filter(f =>
+    /\.(jpe?g|png|webp)$/i.test(f.name) &&
+    /\/images\/events\//i.test(f._rel)
+  );
+
+  let scanned = imgs.length;
+  const groups = new Map();
+  const SKIPPED = [];
+
+  for (const f of imgs) {
+    const base = f.name;
+    const lower = f._lower;
+
+    if (skipWords.some(w => lower.includes(w))) { SKIPPED.push({why:"skipword", file: base}); continue; }
+
+    // Derive slug by stripping common trailing numeric suffixes before extension: -01, -001, -10, etc.
+    const m = base.match(/^(.+?)(?:-(?:\d{2,3}))?\.(jpe?g|png|webp)$/i);
+    const stem = (m ? m[1] : base.replace(/\.(jpe?g|png|webp)$/i,"")).toLowerCase();
+
+    // Only keep files whose stem equals a known event id
+    if (!ids.has(stem)) { SKIPPED.push({why:"no-id-match", file: base}); continue; }
+
+    if (!groups.has(stem)) groups.set(stem, []);
+    groups.get(stem).push(f);
+  }
+
+  // Measure sizes and order by numeric suffix if present
+  const entries = [];
+  for (const [slug, arr] of groups.entries()) {
+    const withSize = await Promise.all(arr.map(async f => {
+      const size = await readImgSize(f);
+      const ord = (f.name.match(/-(\d+)\.(?:jpe?g|png|webp)$/i)?.[1]) ?? "9999";
+      return { f, order: parseInt(ord,10), w:size.w, h:size.h };
+    }));
+
+    const filtered = withSize
+      .filter(x => (x.w>=minw && x.h>=minh))
+      .sort((a,b) => a.order - b.order)
+      .slice(0, limit);
+
+    // Build site-relative path: keep everything after the first folder (usually public/)
+    const rels = filtered.map(x => {
+      const rel = "/" + x.f._rel.replace(/^[^/]+\/?/,""); // strip leading folder the picker adds
+      return rel;
+    });
+
+    if (rels.length) entries.push({ id: slug, images: rels });
+  }
+
+  patchText = JSON.stringify(entries, null, 2) + "\n";
+  document.getElementById("dl").disabled = entries.length === 0;
+
+  const grouped = groups.size;
+  const skipped = SKIPPED.length;
+
+  document.getElementById("report").innerHTML =
+    `<div class="card">
+       <p>Scanned files: <b>${scanned}</b></p>
+       <p>Matched event groups: <b>${grouped}</b> • Events with images (after filters): <b>${entries.length}</b></p>
+       <p>Skipped files by filter/mismatch: <b>${skipped}</b></p>
+     </div>`;
+
+  document.getElementById("preview").innerHTML =
+    `<div class="card"><h3>Preview</h3><pre>${patchText.slice(0, 4000)}</pre></div>`;
+};
+
+document.getElementById("dl").onclick = () => {
+  if (!patchText) return;
+  const blob = new Blob([patchText], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = Object.assign(document.createElement("a"), { href:url, download:"images_patch.json" });
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+};
+</script>

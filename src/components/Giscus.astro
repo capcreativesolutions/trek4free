@@ -1,0 +1,269 @@
+// =============================================
+// 1) GISCUS COMMENTS COMPONENT
+// File: src/components/Giscus.astro
+// ---------------------------------------------
+---
+interface Props {
+  /** e.g., "owner/repo" */
+  repo?: string
+  /** e.g., from https://giscus.app after picking your repo */
+  repoId?: string
+  /** Discussion category name, e.g., "General" */
+  category?: string
+  /** Category ID string from giscus.app */
+  categoryId?: string
+  /** Theme: light | dark | preferred_color_scheme | transparent_dark | ... */
+  theme?: string
+  /** Mapping: pathname | url | title | og:title | specific */
+  mapping?: string
+  /** Strict location matching */
+  strict?: boolean
+  /** Reactions: 0 | 1 */
+  reactions?: string
+  /** Emit metadata: 0 | 1 */
+  emitMetadata?: string
+  /** Input position: top | bottom */
+  inputPosition?: string
+}
+
+const {
+  repo = import.meta.env.PUBLIC_GISCUS_REPO,
+  repoId = import.meta.env.PUBLIC_GISCUS_REPO_ID,
+  category = import.meta.env.PUBLIC_GISCUS_CATEGORY,
+  categoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID,
+  theme = import.meta.env.PUBLIC_GISCUS_THEME ?? 'preferred_color_scheme',
+  mapping = 'pathname',
+  strict = false,
+  reactions = '1',
+  emitMetadata = '0',
+  inputPosition = 'bottom'
+} = Astro.props as Props;
+---
+<section id="comments" class="giscus-wrap">
+  <script
+    src="https://giscus.app/client.js"
+    data-repo={repo}
+    data-repo-id={repoId}
+    data-category={category}
+    data-category-id={categoryId}
+    data-mapping={mapping}
+    data-strict={strict ? '1' : '0'}
+    data-reactions-enabled={reactions}
+    data-emit-metadata={emitMetadata}
+    data-input-position={inputPosition}
+    data-theme={theme}
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+  </script>
+  <noscript>Enable JavaScript to view comments</noscript>
+</section>
+
+<style>
+  .giscus-wrap{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line,#222);}
+</style>
+
+// =============================================
+// 2) HOW TO USE GISCUS ON A BLOG POST PAGE
+// Add this near the bottom of your blog post template
+// Example file: src/pages/blog/[slug].astro OR src/pages/seo/blog/[slug].astro
+// ---------------------------------------------
+/*
+---
+import Giscus from "../../components/Giscus.astro"; // adjust the relative path
+const { Content, frontmatter } = await Astro.locals.post; // or however you load content
+---
+<article>
+  <Content />
+  <Giscus />
+</article>
+*/
+
+// =============================================
+// 3) .env PUBLIC VARIABLES (no secrets)
+// File: .env (or .env.local)
+// Get these four ids at https://giscus.app after enabling Discussions in your repo
+// ---------------------------------------------
+/*
+PUBLIC_GISCUS_REPO=your-github-username/your-repo
+PUBLIC_GISCUS_REPO_ID=XXXXXXXXXXXXX
+PUBLIC_GISCUS_CATEGORY=General
+PUBLIC_GISCUS_CATEGORY_ID=XXXXXXXXXXXXX
+PUBLIC_GISCUS_THEME=preferred_color_scheme
+*/
+
+// =============================================
+// 4) ASTRO CONTENT COLLECTION FOR BLOG (if not already set)
+// File: src/content/config.ts
+// ---------------------------------------------
+/*
+import { defineCollection, z } from 'astro:content';
+
+const blog = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    date: z.string(), // ISO date
+    draft: z.boolean().default(false),
+    tags: z.array(z.string()).default([]),
+    thumbnail: z.string().optional(), // /images/blog/...
+    featured: z.boolean().default(false),
+    author: z.string().default('Trek4Free')
+  })
+});
+
+export const collections = { blog };
+*/
+
+// =============================================
+// 5) BLOG DASHBOARD PAGE (READ-ONLY, NO TOKENS REQUIRED)
+// Lists posts from the 'blog' content collection with quick filters and links.
+// File: src/pages/admin/blog.astro  (route: /admin/blog)
+// ---------------------------------------------
+---
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog')).sort((a,b)=> (a.data.date < b.data.date ? 1 : -1));
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trek4Free · Blog Dashboard</title>
+    <style>
+      :root{
+        --bg:#0b0b0b; --card:#131313; --line:#2a2a2a; --muted:#bdbdbd; --text:#f5f5f5; --accent:#ff6a00; --ok:#46d369; --warn:#f7b500;
+      }
+      body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"}
+      header{position:sticky;top:0;background:linear-gradient(180deg,#0b0b0bf7,#0b0b0bf7);backdrop-filter:saturate(140%) blur(6px);border-bottom:1px solid var(--line);padding:14px 16px;display:flex;gap:16px;align-items:center}
+      h1{font-size:1.1rem;margin:0;font-weight:600}
+      .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:8px 10px;background:var(--card)}
+      main{max-width:1100px;margin:24px auto;padding:0 16px}
+      .grid{display:grid;grid-template-columns:1fr;gap:12px}
+      @media(min-width:860px){.grid{grid-template-columns:1fr 1fr}}
+      .card{border:1px solid var(--line);background:var(--card);border-radius:16px;padding:14px;display:grid;gap:8px}
+      .title{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+      .title a{color:var(--text);text-decoration:none}
+      .title a:hover{color:var(--accent)}
+      .meta{font-size:.85rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:10px}
+      .tags{display:flex;flex-wrap:wrap;gap:6px}
+      .tag{font-size:.75rem;border:1px solid var(--line);border-radius:999px;padding:2px 8px;color:var(--muted)}
+      .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+      .btn{border:1px solid var(--line);background:#111;padding:6px 10px;border-radius:10px;color:var(--text);text-decoration:none}
+      .btn:hover{border-color:var(--accent)}
+      .badge{font-size:.7rem;padding:2px 8px;border-radius:8px;border:1px solid var(--line)}
+      .ok{color:#c3ffd6;border-color:#1f6f3f;background:#0d1f14}
+      .warn{color:#fff7d6;border-color:#5a4100;background:#251a00}
+      .danger{color:#ffd6d6;border-color:#7a1f1f;background:#2a0d0d}
+      .filterbar{display:flex;gap:8px;flex-wrap:wrap}
+      input[type="search"],select{background:#0f0f0f;border:1px solid var(--line);color:var(--text);border-radius:10px;padding:8px 10px}
+      .muted{color:var(--muted)}
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Blog Dashboard</h1>
+      <div class="pill filterbar">
+        <input id="q" type="search" placeholder="Filter by title/tag…" />
+        <select id="status">
+          <option value="all">All</option>
+          <option value="published">Published</option>
+          <option value="draft">Drafts</option>
+          <option value="featured">Featured</option>
+        </select>
+      </div>
+      <span class="muted">{posts.length} posts</span>
+    </header>
+
+    <main>
+      <div id="list" class="grid">
+        {posts.map((p)=> {
+          const fm = p.data as any;
+          const isDraft = !!fm.draft;
+          const isFeatured = !!fm.featured;
+          const hasThumb = !!fm.thumbnail;
+          const url = `/blog/${p.slug}/`; // adjust if your route differs
+          const ghEdit = `https://github.com/YOUR_USER/YOUR_REPO/edit/main/src/content/blog/${p.slug}.md`; // update owner/repo/branch
+          const wordCount = String(p.body).trim().split(/\s+/).length;
+          return (
+            <article class="card" data-title={fm.title} data-tags={(fm.tags||[]).join(',')} data-status={(isDraft?'draft':'published')} data-featured={String(isFeatured)}>
+              <div class="title">
+                <a href={url}><strong>{fm.title}</strong></a>
+                {isDraft ? <span class="badge warn">Draft</span> : <span class="badge ok">Published</span>}
+                {isFeatured && <span class="badge">★ Featured</span>}
+                {!hasThumb && <span class="badge danger">No thumbnail</span>}
+              </div>
+              <div class="meta">
+                <span>{new Date(fm.date).toLocaleDateString()}</span>
+                <span>≈ {wordCount} words</span>
+                {fm.author && <span>by {fm.author}</span>}
+                {fm.tags?.length ? <span class="tags">{fm.tags.map((t:string)=>(<span class="tag">#{t}</span>))}</span> : null}
+              </div>
+              <div class="row">
+                <a class="btn" href={url} target="_blank">Preview</a>
+                <a class="btn" href={ghEdit} target="_blank">Edit on GitHub</a>
+                {hasThumb ? <span class="muted">🖼 thumbnail set</span> : <span class="muted">🖼 none</span>}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </main>
+
+    <script is:inline>
+      const q = document.getElementById('q');
+      const status = document.getElementById('status');
+      const list = document.getElementById('list');
+
+      function applyFilter(){
+        const term = (q.value||'').toLowerCase();
+        const statusVal = status.value;
+        [...list.children].forEach((card)=>{
+          const el = card;
+          const title = el.getAttribute('data-title')?.toLowerCase()||'';
+          const tags = el.getAttribute('data-tags')?.toLowerCase()||'';
+          const st = el.getAttribute('data-status');
+          const featured = el.getAttribute('data-featured') === 'true';
+
+          let ok = true;
+          if(term){ ok = title.includes(term) || tags.includes(term); }
+          if(ok && statusVal !== 'all'){
+            if(statusVal === 'featured') ok = featured;
+            else ok = st === statusVal;
+          }
+          el.style.display = ok ? '' : 'none';
+        });
+      }
+      q.addEventListener('input', applyFilter);
+      status.addEventListener('change', applyFilter);
+    </script>
+  </body>
+</html>
+
+// =============================================
+// 6) SAMPLE BLOG FRONTMATTER (Markdown)
+// File: src/content/blog/my-first-post.md
+// ---------------------------------------------
+/*
+---
+title: "My First Post"
+description: "Quick intro to Trek4Free’s blog."
+date: 2025-08-21
+thumbnail: "/images/blog/my-first-post.jpg"
+draft: false
+featured: true
+tags: [hiking, news]
+author: "Trek4Free"
+---
+
+# Hello Trail Friends
+
+Your content here…
+*/
+
+// =============================================
+// 7) NOTES / OPTIONS
+// - The dashboard is read-only (no file writes). Buttons link to Preview + "Edit on GitHub".
+// - To enable edits from the browser, wire a Netlify Function or GitHub API app later.
+// - Make sure your blog routes match the `url` generation in the dashboard.
+// - Replace YOUR_USER/YOUR_REPO in the GitHub edit link.

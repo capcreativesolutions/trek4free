@@ -1,0 +1,400 @@
+---
+// src/pages/submit.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Submit a Trek4Free Location">
+  <main id="t4f-submit-page">
+    <section class="t4f-submit-page__card">
+      <h1 class="t4f-submit-page__title">Submit a Trek4Free Location</h1>
+      <p class="t4f-submit-page__lede">
+        Share a great place with the community. Pick a type to see the right form.
+      </p>
+
+      <form id="t4f-form" class="t4f-submit-page__form" method="POST" action="/api/submit" novalidate>
+        <!-- Type selector -->
+        
+<div class="t4f-submit-page__typeblock" role="group" aria-labelledby="type-chip">
+  <span id="type-chip" class="t4f-chip t4f-chip--accent">What are you adding?</span>
+  <select id="type" name="type" class="t4f-submit-page__input t4f-submit-page__input--type"
+          aria-describedby="type-help">
+    <option value="free_camping">Free Camping</option>
+    <option value="camping">Camping (paid / state park)</option>
+    <option value="trail">Trail / Hike</option>
+    <option value="water_hole">Water Holes / Waterfalls</option>
+    <option value="event">Event (Endurance • BASE • Balloon • Gritty local)</option>
+  </select>
+  <small id="type-help" class="t4f-submit-page__hint">The form below adapts to your selection.</small>
+</div>
+
+
+
+        <!-- Common fields -->
+        <div class="t4f-submit-page__grid">
+          <div>
+            <label class="t4f-submit-page__label" for="name">Name</label>
+            <input class="t4f-submit-page__input" id="name" name="name" required
+                   placeholder="e.g., Smith Springs Dispersed Site" />
+          </div>
+
+          <div>
+            <label class="t4f-submit-page__label" for="lat">Latitude</label>
+            <input class="t4f-submit-page__input" id="lat" name="lat" type="number" step="any" required
+                   placeholder="e.g., 30.12345" />
+          </div>
+
+          <div>
+            <label class="t4f-submit-page__label" for="lon">Longitude</label>
+            <input class="t4f-submit-page__input" id="lon" name="lon" type="number" step="any" required
+                   placeholder="e.g., -98.54321" />
+          </div>
+
+          <div class="t4f-submit-page__full">
+            <label class="t4f-submit-page__label" for="description">Short Description</label>
+            <textarea class="t4f-submit-page__textarea" id="description" name="description" rows="4" required
+                      placeholder="Road in from the north; flat pads by the creek; great for vans."></textarea>
+          </div>
+        </div>
+
+        <!-- FREE CAMPING -->
+        <fieldset data-section="free_camping" class="t4f-submit-page__fieldset">
+          <legend>Free Camping Details</legend>
+          <label class="t4f-submit-page__label" for="access_notes">Access / Road Condition</label>
+          <textarea class="t4f-submit-page__textarea" id="access_notes" name="access_notes" rows="3"
+                    placeholder="Gravel, washboard in places; 2WD okay when dry."></textarea>
+
+          <div class="t4f-submit-page__grid">
+            <div>
+              <label class="t4f-submit-page__label" for="max_rig_length">Max Rig Length (ft)</label>
+              <input class="t4f-submit-page__input" id="max_rig_length" name="max_rig_length" type="number" step="1" placeholder="e.g., 30" />
+            </div>
+            <div>
+              <label class="t4f-submit-page__label" for="water">Water Available?</label>
+              <select class="t4f-submit-page__input" id="water" name="water">
+                <option value="unknown">Unknown</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+            <div>
+              <label class="t4f-submit-page__label" for="toilets">Toilets?</label>
+              <select class="t4f-submit-page__input" id="toilets" name="toilets">
+                <option value="unknown">Unknown</option>
+                <option value="vault">Vault</option>
+                <option value="flush">Flush</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+          </div>
+
+          <label class="t4f-submit-page__label" for="stay_limit">Stay Limit (days)</label>
+          <input class="t4f-submit-page__input" id="stay_limit" name="stay_limit" type="number" step="1" placeholder="e.g., 14" />
+        </fieldset>
+
+        <!-- CAMPING (paid) -->
+        <fieldset data-section="camping" class="t4f-submit-page__fieldset" hidden>
+          <legend>Camping (Paid) Details</legend>
+          <div class="t4f-submit-page__grid">
+            <div>
+              <label class="t4f-submit-page__label" for="fee_desc">Fee / Cost</label>
+              <input class="t4f-submit-page__input" id="fee_desc" name="fee_desc" placeholder="$10/night, park entry, etc." />
+            </div>
+            <div>
+              <label class="t4f-submit-page__label" for="site_type">Site Type</label>
+              <select class="t4f-submit-page__input" id="site_type" name="site_type">
+                <option value="tent">Tent</option>
+                <option value="rv">RV</option>
+                <option value="mixed">Mixed</option>
+              </select>
+            </div>
+            <div>
+              <label class="t4f-submit-page__label" for="reservations">Reservations</label>
+              <select class="t4f-submit-page__input" id="reservations" name="reservations">
+                <option value="unknown">Unknown</option>
+                <option value="required">Required</option>
+                <option value="recommended">Recommended</option>
+                <option value="first_come">First-come</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- TRAIL -->
+        <fieldset data-section="trail" class="t4f-submit-page__fieldset" hidden>
+          <legend>Trail Details</legend>
+          <div class="t4f-submit-page__grid">
+            <div>
+              <label class="t4f-submit-page__label" for="distance_mi">Distance (miles)</label>
+              <input class="t4f-submit-page__input" id="distance_mi" name="distance_mi" type="number" step="0.01" placeholder="e.g., 7.2" />
+            </div>
+            <div>
+              <label class="t4f-submit-page__label" for="elevation_ft">Elevation Gain (ft)</label>
+              <input class="t4f-submit-page__input" id="elevation_ft" name="elevation_ft" type="number" step="1" placeholder="e.g., 1450" />
+            </div>
+            <div>
+              <label class="t4f-submit-page__label" for="dogs">Dogs Allowed?</label>
+              <select class="t4f-submit-page__input" id="dogs" name="dogs">
+                <option value="unknown">Unknown</option>
+                <option value="yes_leash">Yes (leash)</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+          </div>
+          <label class="t4f-submit-page__label" for="gpx_url">GPX URL (optional)</label>
+          <input class="t4f-submit-page__input" id="gpx_url" name="gpx_url" placeholder="https://..." />
+        </fieldset>
+
+<!-- WATER HOLE / WATERFALL -->
+<fieldset data-section="water_hole" class="t4f-submit-page__fieldset" hidden>
+  <legend>Water Hole / Waterfall Details</legend>
+
+  <div class="t4f-submit-page__grid">
+    <div>
+      <label class="t4f-submit-page__label" for="waterbody_type">Type</label>
+      <select class="t4f-submit-page__input" id="waterbody_type" name="waterbody_type">
+        <option value="swimming_hole">Swimming Hole</option>
+        <option value="waterfall">Waterfall</option>
+        <option value="hot_spring">Hot Spring</option>
+        <option value="river_beach">River / Creek Beach</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="t4f-submit-page__label" for="depth_ft">Typical Depth (ft)</label>
+      <input class="t4f-submit-page__input" id="depth_ft" name="depth_ft" type="number" step="0.5" placeholder="e.g., 6" />
+    </div>
+
+    <div>
+      <label class="t4f-submit-page__label" for="current">Current</label>
+      <select class="t4f-submit-page__input" id="current" name="current">
+        <option value="unknown">Unknown</option>
+        <option value="calm">Calm</option>
+        <option value="moderate">Moderate</option>
+        <option value="strong">Strong</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="t4f-submit-page__grid">
+    <div>
+      <label class="t4f-submit-page__label" for="seasonality">Seasonality</label>
+      <select class="t4f-submit-page__input" id="seasonality" name="seasonality">
+        <option value="unknown">Unknown</option>
+        <option value="year_round">Year-round</option>
+        <option value="spring_runoff">Spring Runoff</option>
+        <option value="after_rains">After Rains</option>
+        <option value="summer_only">Summer Only</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="t4f-submit-page__label" for="cliff_jumping">Cliff Jumping</label>
+      <select class="t4f-submit-page__input" id="cliff_jumping" name="cliff_jumping">
+        <option value="unknown">Unknown</option>
+        <option value="discouraged">Discouraged</option>
+        <option value="allowed">Allowed</option>
+        <option value="popular">Popular</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="t4f-submit-page__label" for="fee_desc">Fees / Permits</label>
+      <input class="t4f-submit-page__input" id="fee_desc" name="fee_desc" placeholder="Parking fee, day-use, none" />
+    </div>
+  </div>
+
+  <label class="t4f-submit-page__label" for="safety_notes">Safety Notes</label>
+  <textarea class="t4f-submit-page__textarea" id="safety_notes" name="safety_notes" rows="3"
+    placeholder="Hidden rocks near the falls; flash-flood risk in storms."></textarea>
+</fieldset>
+
+
+<!-- EVENT -->
+<fieldset data-section="event" class="t4f-submit-page__fieldset" hidden>
+  <legend>Event (Endurance • BASE • Balloon • Gritty Local)</legend>
+
+  <div class="t4f-submit-page__grid">
+    <div>
+      <label class="t4f-submit-page__label" for="event_kind">Event Type</label>
+      <select class="t4f-submit-page__input" id="event_kind" name="event_kind">
+        <option value="endurance">Endurance Race</option>
+        <option value="base">BASE Jumping</option>
+        <option value="balloon">Hot Air Balloon</option>
+        <option value="festival">Outdoor Festival</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div>
+      <label class="t4f-submit-page__label" for="participation">Participation</label>
+      <select class="t4f-submit-page__input" id="participation" name="participation">
+        <option value="spectator">Spectator</option>
+        <option value="participant">Participant / Race</option>
+        <option value="both">Both</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="t4f-submit-page__grid">
+    <div>
+      <label class="t4f-submit-page__label" for="start_date">Start Date (YYYY-MM-DD)</label>
+      <input class="t4f-submit-page__input" id="start_date" name="start_date" pattern="\\d{4}-\\d{2}-\\d{2}" placeholder="2025-10-12" />
+    </div>
+    <div>
+      <label class="t4f-submit-page__label" for="end_date">End Date (YYYY-MM-DD)</label>
+      <input class="t4f-submit-page__input" id="end_date" name="end_date" pattern="\\d{4}-\\d{2}-\\d{2}" placeholder="2025-10-14" />
+    </div>
+  </div>
+
+  <label class="t4f-submit-page__label" for="website">Event Website (optional)</label>
+  <input class="t4f-submit-page__input" id="website" name="website" placeholder="https://..." />
+</fieldset>
+        
+
+
+        <div class="t4f-submit-page__actions">
+          <button class="t4f-submit-page__button" type="submit">Submit for Review</button>
+          <p id="t4f-status" class="t4f-submit-page__status" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- Minimal client JS (toggle sections + AJAX submit) -->
+  <script is:inline>
+    (function () {
+      const form = document.getElementById('t4f-form');
+      const typeSel = document.getElementById('type');
+      const sections = Array.from(document.querySelectorAll('[data-section]'));
+      const status = document.getElementById('t4f-status');
+
+      function toggleSections() {
+        const t = typeSel.value;
+        sections.forEach(s => s.hidden = s.getAttribute('data-section') !== t);
+      }
+      typeSel.addEventListener('change', toggleSections);
+      toggleSections();
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        status.textContent = 'Submitting...';
+        try {
+          const fd = new FormData(form);
+          const res = await fetch(form.action, { method: 'POST', body: fd });
+          const json = await res.json().catch(() => ({}));
+          if (res.ok) {
+            status.textContent = json.message || 'Thanks! Your submission is pending review.';
+            form.reset();
+            toggleSections();
+          } else {
+            status.textContent = json.message || 'Submission failed. Please check required fields.';
+          }
+        } catch {
+          status.textContent = 'Network error. Please try again.';
+        }
+      });
+    })();
+  </script>
+
+  <style>
+    /* ===== Trek4Free Submit Page — fully page-scoped ===== */
+    #t4f-submit-page {
+      --bg: #0e0f11;
+      --panel: #111318;
+      --panel-2: #14161a;
+      --line: #2b2e34;
+      --text: #e8ecf1;
+      --muted: #b8bfca;
+      --accent: #ff6a00;
+      --accent-2: #ffd9bf;
+      background: var(--bg);
+      display: grid;
+      place-items: start center;
+      min-height: 70vh;
+      padding: 2rem 1rem;
+    }
+    .t4f-submit-page__card{
+      width:100%; max-width: 880px;
+      background: var(--panel);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.25rem 1.25rem 1.5rem;
+      box-shadow: 0 8px 28px rgba(0,0,0,.35);
+    }
+    .t4f-submit-page__title{
+      margin:0 0 .25rem; font-size:2.25rem; line-height:1.15; letter-spacing:.2px;
+    }
+    .t4f-submit-page__lede{
+      margin:0 0 1.25rem; color:var(--muted);
+    }
+    .t4f-submit-page__form{ display:grid; gap:1.1rem; }
+    .t4f-submit-page__grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:.9rem; }
+    .t4f-submit-page__full{ grid-column:1 / -1; }
+
+    .t4f-submit-page__label{
+      display:block; margin:.25rem 0 .4rem; font-size:.95rem; color:var(--muted);
+    }
+    .t4f-submit-page__hint{
+      margin-top:.25rem; color:var(--muted); font-size:.85rem;
+    }
+
+    .t4f-submit-page__input,
+    .t4f-submit-page__textarea{
+      width:100%; background:var(--panel-2); color:var(--text);
+      border:1px solid var(--line); border-radius:12px; padding:.7rem .85rem;
+      outline:none; transition:border-color .15s, box-shadow .15s, background .15s;
+    }
+    .t4f-submit-page__textarea{ resize:vertical; min-height:110px; }
+    .t4f-submit-page__input::placeholder,
+    .t4f-submit-page__textarea::placeholder{ color:#8b93a1; }
+    .t4f-submit-page__input:focus,
+    .t4f-submit-page__textarea:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(255,106,0,.18);
+    }
+
+    .t4f-submit-page__fieldset{
+      border:1px solid var(--line); border-radius:14px; padding:1rem;
+      background:rgba(255,255,255,.02);
+    }
+    .t4f-submit-page__fieldset > legend{
+      margin-left:.5rem; padding:.1rem .6rem; border-radius:999px;
+      background:rgba(255,106,0,.12); color:var(--accent-2); font-weight:600; letter-spacing:.2px;
+      border:1px solid rgba(255,106,0,.25);
+    }
+
+    .t4f-submit-page__actions{ display:flex; align-items:center; gap:.75rem; }
+    .t4f-submit-page__button{
+      background:var(--accent); color:#0b0c0e; border:0; border-radius:12px;
+      padding:.75rem 1.1rem; font-weight:800; cursor:pointer; transition:filter .15s, transform .02s;
+    }
+    .t4f-submit-page__button:hover{ filter:brightness(1.05); }
+    .t4f-submit-page__button:active{ transform:translateY(1px); }
+    .t4f-submit-page__status{ min-height:1.25rem; font-size:.95rem; color:var(--accent-2); }
+
+/* Type picker block */
+.t4f-submit-page__typeblock{
+  display:grid; gap:.5rem; margin-bottom:.25rem;
+}
+
+/* Reusable chip (matches your fieldset legend vibe) */
+.t4f-chip{
+  width:max-content; font-weight:700; letter-spacing:.2px;
+  padding:.25rem .7rem; border-radius:999px; border:1px solid var(--line);
+}
+.t4f-chip--accent{
+  background: rgba(255,106,0,.12);
+  border-color: rgba(255,106,0,.25);
+  color: var(--accent-2);
+}
+
+/* Make the select feel premium and bigger */
+.t4f-submit-page__input--type{
+  font-size:1.05rem; padding:.85rem 1rem; border-radius:14px;
+  box-shadow: inset 0 0 0 1px transparent;
+}
+.t4f-submit-page__input--type:focus{
+  box-shadow: 0 0 0 3px rgba(255,106,0,.18);
+}
+
+  </style>
+</BaseLayout>

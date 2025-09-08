@@ -1,0 +1,239 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const updated = "August 29, 2025";
+---
+
+<BaseLayout title="Privacy Policy – Trek4Free">
+  <main class="t4f-privacy-root">
+    <section class="t4f-privacy-hero">
+      <h1 class="t4f-privacy-title">Privacy Policy</h1>
+      <p class="t4f-privacy-sub">Last updated: {updated}</p>
+      <p class="t4f-privacy-tag">We collect the minimum necessary. You control what’s shared.</p>
+    </section>
+
+    <section class="t4f-privacy-card">
+      <h2 class="t4f-privacy-h2">Who We Are</h2>
+      <p>Trek4Free (“we,” “our,” “us”) runs a free, information-first outdoor resource. We prioritize privacy and community trust.</p>
+    </section>
+
+    <section class="t4f-privacy-card">
+      <h2 class="t4f-privacy-h2">What We Collect (Minimal)</h2>
+      <ul class="t4f-privacy-list">
+        <li><strong>Usage signals (aggregate):</strong> page views, referrers, device type, and approximate region. No cross-site tracking, no ad tech beacons, no fingerprinting.</li>
+        <li><strong>Contact info (optional):</strong> if you email or submit a form, we receive what you send (e.g., name, email, message).</li>
+        <li><strong>User contributions (optional):</strong> trail notes, photos, road conditions, comments. You choose what to share.</li>
+      </ul>
+    </section>
+
+    <section class="t4f-privacy-card">
+      <h2 class="t4f-privacy-h2">How We Use Data</h2>
+      <ul class="t4f-privacy-list">
+        <li>Operate and secure the site and maps.</li>
+        <li>Improve content quality based on aggregate trends.</li>
+        <li>Moderate submissions to keep the community helpful and safe.</li>
+        <li>Respond to messages and support requests.</li>
+      </ul>
+    </section>
+
+    <section class="t4f-privacy-card">
+      <h2 class="t4f-privacy-h2">Analytics Choice (DNT-Aware)</h2>
+      <p>By default, we use privacy-respecting, cookie-free analytics. We honor your browser’s <em>Do Not Track</em> (DNT) setting and offer a manual toggle below.</p>
+
+      <div class="t4f-privacy-optout">
+        <label class="t4f-privacy-toggle">
+          <input id="t4fAnalyticsOptOut" type="checkbox" />
+          <span>Disable analytics on this browser</span>
+        </label>
+        <p class="t4f-privacy-small">This stores a single setting in your browser (no account needed). We also automatically disable analytics if your browser sends DNT.</p>
+      </div>
+
+      <details class="t4f-privacy-details">
+        <summary>What our analytics <em>don’t</em> do</summary>
+        <ul class="t4f-privacy-list t4f-privacy-list--tight">
+          <li>No cookies for tracking</li>
+          <li>No cross-site tracking or third-party ad pixels</li>
+          <li>No unique fingerprinting</li>
+          <li>No sale of personal data</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="t4f-privacy-card">
+      <h2 class="t4f-privacy-h2">Cookies & Local Storage</h2>
+      <p>We avoid cookies except what’s essential (e.g., preferences). The analytics toggle above saves a simple preference in <code>localStorage</code> on your device.</p>
+    </section>
+
+    <section class="t4f-privacy-card">
+      <h2 class="t4f-privacy-h2">Data Sharing</h2>
+      <p>We do not sell personal data. Limited sharing may occur with trusted providers (hosting, spam prevention) under strict contracts, or when required by law.</p>
+    </section>
+
+    <section class="t4f-privacy-card">
+      <h2 class="t4f-privacy-h2">Retention</h2>
+      <p>We keep data only as long as necessary for the purposes above, then delete or de-identify it.</p>
+    </section>
+
+    <section class="t4f-privacy-card">
+      <h2 class="t4f-privacy-h2">Your Choices & Rights</h2>
+      <ul class="t4f-privacy-list">
+        <li>Toggle analytics off at any time.</li>
+        <li>Request deletion of your submissions or personal info we control by emailing us.</li>
+        <li>Block cookies in your browser settings.</li>
+      </ul>
+    </section>
+
+    <section class="t4f-privacy-card">
+      <h2 class="t4f-privacy-h2">Children’s Privacy</h2>
+      <p>Not directed to children under 13, and we don’t knowingly collect their personal data.</p>
+    </section>
+
+    <section class="t4f-privacy-card">
+      <h2 class="t4f-privacy-h2">International Visitors</h2>
+      <p>Processing may occur in the U.S. and where our providers operate. By using the site, you consent to this processing.</p>
+    </section>
+
+    <section class="t4f-privacy-card">
+      <h2 class="t4f-privacy-h2">Contact</h2>
+      <p>Email: <a class="t4f-privacy-link" href="mailto:hello@trek4free.com">hello@trek4free.com</a> (update to your preferred address)</p>
+    </section>
+
+    <section class="t4f-privacy-card">
+      <h2 class="t4f-privacy-h2">Updates to This Policy</h2>
+      <p>We may revise this policy and will update the date at the top. Material changes will be summarized here.</p>
+    </section>
+  </main>
+
+  <style>
+    .t4f-privacy-root{
+      --t4f-pri-bg:#0b0e11;
+      --t4f-pri-card:#12161b;
+      --t4f-pri-accent:#ff6a00; /* Trek4Free orange */
+      --t4f-pri-text:#e9edf1;
+      --t4f-pri-dim:#a9b3bd;
+      --t4f-pri-line:#1f2730;
+      max-width: 100%;
+      padding: 2rem 1rem 4rem;
+      color: var(--t4f-pri-text);
+      background: var(--t4f-pri-bg);
+    }
+    .t4f-privacy-hero{
+      text-align:center;
+      margin: 0 auto 2rem auto;
+      max-width: 60ch;
+    }
+    .t4f-privacy-title{
+      font-size: clamp(2rem, 3vw, 2.75rem);
+      line-height: 1.1;
+      margin: 0;
+      letter-spacing:0.2px;
+    }
+    .t4f-privacy-sub{
+      margin: 0.5rem 0 0;
+      color: var(--t4f-pri-dim);
+      font-size: 0.95rem;
+    }
+    .t4f-privacy-tag{
+      margin-top: 0.75rem;
+      color: var(--t4f-pri-text);
+      background: linear-gradient(90deg, #20160f, #161a1f);
+      border: 1px solid var(--t4f-pri-line);
+      border-left: 4px solid var(--t4f-pri-accent);
+      padding: 0.8rem 1rem;
+      border-radius: 0.75rem;
+      display:inline-block;
+    }
+    .t4f-privacy-card{
+      margin: 1rem auto;
+      max-width: 70ch;
+      background: var(--t4f-pri-card);
+      border: 1px solid var(--t4f-pri-line);
+      border-radius: 1rem;
+      padding: 1.25rem 1.25rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .t4f-privacy-h2{
+      margin: 0 0 0.75rem 0;
+      font-size: 1.25rem;
+      letter-spacing: 0.2px;
+      position: relative;
+    }
+    .t4f-privacy-h2::after{
+      content:"";
+      display:block;
+      width: 48px;
+      height: 2px;
+      background: var(--t4f-pri-accent);
+      margin-top: 0.5rem;
+      border-radius: 2px;
+    }
+    .t4f-privacy-list{
+      margin: 0.5rem 0 0 1rem;
+      padding: 0;
+    }
+    .t4f-privacy-list li{ margin: 0.5rem 0; }
+    .t4f-privacy-list--tight li{ margin: 0.25rem 0; }
+    .t4f-privacy-details summary{
+      cursor: pointer;
+      color: var(--t4f-pri-text);
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+    .t4f-privacy-optout{
+      margin: 0.75rem 0 0.25rem;
+      display:flex;
+      align-items:center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .t4f-privacy-toggle{
+      display:flex;
+      align-items:center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--t4f-pri-line);
+      border-radius: 999px;
+      background: #0e141a;
+    }
+    .t4f-privacy-small{
+      color: var(--t4f-pri-dim);
+      font-size: 0.9rem;
+    }
+    .t4f-privacy-link{
+      color: var(--t4f-pri-accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* Print: keep cards readable */
+    @media print {
+      .t4f-privacy-root{ background: #fff; color: #111; }
+      .t4f-privacy-card{ background: #fff; border-color: #ddd; box-shadow: none; }
+      .t4f-privacy-tag{ background: #fff; border-color: #ddd; }
+      .t4f-privacy-link{ color: #000; }
+    }
+  </style>
+
+  <script is:inline>
+    // DNT-aware + manual toggle. If either DNT is enabled or opt-out is set,
+    // you can conditionally skip loading any analytics script elsewhere.
+    const DNT = navigator.doNotTrack === "1" || window.doNotTrack === "1";
+    const KEY = "t4f_analytics_optout";
+    const optEl = document.getElementById("t4fAnalyticsOptOut");
+
+    function readOpt(){ try { return localStorage.getItem(KEY) === "true"; } catch { return false; } }
+    function writeOpt(v){ try { localStorage.setItem(KEY, v ? "true" : "false"); } catch {} }
+
+    // Initialize checkbox state
+    const isOpted = readOpt() || DNT;
+    optEl.checked = isOpted;
+
+    // Persist manual choice
+    optEl.addEventListener("change", (e) => {
+      writeOpt(e.currentTarget.checked);
+      // Optional: show a toast or reload if your analytics loader checks this at startup.
+    });
+
+    // Expose a global flag your analytics loader can check
+    window.__T4F_DISABLE_ANALYTICS__ = isOpted;
+  </script>
+</BaseLayout>

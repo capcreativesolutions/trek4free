@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>USFS Hiking Trailheads XLSX to JSON</title>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <h2>Convert USFS Trailheads XLSX to JSON</h2>
+  <input type="file" id="xlsxFile" accept=".xlsx" />
+  <button onclick="processXLSX()">Convert</button>
+  <div id="status" style="margin-top:10px;"></div>
+  <a id="downloadLink" style="display:none" download="trailheads-usfs.json">Download Trailheads JSON</a>
+
+  <script>
+    function processXLSX() {
+      const fileInput = document.getElementById("xlsxFile");
+      const status = document.getElementById("status");
+      if (!fileInput.files.length) return alert("Please select an XLSX file.");
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+
+        const trailheads = [];
+        let processed = 0, skipped = 0;
+
+        rows.forEach((row, index) => {
+          const lat = parseFloat(row['LATITUDE']);
+          const lon = parseFloat(row['LONGITUDE']);
+          const type = row['SITE_TYPE']?.toUpperCase();
+
+          if (type !== 'TRAILHEAD' || !lat || !lon) {
+            skipped++;
+            return;
+          }
+
+          const elevation = parseFloat((row['MINIMUM_EL'] || "").toString().replace(/[^\d.]/g, ""));
+          const obj = {
+            id: `usfs-trail-${index + 1}`,
+            name: row['SITE_NAME'] || row['PUBLIC_SIT'] || row['RECAREA_NA'] || "Unnamed Trailhead",
+            description: row['RECAREA_DE'] || "",
+            latitude: lat,
+            longitude: lon,
+            elevation: isNaN(elevation) ? null : elevation,
+            fee: row['FEE_CHARGE'] === "Y" ? "Fee Required" :
+                 row['FEE_CHARGE'] === "N" ? "No Fee" : "Unknown",
+            fee_description: row['FEE_DESCRI'] || "",
+            water: row['WATER_AVAI'] || "Not specified",
+            bathrooms: row['RESTROOM_A'] || "Not specified",
+            operator: row['OPERATED_B'] || "",
+            directions: row['DIRECTIONS'] || "",
+            open_season: row['OPEN_SEASO'] || "",
+            operation_hours: row['OPERATIONA'] || "",
+            restrictions: row['RESTRICTIO'] || "",
+            access_notes: row['IMPORTANT_'] || "",
+            access_type: row['PACK_IN_OU'] === "Y" ? "Remote Access" : "Road Access",
+            closest_town: row['CLOSEST_TO'] || "",
+            link: row['USDA_POR_1'] || "",
+            last_verified: row['INFRA_LAST'] || "",
+            source: "USFS RecSites"
+          };
+
+          trailheads.push(obj);
+          processed++;
+        });
+
+        // Output JSON
+        const blob = new Blob([JSON.stringify(trailheads, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.getElementById("downloadLink");
+        link.href = url;
+        link.style.display = "inline";
+
+        // Status
+        status.innerHTML = `
+          🟢 Trailheads converted: ${processed}<br/>
+          🔴 Skipped (missing lat/lon or not trailheads): ${skipped}<br/>
+          📦 Total rows scanned: ${rows.length}
+        `;
+      };
+
+      reader.readAsArrayBuffer(fileInput.files[0]);
+    }
+  </script>
+</body>
+</html>

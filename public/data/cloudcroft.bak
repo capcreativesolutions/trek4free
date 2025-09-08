@@ -1,0 +1,24 @@
+[
+  {
+    "slug": "osha-trail",
+    "trail_name": "Osha Trail",
+    "distance_mi": 2.5,
+    "elevation_gain_ft": 330,
+    "difficulty": "Moderate",
+    "dog_friendly": true,
+    "lat": 32.9635,
+    "lon": -105.7412,
+    "notes": "Fir forest, White Sands views, shaded loop"
+  },
+  {
+    "slug": "old-cloudcroft-hwy-loop",
+    "trail_name": "Old Cloudcroft Hwy Loop",
+    "distance_mi": 2.3,
+    "elevation_gain_ft": 400,
+    "difficulty": "Moderate",
+    "dog_friendly": true,
+    "lat": 32.9574,
+    "lon": -105.7499,
+    "notes": "Historic trestles, Devil’s Elbow overlook"
+  }
+]

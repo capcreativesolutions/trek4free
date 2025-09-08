@@ -1,0 +1,296 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Adventure Starts Here">
+  <!-- Page-specific font -->
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  </Fragment>
+
+  <div class="hero-page">
+    <!-- ============== HERO ============== -->
+    <section class="landing-hero" data-reveal="fade">
+      <div class="landing-hero__darken" aria-hidden="true"></div>
+      <div class="landing-hero__glow tilt-me" aria-hidden="true"></div>
+      <div class="landing-hero__scrim" aria-hidden="true"></div>
+
+      <div class="landing-hero__content">
+        <h1 class="gold-rugged gold-rugged--hero landing-hero__headline tilt-me">
+          Adventure Starts Here
+        </h1>
+        <p class="landing-hero__subtext">
+          Trek4Free helps you find free campsites, epic hikes, and off‑grid escapes.
+          No logins. No fees. Just trails.
+        </p>
+
+        <div class="landing-hero__buttons">
+          <a href="/explore" class="btn btn--primary">Explore the Map</a>
+          <a href="/trail-notes" class="btn btn--outline">Trail Notes</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== SECTION 2 ============== -->
+    <section class="statement" data-reveal="up">
+      <div class="statement__wrap">
+        <h2 class="gold-rugged statement__title">Find Free Hiking Trails & Campsites</h2>
+        <p class="statement__tag">Your guide to adventure without the cost.</p>
+
+        <div class="proofs">
+          <a class="proof" href="/explore?tag=nationwide">🗺️ Nationwide coverage</a>
+          <a class="proof" href="/explore?tag=dog-friendly">🐕 Dog‑friendly filters</a>
+          <a class="proof" href="/explore?tag=waterfalls">💧 Waterfalls & swimming holes</a>
+          <a class="proof" href="/explore?tag=access-notes">⛰️ Real access notes</a>
+        </div>
+
+        <a href="/explore" class="cta-stripe">
+          This is the tool your grandpa never had — Start planning free →
+        </a>
+      </div>
+      <div class="statement__divider" aria-hidden="true"></div>
+    </section>
+
+    <!-- ============== WHY TREK4FREE ============== -->
+    <section class="lp" data-reveal="up">
+      <h2 class="values__title">Why Trek4Free?</h2>
+
+      <div class="lp_values__grid">
+        <a class="card" href="/explore" data-reveal="up" style="--delay:0ms">
+          <img src="/images/hero/bear.png" alt="" class="card__icon" />
+          <h3 class="card__title">Save Money</h3>
+          <p class="card__text">Find free campsites and trails — no fees, ever.</p>
+        </a>
+        <a class="card" href="/search" data-reveal="up" style="--delay:80ms">
+          <img src="/images/hero/eagle.png" alt="" class="card__icon" />
+          <h3 class="card__title">Discover Hidden Gems</h3>
+          <p class="card__text">Waterfalls, hot springs, alpine lakes, and more.</p>
+        </a>
+        <a class="card" href="/explore" data-reveal="up" style="--delay:160ms">
+          <img src="/images/hero/wolf.png" alt="" class="card__icon" />
+          <h3 class="card__title">Adventure Smart</h3>
+          <p class="card__text">Maps, access notes, and real‑world conditions.</p>
+        </a>
+        <a class="card" href="/trail-notes" data-reveal="up" style="--delay:240ms">
+          <img src="/images/hero/owl.png" alt="" class="card__icon" />
+          <h3 class="card__title">Plan Without Friction</h3>
+          <p class="card__text">No logins. No upsells. Just nature.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============== SOCIAL PROOF ============== -->
+    <section class="social" data-reveal="fade">
+      <p class="social__text">Trusted by thousands of hikers and campers across the U.S.</p>
+    </section>
+
+    <!-- ============== STAR NIGHT ============== -->
+    <section class="night" data-reveal="up">
+      <div class="night__sky" aria-hidden="true">
+        <div class="stars stars--1"></div>
+        <div class="stars stars--2"></div>
+        <div class="stars stars--3"></div>
+      </div>
+
+      <div class="night__content">
+        <div class="night__art" data-reveal="left">
+          <picture>
+            <source srcset="/images/hero/topo-dog.png" media="(max-width: 640px)" />
+            <img src="/images/hero/topo-fire.png" alt="Topo by the fire" />
+          </picture>
+        </div>
+
+        <div class="night__text" data-reveal="right">
+          <h2 class="gold-rugged night__title">Adventure waits on no one.</h2>
+          <p class="night__copy">
+            Pack light. Dream big. Chase the ridge line. Trek4Free gives you the
+            map, the notes, and the courage to go — without the paywalls.
+          </p>
+          <div class="landing-hero__buttons">
+            <a href="/explore" class="btn btn--primary">Plan My Next Route</a>
+            <a href="/trail-notes" class="btn btn--outline">Read Trail Notes</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <style>
+    /* Scope everything so it doesn't fight global layout */
+    .hero-page { background:#0a0a0a; color:#eee; }
+
+    /* Rugged gold title */
+    .gold-rugged{
+      font-family:'Bebas Neue',sans-serif;
+      text-transform:uppercase; letter-spacing:.04em;
+      background:linear-gradient(45deg,#d4af37,#a67c00);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      position:relative; filter:contrast(1.06) brightness(.96);
+    }
+    .gold-rugged::after{
+      content:""; position:absolute; inset:0; pointer-events:none;
+      background-image:
+        radial-gradient(rgba(0,0,0,.22) 20%, transparent 21%),
+        radial-gradient(rgba(0,0,0,.12) 18%, transparent 19%);
+      background-size:6px 6px, 9px 9px; background-position:0 0, 3px 4px;
+      mix-blend-mode:multiply; opacity:.35;
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    .gold-rugged--hero{
+      background: linear-gradient(45deg, #ffd24d, #cc9900);
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 12px rgba(0,0,0,.55), 0 0 1px rgba(0,0,0,.6);
+      filter: contrast(1.12) brightness(1.02);
+    }
+    .gold-rugged--hero::after{ opacity:.22; }
+
+    /* HERO */
+    .landing-hero{
+      position:relative; min-height:clamp(520px,86vh,940px);
+      display:grid; place-items:center; padding:4rem 1.25rem;
+      background: url('/images/hero/background-mountains.png') center 55% / cover no-repeat;
+      filter: brightness(1.08) contrast(1.14) saturate(1.08);
+      perspective:900px;
+      overflow:hidden;
+    }
+    .landing-hero__darken{
+      position:absolute; inset:0; z-index:0;
+      background:
+        linear-gradient(to bottom,
+          rgba(0,0,0,.08) 0%,
+          rgba(0,0,0,.12) 35%,
+          rgba(0,0,0,.22) 55%,
+          rgba(0,0,0,.55) 85%,
+          rgba(0,0,0,.70) 100%);
+    }
+    .landing-hero__glow{
+      position:absolute; inset:-8% -12% 22% -12%; z-index:0;
+      background: radial-gradient(52% 38% at 38% 48%, rgba(255,180,70,.5), transparent 62%);
+      mix-blend-mode:screen; opacity:.75; pointer-events:none; will-change:transform;
+    }
+    .landing-hero__scrim{
+      position:absolute; inset:0; pointer-events:none; z-index:0;
+      background:
+        radial-gradient(60% 38% at 50% 45%, rgba(0,0,0,.38), transparent 62%),
+        radial-gradient(60% 28% at 50% 72%, rgba(0,0,0,.35), transparent 75%);
+    }
+    .landing-hero__content{ position:relative; z-index:1; text-align:center; max-width:780px; }
+    .landing-hero__headline{ font-size:clamp(2.6rem,6vw,4.5rem); margin:.2rem 0 .8rem; will-change:transform; }
+    .landing-hero__subtext{
+      color:rgba(255,215,128,.88); font-size:clamp(1.05rem,2.4vw,1.25rem);
+      line-height:1.55; margin:0 0 1.6rem; max-width:56ch; margin-inline:auto;
+      text-shadow:0 2px 8px rgba(0,0,0,.45);
+    }
+    .landing-hero__buttons{ display:inline-flex; gap:.9rem; flex-wrap:wrap; justify-content:center; }
+
+    /* Buttons (scoped, doesn’t override global .btn) */
+    .btn{
+      display:inline-block; padding:.95rem 1.75rem; border-radius:12px; font-weight:800;
+      text-decoration:none; font-size:1rem; transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease, border-color .15s ease;
+      box-shadow: 0 0 0 rgba(255,127,26,0);
+    }
+    .btn:hover{ transform:translateY(-1px); }
+    .btn.btn--primary{ background:#ff7f1a; color:#fff; border:0; }
+    .btn.btn--primary:hover{ background:#ff9933; box-shadow:0 10px 28px rgba(255,127,26,.35); }
+    .btn.btn--outline{ background:transparent; color:#ff7f1a; border:2px solid #ff7f1a; }
+    .btn.btn--outline:hover{ background:rgba(255,127,26,.15); border-color:#ff9933; color:#ff9933; box-shadow:0 10px 28px rgba(255,127,26,.2); }
+
+    /* SECTION 2 */
+    .statement{ background:#0b0b0b; padding:3.75rem 1.25rem 2.5rem; }
+    .statement__wrap{ max-width:1100px; margin:0 auto; text-align:center; }
+    .statement__title{ font-size:clamp(1.9rem,4.8vw,3rem); margin:0 0 .4rem; }
+    .statement__tag{
+      font-family:'Bebas Neue',sans-serif; letter-spacing:.02em;
+      color:rgba(255,215,130,.75); font-size:clamp(1.05rem,2.5vw,1.3rem); margin:0 0 1.6rem;
+    }
+    .proofs{ display:flex; flex-wrap:wrap; gap:.75rem; justify-content:center; margin:0 0 1.8rem; }
+    .proof{ background:#151515; color:#e8e8e8; border:1px solid #222; border-radius:999px; padding:.55rem .95rem; font-size:.95rem; text-decoration:none; }
+    .proof:hover{ border-color:#444; background:#1b1b1b; }
+    .cta-stripe{
+      display:inline-block; margin:0 auto; padding:1rem 1.4rem; border-radius:14px; text-decoration:none; font-weight:800; letter-spacing:.02em;
+      background:linear-gradient(90deg,#ff7f1a,#ff9933); color:#0a0a0a; box-shadow:0 10px 35px rgba(255,127,26,.25);
+      transition:transform .15s ease, box-shadow .15s ease;
+    }
+    .cta-stripe:hover{ transform:translateY(-2px); box-shadow:0 14px 42px rgba(255,127,26,.35); }
+    .statement__divider{ height:14px; margin:2.25rem auto 0; max-width:1100px; opacity:.6; background: radial-gradient(80% 120% at 50% 0%, rgba(255,140,40,.18), transparent 70%); border-bottom:1px solid #111; }
+
+    /* VALUES */
+    .values{ background:#111; padding:4rem 1.5rem; }
+    .values__title{ font-family:'Bebas Neue',sans-serif; color:#ff7f1a; text-align:center; font-size:clamp(1.6rem,4vw,2rem); margin:0 0 2rem; letter-spacing:.04em; }
+    .lp .lp_values__grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1.5rem; max-width:1000px; margin:0 auto; }
+    .card{ background:#1a1a1a; border-radius:18px; padding:1.35rem 1.15rem 1.2rem; text-align:center; transition:transform .22s ease, box-shadow .22s ease; text-decoration:none; color:inherit; }
+    .card:hover{ transform:translateY(-4px); box-shadow:0 8px 30px rgba(0,0,0,.35); }
+    .card__icon{ width:64px; height:auto; margin: 0 auto; margin-bottom:.75rem; }
+    .card__title{ font-family:'Bebas Neue',sans-serif; color:#ff7f1a; font-size:1.15rem; margin:.15rem 0 .35rem; letter-spacing:.03em; }
+    .card__text{ color:#cfcfcf; font-size:.98rem; line-height:1.45; margin:0; }
+
+    /* SOCIAL */
+    .social{ background:#0f0f0f; padding:2.2rem 1rem; text-align:center; border-top:1px solid #111; border-bottom:1px solid #111; }
+    .social__text{ color:#cfcfcf; font-size:1rem; letter-spacing:.02em; }
+
+    /* NIGHT */
+    .night{ position:relative; overflow:hidden; background:#0a0b0e; }
+    .night__sky{ position:absolute; inset:0; }
+    .stars{ position:absolute; inset:-20% -10% -10% -10%; background-repeat:repeat; animation: twinkle 8s linear infinite; opacity:.75; }
+    .stars--1{ background-image: radial-gradient(2px 2px at 20px 30px,#fff,transparent 60%), radial-gradient(2px 2px at 120px 80px,#fff,transparent 60%), radial-gradient(1px 1px at 60px 140px,#fff,transparent 60%); background-size:200px 200px; }
+    .stars--2{ background-image: radial-gradient(1px 1px at 40px 60px,#fff,transparent 60%), radial-gradient(2px 2px at 160px 40px,#fff,transparent 60%), radial-gradient(1px 1px at 100px 160px,#fff,transparent 60%); background-size:260px 260px; animation-duration:11s; opacity:.55; }
+    .stars--3{ background-image: radial-gradient(1px 1px at 80px 20px,#fff,transparent 60%), radial-gradient(1px 1px at 200px 140px,#fff,transparent 60%), radial-gradient(2px 2px at 140px 120px,#fff,transparent 60%); background-size:300px 300px; animation-duration:14s; opacity:.4; }
+    @keyframes twinkle { 0%{opacity:.75} 50%{opacity:.55} 100%{opacity:.75} }
+
+    .night__content{ position:relative; z-index:1; display:grid; gap:2rem; align-items:center; grid-template-columns: 1fr; max-width:1100px; margin:0 auto; padding:4.5rem 1.25rem 5rem; }
+    @media (min-width: 880px){ .night__content{ grid-template-columns: 0.9fr 1.1fr; } }
+    .night__art img{ width:100%; max-width:520px; display:block; margin:0 auto; filter: drop-shadow(0 12px 40px rgba(255,180,70,.15)); }
+    .night__title{ font-size:clamp(2.1rem,5vw,3.2rem); margin:0 0 .5rem; }
+    .night__copy{ color:#d9d9d9; line-height:1.6; margin:0 0 1.1rem; max-width:52ch; }
+
+    /* Reveal */
+    [data-reveal] { opacity:0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; }
+    [data-reveal].is-inview { opacity:1; transform:none; }
+    [data-reveal="left"]  { transform: translateX(-20px); }
+    [data-reveal="right"] { transform: translateX(20px);  }
+    [data-reveal].is-inview { transition-delay: var(--delay, 0ms); }
+    @media (prefers-reduced-motion: reduce){
+      .btn:hover, .card:hover { transform:none; box-shadow:none; }
+      .btn, .card, .stars, [data-reveal] { transition:none; animation:none; }
+      [data-reveal] { opacity:1; transform:none; }
+      .tilt-me { transform: none !important; }
+    }
+  </style>
+
+  <script>
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Scroll reveal
+    if (!prefersReduced && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-inview');
+            io.unobserve(e.target);
+          }
+        });
+      }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+
+      document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+    } else {
+      document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('is-inview'));
+    }
+
+    // Parallax tilt
+    if (!prefersReduced) {
+      const tiltEls = Array.from(document.querySelectorAll('.tilt-me'));
+      const hero = document.querySelector('.landing-hero');
+      if (hero && tiltEls.length) {
+        hero.addEventListener('mousemove', (e) => {
+          const rect = hero.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+          const tiltX = y * -6, tiltY = x * 6;
+          tiltEls.forEach(el => el.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(0)`);
+        });
+        hero.addEventListener('mouseleave', () => tiltEls.forEach(el => el.style.transform = ''));
+      }
+    }
+  </script>
+</BaseLayout>

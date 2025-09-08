@@ -1,0 +1,158 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const updated = "August 29, 2025";
+---
+
+<BaseLayout title="Terms of Use – Trek4Free">
+  <main class="t4f-terms-root">
+    <section class="t4f-terms-hero">
+      <h1 class="t4f-terms-title">Terms of Use</h1>
+      <p class="t4f-terms-sub">Last updated: {updated}</p>
+      <p class="t4f-terms-tag">Plain-English rules so the community stays helpful, safe, and fun.</p>
+    </section>
+
+    <section class="t4f-terms-card">
+      <h2 class="t4f-terms-h2">Agreement to Terms</h2>
+      <p>By using Trek4Free (the “Service”), you agree to these Terms. If you don’t agree, please don’t use the site.</p>
+    </section>
+
+    <section class="t4f-terms-card">
+      <h2 class="t4f-terms-h2">Content & Risk</h2>
+      <p>Information is provided for general guidance. Outdoor activities involve real risk. You’re solely responsible for your decisions and safety in the field.</p>
+    </section>
+
+    <section class="t4f-terms-card">
+      <h2 class="t4f-terms-h2">User Contributions & Community</h2>
+      <ul class="t4f-terms-list">
+        <li>You own your submissions and grant us a non-exclusive, worldwide, royalty-free license to host, display, adapt, and distribute them in connection with the Service.</li>
+        <li>Only share content you have the rights to share; no infringing or unlawful material.</li>
+        <li>We may moderate, edit, or remove content for clarity, safety, or quality.</li>
+        <li>Be kind: no harassment, hate, spam, or exploitation. Report issues via email below.</li>
+      </ul>
+    </section>
+
+    <section class="t4f-terms-card">
+      <h2 class="t4f-terms-h2">Acceptable Use</h2>
+      <ul class="t4f-terms-list">
+        <li>No attempts to disrupt, scrape at scale, bulk download, or bypass rate limits unless clearly permitted by our robots.txt or written permission.</li>
+        <li>No posting of sensitive personal data of others without consent.</li>
+      </ul>
+    </section>
+
+    <section class="t4f-terms-card">
+      <h2 class="t4f-terms-h2">Intellectual Property</h2>
+      <p>The Trek4Free name, logo, characters (e.g., Topo), and design elements are our property. Third-party marks belong to their owners. Don’t use our marks without permission.</p>
+    </section>
+
+    <section class="t4f-terms-card">
+      <h2 class="t4f-terms-h2">Links & Third Parties</h2>
+      <p>We may link to third-party sites (parks, weather, maps). We’re not responsible for their content, policies, or availability.</p>
+    </section>
+
+    <section class="t4f-terms-card">
+      <h2 class="t4f-terms-h2">Disclaimers</h2>
+      <p>THE SERVICE IS PROVIDED “AS IS” AND “AS AVAILABLE,” WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING ACCURACY, AVAILABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.</p>
+    </section>
+
+    <section class="t4f-terms-card">
+      <h2 class="t4f-terms-h2">Limitation of Liability</h2>
+      <p>To the fullest extent permitted by law, we won’t be liable for indirect, incidental, special, consequential, or punitive damages, or lost profits arising from your use of the Service.</p>
+    </section>
+
+    <section class="t4f-terms-card">
+      <h2 class="t4f-terms-h2">DMCA / Takedown</h2>
+      <p>If you believe content infringes your rights, contact us with details (links, ownership statements). We’ll review and respond promptly.</p>
+    </section>
+
+    <section class="t4f-terms-card">
+      <h2 class="t4f-terms-h2">Governing Law</h2>
+      <p>These Terms are governed by the laws of the State of Texas, without regard to conflict-of-law principles. Venue lies in state or federal courts in Texas.</p>
+    </section>
+
+    <section class="t4f-terms-card">
+      <h2 class="t4f-terms-h2">Changes</h2>
+      <p>We may update these Terms; continuing to use the Service after changes means you accept the revised Terms.</p>
+    </section>
+
+    <section class="t4f-terms-card">
+      <h2 class="t4f-terms-h2">Contact</h2>
+      <p>Email: <a class="t4f-terms-link" href="mailto:hello@trek4free.com">hello@trek4free.com</a></p>
+    </section>
+  </main>
+
+  <style>
+    .t4f-terms-root{
+      --t4f-ter-bg:#0b0e11;
+      --t4f-ter-card:#10151a;
+      --t4f-ter-accent:#ff6a00;
+      --t4f-ter-text:#e9edf1;
+      --t4f-ter-dim:#a9b3bd;
+      --t4f-ter-line:#1f2730;
+      padding: 2rem 1rem 4rem;
+      background: var(--t4f-ter-bg);
+      color: var(--t4f-ter-text);
+    }
+    .t4f-terms-hero{
+      text-align:center;
+      margin: 0 auto 2rem auto;
+      max-width: 60ch;
+    }
+    .t4f-terms-title{
+      font-size: clamp(2rem, 3vw, 2.75rem);
+      margin: 0;
+      letter-spacing:0.2px;
+    }
+    .t4f-terms-sub{
+      margin: 0.5rem 0 0;
+      color: var(--t4f-ter-dim);
+      font-size: 0.95rem;
+    }
+    .t4f-terms-tag{
+      margin-top: .75rem;
+      color: var(--t4f-ter-text);
+      background: linear-gradient(90deg, #1d140d, #151a1f);
+      border: 1px solid var(--t4f-ter-line);
+      border-left: 4px solid var(--t4f-ter-accent);
+      padding: 0.8rem 1rem;
+      border-radius: 0.75rem;
+      display:inline-block;
+    }
+    .t4f-terms-card{
+      margin: 1rem auto;
+      max-width: 70ch;
+      background: var(--t4f-ter-card);
+      border: 1px solid var(--t4f-ter-line);
+      border-radius: 1rem;
+      padding: 1.25rem 1.25rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .t4f-terms-h2{
+      margin: 0 0 0.75rem 0;
+      font-size: 1.25rem;
+      position: relative;
+    }
+    .t4f-terms-h2::after{
+      content:"";
+      display:block;
+      width:48px;height:2px;
+      background: var(--t4f-ter-accent);
+      margin-top: .5rem;
+      border-radius: 2px;
+    }
+    .t4f-terms-list{
+      margin: .5rem 0 0 1rem;
+      padding: 0;
+    }
+    .t4f-terms-list li{ margin: .5rem 0; }
+    .t4f-terms-link{
+      color: var(--t4f-ter-accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    @media print {
+      .t4f-terms-root{ background: #fff; color:#111; }
+      .t4f-terms-card{ background:#fff; border-color:#ddd; box-shadow:none; }
+      .t4f-terms-link{ color:#000; }
+    }
+  </style>
+</BaseLayout>

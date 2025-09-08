@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSV to Map Pins JSON Converter</title>
+</head>
+<body>
+  <h2>CSV to Map Pins JSON Converter</h2>
+
+  <div style="background: #eef; padding: 1em; margin-bottom: 1em; border: 1px solid #ccd;">
+    <h3>📋 Required CSV Column Headers:</h3>
+    <ul>
+      <li><strong>id</strong> – A unique identifier for each point</li>
+      <li><strong>name</strong> – The display name of the location</li>
+      <li><strong>description</strong> – (can be blank, but must be included)</li>
+      <li><strong>latitude</strong> – Use full word 'latitude', not 'lat'</li>
+      <li><strong>longitude</strong> – Use full word 'longitude', not 'lon'</li>
+    </ul>
+
+    <h3>🧩 Optional Columns (include if applicable):</h3>
+    <ul>
+      <li><strong>ridbtype</strong>, <strong>difficulty</strong>, <strong>distance</strong>, <strong>source</strong></li>
+      <li><strong>routetype</strong>, <strong>dog</strong>, <strong>bathrooms</strong>, <strong>shower</strong></li>
+    </ul>
+
+    <p style="color: red;"><strong>Important:</strong> Files missing <code>id</code>, <code>latitude</code>, or <code>longitude</code> will be skipped.</p>
+  </div>
+
+  <input type="file" id="csvFile" accept=".csv" />
+  <button onclick="convert()">Convert</button>
+  <button onclick="download()">Download JSON</button>
+
+  <pre id="output" style="background: #f4f4f4; padding: 1em; max-height: 500px; overflow: auto;"></pre>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script>
+    let jsonOutput = [];
+
+    function sanitize(str) {
+      return str?.replace(/<[^>]+>/g, '').trim() || '';
+    }
+
+    function convert() {
+      const fileInput = document.getElementById('csvFile');
+      const file = fileInput.files[0];
+      if (!file) {
+        alert("Please upload a CSV file first.");
+        return;
+      }
+
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          const data = results.data;
+          const output = [];
+          const skipped = [];
+
+          data.forEach((row, index) => {
+            const id = sanitize(row.id);
+            const name = sanitize(row.name);
+            const description = sanitize(row.description);
+            const lat = parseFloat(row.latitude);
+            const lon = parseFloat(row.longitude);
+
+            if (!id || isNaN(lat) || isNaN(lon) || lat === 0 || lon === 0) {
+              skipped.push({ index, reason: "Missing or invalid id/lat/lon", row });
+              return;
+            }
+
+            const jsonEntry = {
+              id,
+              name,
+              description,
+              latitude: lat,
+              longitude: lon,
+              ...(row.ridbtype && { ridbtype: sanitize(row.ridbtype) }),
+              ...(row.difficulty && { difficulty: sanitize(row.difficulty) }),
+              ...(row.distance && { distance: sanitize(row.distance) }),
+              ...(row.source && { source: sanitize(row.source) }),
+              ...(row.routetype && { routetype: sanitize(row.routetype) }),
+              ...(row.dog && { dog: sanitize(row.dog) }),
+              ...(row.bathrooms && { bathrooms: sanitize(row.bathrooms) }),
+              ...(row.shower && { shower: sanitize(row.shower) })
+            };
+
+            output.push(jsonEntry);
+          });
+
+          jsonOutput = output;
+          document.getElementById('output').textContent = JSON.stringify(output, null, 2);
+          console.log("✅ Conversion complete. Entries:", output.length);
+          if (skipped.length > 0) {
+            console.warn("⚠️ Skipped rows:", skipped);
+          }
+        }
+      });
+    }
+
+    function download() {
+      if (jsonOutput.length === 0) {
+        alert("No JSON to download. Please convert a CSV file first.");
+        return;
+      }
+
+      const blob = new Blob([JSON.stringify(jsonOutput, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'map-pins.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

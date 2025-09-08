@@ -1,0 +1,112 @@
+{
+  "trails": [
+    {
+      "name": "Bright Angel Trail - Grand Canyon",
+      "location": "Grand Canyon National Park, AZ",
+      "distance": "9.5 miles",
+      "difficulty": "Hard",
+      "features": "Canyon views, switchbacks, access to Colorado River",
+      "updated": "2025-07-24",
+      "image": "/images/epichikes/grandcanyon.png"
+    },
+    {
+      "name": "Highline Trail - Glacier National Park",
+      "location": "Glacier National Park, MT",
+      "distance": "11.8 miles",
+      "difficulty": "Moderate",
+      "features": "Alpine scenery, wildlife, dramatic cliffs",
+      "updated": "2025-07-24",
+      "image": "/images/epichikes/glacier.png"
+    },
+    {
+      "name": "Angels Landing - Zion National Park",
+      "location": "Zion National Park, UT",
+      "distance": "5.4 miles",
+      "difficulty": "Hard",
+      "features": "Steep drop-offs, stunning canyon views",
+      "updated": "2025-07-24",
+      "image": "/images/epichikes/zion.png"
+    },
+    {
+      "name": "Appalachian Trail (AT) Section Hike",
+      "location": "Eastern United States",
+      "distance": "Varies",
+      "difficulty": "Varies",
+      "features": "Forests, mountains, shelters, scenic ridgelines",
+      "updated": "2025-07-24",
+      "image": "/images/epichikes/appalachiantrail.png"
+    },
+    {
+      "name": "Half Dome Trail - Yosemite",
+      "location": "Yosemite National Park, CA",
+      "distance": "14.2 miles",
+      "difficulty": "Hard",
+      "features": "Granite dome, cables section, panoramic valley views",
+      "updated": "2025-07-24",
+      "image": "/images/epichikes/halfdometrail.png"
+    },
+    {
+      "name": "Delicate Arch Trail - Arches National Park",
+      "location": "Arches National Park, UT",
+      "distance": "3 miles",
+      "difficulty": "Moderate",
+      "features": "Iconic arch, slickrock, desert views",
+      "updated": "2025-07-24",
+      "image": "/images/epichikes/archesnp.png"
+    },
+    {
+      "name": "Bear Lake to Fern Lake - Rocky Mountain",
+      "location": "Rocky Mountain National Park, CO",
+      "distance": "7.6 miles",
+      "difficulty": "Moderate",
+      "features": "Alpine lakes, meadows, wildlife",
+      "updated": "2025-07-24",
+      "image": "/images/epichikes/mountaintrail.png"
+    },
+    {
+      "name": "Skyline Trail - Mount Rainier",
+      "location": "Mount Rainier National Park, WA",
+      "distance": "5.5 miles",
+      "difficulty": "Moderate",
+      "features": "Glacier views, wildflowers, waterfalls",
+      "updated": "2025-07-24",
+      "image": "/images/epichikes/mountrainier.png"
+    },
+    {
+      "name": "Navajo Loop - Bryce Canyon",
+      "location": "Bryce Canyon National Park, UT",
+      "distance": "1.3 miles",
+      "difficulty": "Moderate",
+      "features": "Hoodoos, switchbacks, red rock amphitheater",
+      "updated": "2025-07-24",
+      "image": "/images/epichikes/bryce3.png"
+    },
+    {
+      "name": "Pacific Crest Trail (PCT) Overview",
+      "location": "California to Washington",
+      "distance": "2,650 miles",
+      "difficulty": "Varies",
+      "features": "High Sierra, Cascade Mountains, deserts, thru-hiking",
+      "updated": "2025-07-24",
+      "image": "/images/epichikes/pct.png"
+    },
+    {
+      "name": "John Muir Trail (JMT)",
+      "location": "Sierra Nevada, CA",
+      "distance": "211 miles",
+      "difficulty": "Hard",
+      "features": "Remote wilderness, alpine lakes, High Sierra peaks",
+      "updated": "2025-07-24",
+      "image": "/images/epichikes/johnmuirtrail.png"
+    },
+    {
+      "name": "Clingmans Dome - Smoky Mountains",
+      "location": "Great Smoky Mountains, TN/NC",
+      "distance": "1 mile",
+      "difficulty": "Easy",
+      "features": "Observation tower, forested trail, panoramic views",
+      "updated": "2025-07-24",
+      "image": "/images/epichikes/smokymountains.png"
+    }
+  ]
+}

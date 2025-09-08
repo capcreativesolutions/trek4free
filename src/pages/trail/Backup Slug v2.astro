@@ -1,0 +1,320 @@
+
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+export const prerender = false;
+---
+
+<BaseLayout title="Location Details">
+  <div class="container section detail-wrap">
+    <!-- Row 1: About (L) + USGS map (R) -->
+    <section class="row2">
+      <article class="card">
+        <h1 id="poi-title" class="mt-0">Loading…</h1>
+        <div class="badges mt-8" id="poi-badges"></div>
+        <p id="poi-sub" class="small mt-8"></p>
+
+        <div class="stat-grid mt-16" id="poi-stats"></div>
+
+        <div class="row mt-12">
+          <button id="copyLL" class="btn btn-ghost">📍 Copy coords</button>
+          <a id="gmaps" class="btn btn-ghost" target="_blank" rel="noopener">🗺️ Open in Google Maps</a>
+          <a id="permalink" class="btn btn-ghost">🔗 Copy link</a>
+          <button id="printPkt" class="btn btn-primary" style="margin-left:auto;">🖨️ Print / PDF</button>
+        </div>
+
+        <h2 class="mt-20">About this place</h2>
+        <p id="poi-desc" class="mt-12"></p>
+
+        <div class="row mt-12">
+          <a href="/explore" class="btn btn-ghost">← Back to Explore</a>
+          <a href="/explore?reset=1" class="btn btn-ghost">↩︎ Reset Map View</a>
+        </div>
+      </article>
+
+      <aside class="card padless">
+        <div class="map-head">
+          <strong>USGS Topo</strong>
+          <span class="small">Good road labels</span>
+        </div>
+        <div id="detailMap" class="map-box" aria-label="USGS topo map"></div>
+      </aside>
+    </section>
+
+    <!-- Row 2: Nearby (L) + Relief/Topo map (R) -->
+    <section class="row2 mt-16">
+      <article class="card">
+        <h2 class="mt-0">Nearby (≈ 5 miles)</h2>
+        <p class="small mt-8">Quick hits within ~8 km.</p>
+        <div id="nearbyList" class="nearby mt-12">
+          <div class="card"><p class="small">Searching around this point…</p></div>
+        </div>
+      </article>
+
+      <aside class="card padless">
+        <div class="map-head">
+          <strong>Relief / Topo</strong>
+          <span class="small">Great for terrain & contours</span>
+        </div>
+        <div id="nearbyMap" class="map-box" aria-label="Topo map with nearby points"></div>
+      </aside>
+    </section>
+
+    <!-- Row 3: Weather (L) + Radar (R) -->
+    <section class="row2 mt-16">
+      <article id="weatherCard" class="card" style="display:none;">
+        <h2 class="mt-0">Weather (5‑day)</h2>
+        <div id="weatherRows" class="weather-grid mt-12"></div>
+        <p class="small mt-8" id="weatherNote"></p>
+      </article>
+
+      <aside class="card padless" id="radarBox" style="display:none;">
+        <div class="map-head">
+          <strong>Live Radar</strong>
+          <span class="small">Windy embed (no sign‑in)</span>
+        </div>
+        <div class="map-box" style="padding:0;">
+          <div id="radarMount" style="height:100%;"></div>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <style>
+    .detail-wrap { max-width: 1200px; }
+    .row2 { display:grid; gap:16px; grid-template-columns:1fr 480px; align-items:start; }
+    @media (max-width:1100px){ .row2 { grid-template-columns:1fr; } }
+
+    .padless{ padding:0; }
+    .map-head{
+      display:flex; align-items:baseline; justify-content:space-between;
+      padding:10px 12px; border-bottom:1px solid var(--line); background:#101010;
+    }
+    .map-box{ width:100%; height:360px; background:#0b0b0b; border-radius:0 0 14px 14px; overflow:hidden; }
+
+    .stat-grid{ display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); }
+    .stat{ background:#161616; border:1px solid var(--line); border-radius:12px; padding:10px 12px; }
+    .stat .label{ color:var(--muted); font-size:.9rem; }
+    .stat .value{ font-weight:700; font-family:var(--font-mono); }
+
+    .nearby{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); }
+    .nearby .card{ cursor:pointer; transition:transform .12s ease, box-shadow .2s ease, border-color .15s ease; }
+    .nearby .card:hover{ transform:translateY(-1px); box-shadow:var(--shadow-2); border-color:#333; }
+
+    .weather-grid{ display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); }
+    .w-row{ background:#161616; border:1px solid var(--line); border-radius:12px; padding:10px 12px; }
+    .w-title{ font-weight:700; }
+    .w-sub{ color:var(--muted); font-size:.9rem; }
+  </style>
+
+  <script is:inline>
+    (function () {
+      const titleEl = document.getElementById("poi-title");
+      const subEl   = document.getElementById("poi-sub");
+      const descEl  = document.getElementById("poi-desc");
+      const badges  = document.getElementById("poi-badges");
+      const stats   = document.getElementById("poi-stats");
+      const copyLL  = document.getElementById("copyLL");
+      const gmaps   = document.getElementById("gmaps");
+      const permalink = document.getElementById("permalink");
+
+      const weatherCard = document.getElementById("weatherCard");
+      const weatherRows = document.getElementById("weatherRows");
+      const weatherNote = document.getElementById("weatherNote");
+      const radarBox    = document.getElementById("radarBox");
+      const radarMount  = document.getElementById("radarMount");
+
+      const nearbyList  = document.getElementById("nearbyList");
+
+      // selected point from Explore
+      let point = null;
+      try { point = JSON.parse(sessionStorage.getItem("selectedPoint") || "null"); } catch {}
+
+      const fmt = v => (v==null || v==="") ? null : String(v);
+      const addStat = (label, value) => {
+        if (!value && value !== 0) return;
+        const el = document.createElement("div");
+        el.className = "stat";
+        el.innerHTML = `<div class="label">${label}</div><div class="value">${value}</div>`;
+        stats.appendChild(el);
+      };
+      const makeBadge = txt => {
+        const b = document.createElement("span");
+        b.className = "badge";
+        b.textContent = txt;
+        return b;
+      };
+
+      if (!point) {
+        titleEl.textContent = "Open from Explore";
+        subEl.textContent   = "Open a marker on Explore and click “View Details”.";
+        descEl.textContent  = "No data found for this browser session.";
+        return;
+      }
+
+      const name = fmt(point.name || point.trail_name || point.site_name) || "Unnamed";
+      titleEl.textContent = name;
+      subEl.textContent   = fmt(point.location || point.agency || point.region) || "";
+      descEl.textContent  = fmt(point.description || point.notes) || "No description available yet.";
+
+      const type = fmt(point.site_type || point.type || point.category);
+      const src  = fmt(point.source);
+      if (type) badges.appendChild(makeBadge(type));
+      if (src)  badges.appendChild(makeBadge(`Source: ${src}`));
+
+      const lat = Number(point.latitude);
+      const lon = Number(point.longitude);
+      if (Number.isFinite(lat) && Number.isFinite(lon)) {
+        addStat("Latitude",  lat.toFixed(5));
+        addStat("Longitude", lon.toFixed(5));
+        copyLL.addEventListener("click", async () => {
+          try { await navigator.clipboard.writeText(`${lat.toFixed(5)}, ${lon.toFixed(5)}`); copyLL.textContent="✅ Copied!"; setTimeout(()=>copyLL.textContent="📍 Copy coords",1000);} catch {}
+        });
+        gmaps.href = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
+        permalink.addEventListener("click", async () => {
+          try { await navigator.clipboard.writeText(location.href); permalink.textContent="✅ Link copied"; setTimeout(()=>permalink.textContent="🔗 Copy link",1000);} catch {}
+        });
+      }
+
+      // Maps with layer switchers (wrapped to avoid race with deferred Leaflet)
+      const whenLeaflet = () =>
+        new Promise(r => (window.L ? r() : window.addEventListener("load", r, { once:true })));
+
+      whenLeaflet().then(() => {
+        const baseLayers = () => {
+          const usgsTopo = L.tileLayer("https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}", { attribution:"USGS Topo", maxZoom:16 });
+          const usgsImag = L.tileLayer("https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}", { attribution:"USGS Imagery", maxZoom:16 });
+          const openTopo = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", { attribution:"OpenTopoMap", maxZoom:17 });
+          const osm      = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution:"© OpenStreetMap", maxZoom:19 });
+          const esriHill = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}", { attribution:"Esri Hillshade", maxZoom:16 });
+          return {usgsTopo, usgsImag, openTopo, osm, esriHill};
+        };
+
+        if (Number.isFinite(lat) && Number.isFinite(lon)) {
+          const {usgsTopo, usgsImag, openTopo, osm, esriHill} = baseLayers();
+
+          // main map
+          const main = L.map("detailMap", { center:[lat,lon], zoom:12, layers:[usgsTopo] });
+          L.control.layers({
+            "🗺️ USGS Topo":usgsTopo, "🛰️ USGS Imagery":usgsImag, "🗻 OpenTopo":openTopo, "🧭 OSM":osm, "⛰️ Hillshade":esriHill
+          }, null, {collapsed:true}).addTo(main);
+          L.marker([lat,lon]).addTo(main).bindPopup(name);
+          setTimeout(()=>main.invalidateSize(),80);
+
+          // nearby map
+          const b2 = baseLayers();
+          const topo = L.map("nearbyMap", { center:[lat,lon], zoom:12, layers:[b2.openTopo] });
+          L.control.layers({
+            "🗻 OpenTopo":b2.openTopo, "🗺️ USGS Topo":b2.usgsTopo, "🛰️ USGS Imagery":b2.usgsImag, "🧭 OSM":b2.osm, "⛰️ Hillshade":b2.esriHill
+          }, null, {collapsed:true}).addTo(topo);
+          const hereIcon = L.icon({ iconUrl:"/images/markers/default.png", iconSize:[40,40], iconAnchor:[20,38] });
+          L.marker([lat,lon], {icon:hereIcon}).addTo(topo).bindPopup(name);
+
+          // nearby points (~8km)
+          const datasets = [
+            { file: "trailheads-usfs.json",       icon:"hiking"      },
+            { file: "trailheads-ridb.json",       icon:"hiking"      },
+            { file: "campgrounds-usfs-ridb.json", icon:"camping"     },
+            { file: "freecamping.json",           icon:"freecamping" },
+            { file: "freecamping-usfs.json",      icon:"freecamping" },
+            { file: "swimming-holes.json",        icon:"swimming"    },
+          ];
+          const toRad = d => d*Math.PI/180, R=6371;
+          const distKm = (a,b) => {
+            const dLat=toRad(b.lat-a.lat), dLon=toRad(b.lon-a.lon);
+            const la1=toRad(a.lat), la2=toRad(b.lat);
+            const h=Math.sin(dLat/2)**2 + Math.cos(la1)*Math.cos(la2)*Math.sin(dLon/2)**2;
+            return 2*R*Math.asin(Math.sqrt(h));
+          };
+          const here = {lat,lon};
+          const group = L.featureGroup().addTo(topo);
+
+          Promise.all(
+            datasets.map(({file,icon}) =>
+              fetch(`/data/${file}`).then(r=>r.json()).then(arr =>
+                arr
+                  .map(p => ({...p, __dist: distKm(here,{lat:Number(p.latitude),lon:Number(p.longitude)}), __icon:icon}))
+                  .filter(p => Number.isFinite(p.__dist) && p.__dist <= 8)
+              )
+            )
+          ).then(chunks => {
+            const all = chunks.flat().sort((a,b)=>a.__dist-b.__dist).slice(0,14);
+            nearbyList.innerHTML = all.length ? "" : `<div class="card"><p class="small">No nearby points within ~5 miles.</p></div>`;
+            all.forEach((p) => {
+              const icon = L.icon({ iconUrl:`/images/markers/${p.__icon}.png`, iconSize:[34,34], iconAnchor:[17,32] });
+              const m = L.marker([p.latitude, p.longitude], {icon}).bindPopup(p.name || "Spot").addTo(group);
+
+              const card = document.createElement("div");
+              card.className = "card";
+              card.innerHTML = `
+                <div class="row">
+                  <img src="/images/markers/${p.__icon}.png" width="28" height="28" style="border-radius:6px" alt="">
+                  <div class="col"><strong>${p.name || "Unnamed"}</strong><span class="small">${p.__icon} • ${p.__dist.toFixed(1)} km</span></div>
+                </div>`;
+              card.addEventListener("mouseenter", ()=>m.openPopup());
+              card.addEventListener("mouseleave", ()=>m.closePopup());
+              card.addEventListener("click", ()=>{ topo.setView(m.getLatLng(), 14); m.openPopup(); });
+              nearbyList.appendChild(card);
+            });
+            try { const b = group.getBounds(); if (b && b.isValid()) topo.fitBounds(b.pad(0.2)); } catch {}
+            setTimeout(()=>topo.invalidateSize(),80);
+          });
+        }
+      });
+
+      // Weather + elevation + sunrise/sunset (unchanged from your PDF, backticks fixed)
+      if (Number.isFinite(Number(point.latitude)) && Number.isFinite(Number(point.longitude))) {
+        (async () => {
+          const lat = Number(point.latitude), lon = Number(point.longitude);
+          try {
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max,windspeed_10m_max,sunrise,sunset&timezone=auto`;
+            const res = await fetch(url);
+            const data = await res.json();
+
+            if (Number.isFinite(data.elevation)) addStat("Elevation", `${Math.round(data.elevation)} m`);
+            if (data?.daily?.sunrise?.length && data?.daily?.sunset?.length) {
+              const sr = new Date(data.daily.sunrise[0]);
+              const ss = new Date(data.daily.sunset[0]);
+              const t = d => d.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
+              addStat("Sunrise/Sunset", `${t(sr)} / ${t(ss)}`);
+            }
+
+            const d = data.daily;
+            if (!d || !d.time) return;
+            weatherCard.style.display = "";
+            weatherRows.innerHTML = "";
+
+            const codeToText = c => ({0:"Clear",1:"Mostly clear",2:"Partly cloudy",3:"Cloudy",45:"Fog",48:"Rime fog",51:"Drizzle",61:"Rain",71:"Snow",95:"Thunder"}[c] || "—");
+
+            for (let i = 0; i < Math.min(5, d.time.length); i++) {
+              const row = document.createElement("div");
+              row.className = "w-row";
+              const day = new Date(d.time[i]).toLocaleDateString(undefined, { weekday:"short", month:"short", day:"numeric" });
+              row.innerHTML = `
+                <div class="w-title">${day}</div>
+                <div class="w-sub">${codeToText(d.weathercode[i])}</div>
+                <div class="w-sub">🌡️ ${Math.round(d.temperature_2m_min[i])}° / ${Math.round(d.temperature_2m_max[i])}°</div>
+                <div class="w-sub">💨 ${Math.round(d.windspeed_10m_max[i])} mph • ☔ ${d.precipitation_probability_max?.[i] ?? "—"}%</div>
+              `;
+              weatherRows.appendChild(row);
+            }
+            weatherNote.textContent = "Forecast via Open‑Meteo.";
+
+            // live radar
+            radarBox.style.display = "";
+            const iframe = document.createElement("iframe");
+            iframe.title = "Live radar";
+            iframe.width = "100%";
+            iframe.height = "100%";
+            iframe.frameBorder = "0";
+            iframe.referrerPolicy = "no-referrer";
+            iframe.src = `https://embed.windy.com/embed2.html?lat=${lat}&lon=${lon}&detailLat=${lat}&detailLon=${lon}&zoom=8&level=surface&overlay=radar&menu=&message=false&type=map&location=coordinates&metricWind=mph&metricTemp=%C2%B0F`;
+            radarMount.appendChild(iframe);
+          } catch {}
+        })();
+      }
+
+      // print button
+      document.getElementById("printPkt")?.addEventListener("click", () => window.print());
+    })();
+  </script>
+</BaseLayout>

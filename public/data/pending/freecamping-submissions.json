@@ -1,0 +1,45 @@
+[
+  {
+    "id": "test",
+    "type": "free_camping",
+    "name": "Test",
+    "lat": 30.12,
+    "lon": -98.54,
+    "description": "just a test of the input system this is not a real campsite only a test",
+    "submitted_at": "2025-08-29T20:19:32.629Z",
+    "status": "pending",
+    "source": "user",
+    "access_notes": "test gravel road test",
+    "water": "yes",
+    "toilets": "vault",
+    "stay_limit": 14
+  },
+  {
+    "id": "test-2",
+    "type": "free_camping",
+    "name": "test 2",
+    "lat": 30.12,
+    "lon": -98.54,
+    "description": "Test number two second test location",
+    "submitted_at": "2025-08-29T20:20:58.654Z",
+    "status": "pending",
+    "source": "user",
+    "access_notes": "test gravel",
+    "water": "yes",
+    "toilets": "unknown",
+    "stay_limit": 5
+  },
+  {
+    "id": "test-number-3",
+    "type": "free_camping",
+    "name": "test number 3",
+    "lat": 30.12,
+    "lon": -98.54,
+    "description": "test",
+    "submitted_at": "2025-08-29T20:26:28.392Z",
+    "status": "pending",
+    "source": "user",
+    "water": "unknown",
+    "toilets": "unknown"
+  }
+]

@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>USFS CSV to Map Pins JSON Converter</title>
+</head>
+<body>
+  <h2>USFS CSV to Map Pins JSON Converter</h2>
+
+  <div style="background: #eef; padding: 1em; margin-bottom: 1em; border: 1px solid #ccd;">
+    <h3>📋 Instructions:</h3>
+    <ul>
+      <li>Upload a raw USFS CSV export with original headers (e.g., SITE_NAME, LATITUDE, FEE_TYPE)</li>
+      <li>This tool will map and normalize it for your <code>map.js</code> integration</li>
+    </ul>
+  </div>
+
+  <input type="file" id="csvFile" accept=".csv" />
+  <button onclick="convert()">Convert</button>
+  <button onclick="download()">Download JSON</button>
+
+  <pre id="output" style="background: #f4f4f4; padding: 1em; max-height: 500px; overflow: auto;"></pre>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script>
+    let jsonOutput = [];
+
+    function normalizeValue(value, mapping) {
+      if (!value) return "Not specified";
+      const key = value.toString().trim().toUpperCase();
+      return mapping[key] || value;
+    }
+
+    function sanitizeText(text) {
+      return (text || "").replace(/\n|\t/g, ' ').trim();
+    }
+
+    function convert() {
+      const fileInput = document.getElementById('csvFile');
+      const file = fileInput.files[0];
+      if (!file) {
+        alert("Please upload a CSV file first.");
+        return;
+      }
+
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          const data = results.data;
+          const output = [];
+
+          data.forEach((row, index) => {
+            const id = row["SITE_ID"] ? `usfs-${row["SITE_ID"]}` : `usfs-${index}`;
+            const name = row["SITE_NAME"] || "Unnamed Site";
+            const lat = parseFloat(row["LATITUDE"]);
+            const lon = parseFloat(row["LONGITUDE"]);
+            if (isNaN(lat) || isNaN(lon)) return;
+
+            const feeMap = { "NONE": "Free" };
+            const restroomMap = { "Y": "Toilets available", "N": "No toilets" };
+            const waterMap = { "Y": "Potable water available", "N": "No water" };
+            const accessMap = { "Y": "Pack-in only", "N": "Drive-in access" };
+
+            const rawCount = row["TOTAL_CAPA"] ? Math.round(parseFloat(row["TOTAL_CAPA"])) : null;
+            const feeDesc = sanitizeText(row["FEE_DESCRI"]);
+            const description = `${feeDesc ? feeDesc + ". " : ""}${rawCount ? `Capacity: ${rawCount} sites.` : ""}`.trim();
+
+            const jsonEntry = {
+              id: id,
+              name: name,
+              description: description,
+              latitude: lat,
+              longitude: lon,
+              site_type: row["SITE_TYPE"] || "",
+              fee: normalizeValue(row["FEE_TYPE"], feeMap) === "Free" ? "Free" : "Fee Required",
+              fee_description: feeDesc,
+              site_count: rawCount,
+              bathrooms: normalizeValue(row["RESTROOM_A"], restroomMap),
+              water: normalizeValue(row["WATER_AVAI"], waterMap),
+              access: normalizeValue(row["PACK_IN_OU"], accessMap),
+              state: row["STATES_SPA"] || "",
+              directions: row["DIRECTIONS"] || "",
+              season: row["SEASON_DES"] || "",
+              source: "USFS RecSites"
+            };
+
+            output.push(jsonEntry);
+          });
+
+          jsonOutput = output;
+          document.getElementById('output').textContent = JSON.stringify(output, null, 2);
+          console.log("✅ Conversion complete. Entries:", output.length);
+        }
+      });
+    }
+
+    function download() {
+      if (jsonOutput.length === 0) {
+        alert("No JSON to download. Please convert a CSV file first.");
+        return;
+      }
+
+      const blob = new Blob([JSON.stringify(jsonOutput, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'usfs_campgrounds.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

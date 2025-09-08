@@ -1,0 +1,531 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+export const prerender = false;
+---
+
+<BaseLayout title="Location Details">
+  <div class="container section detail-wrap">
+    <!-- Row 1: About (L) + USGS map (R) -->
+   
+<!-- NEW Row 0: Title + key stats (full width) -->
+<section class="title-row">
+  <article class="card">
+    <h1 id="poi-title" class="mt-0">Loading…</h1>
+    <div class="badges mt-8" id="poi-badges"></div>
+    <p id="poi-sub" class="small mt-8"></p>
+
+    <!-- keep the existing stat grid + buttons -->
+    <div class="stat-grid mt-16" id="poi-stats"></div>
+
+    <div class="row mt-12">
+      <button id="copyLL" class="btn btn-ghost">📍 Copy coords</button>
+      <a id="gmaps" class="btn btn-ghost" target="_blank" rel="noopener">🗺️ Open in Google Maps</a>
+      <a id="permalink" class="btn btn-ghost">🔗 Copy link</a>
+      <button id="printPkt" class="btn btn-primary" style="margin-left:auto;">🖨️ Print / PDF</button>
+    </div>
+  </article>
+</section>
+
+<!-- Row 1: About (L) + USGS map (R) -->
+<section class="row2">
+  <article class="card">
+    <h2 class="mt-0">About this place</h2>
+    <p id="poi-desc" class="mt-12"></p>
+
+    <!-- Auto-surfaced extras BELOW description -->
+    <h2 class="mt-20" id="moreHead" style="display:none;">More details</h2>
+    <div id="moreList" class="kv-list mt-12"></div>
+
+    <div class="row mt-12">
+      <a href="/explore" class="btn btn-ghost">← Back to Explore</a>
+      <a href="/explore?reset=1" class="btn btn-ghost">↩ Reset Map View</a>
+    </div>
+  </article>
+
+  <aside class="card padless">
+    <div class="map-head">
+      <strong>USGS Topo</strong>
+      <span class="small">Good road labels</span>
+    </div>
+    <div id="detailMap" class="map-box" aria-label="USGS topo map"></div>
+  </aside>
+</section>
+
+
+    <!-- Row 2: Nearby (L) + Relief/Topo map (R) -->
+    <section class="row2 mt-16">
+      <article class="card">
+        <h2 class="mt-0">Nearby (≈ 5 miles)</h2>
+        <p class="small mt-8">Quick hits within ~8 km.</p>
+        <div id="nearbyList" class="nearby mt-12">
+          <div class="card"><p class="small">Searching around this point…</p></div>
+        </div>
+      </article>
+
+      <aside class="card padless">
+        <div class="map-head">
+          <strong>Relief / Topo</strong>
+          <span class="small">Great for terrain & contours</span>
+        </div>
+        <div id="nearbyMap" class="map-box" aria-label="Topo map with nearby points"></div>
+      </aside>
+    </section>
+
+    <!-- Row 3: Weather (L) + Radar (R) -->
+    <section class="row2 mt-16">
+      <article id="weatherCard" class="card" style="display:none;">
+        <h2 class="mt-0">Weather (5-day)</h2>
+        <div id="weatherRows" class="weather-grid mt-12"></div>
+        <p class="small mt-8" id="weatherNote"></p>
+      </article>
+
+      <aside class="card padless" id="radarBox" style="display:none;">
+        <div class="map-head">
+          <strong>Live Radar</strong>
+          <span class="small">Windy embed (no sign-in)</span>
+        </div>
+        <div class="map-box" style="padding:0;">
+          <div id="radarMount" style="height:100%;"></div>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <style>
+
+/* Title section spans full width and creates visual separation */
+.title-row { margin-bottom: 12px; }
+.title-row .card { padding-bottom: 16px; }
+
+/* Optional: tighten spacing on big screens so the map lines up with About */
+@media (min-width:1101px){
+  .row2 .card h2.mt-0 { margin-top: 6px; }
+}
+
+
+    .detail-wrap { max-width: 1200px; }
+    .row2 { display:grid; gap:16px; grid-template-columns:1fr 480px; align-items:start; }
+    @media (max-width:1100px){ .row2 { grid-template-columns:1fr; } }
+
+    .padless{ padding:0; }
+    .map-head{
+      display:flex; align-items:baseline; justify-content:space-between;
+      padding:10px 12px; border-bottom:1px solid var(--line); background:#101010;
+    }
+    .map-box{ width:100%; height:360px; background:#0b0b0b; border-radius:0 0 14px 14px; overflow:hidden; }
+
+    .stat-grid{ display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); }
+    .stat{ background:#161616; border:1px solid var(--line); border-radius:12px; padding:10px 12px; }
+    .stat .label{ color:var(--muted); font-size:.9rem; }
+    .stat .value{ font-weight:700; font-family:var(--font-mono); }
+
+    .nearby{ display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); }
+    .nearby .card{ cursor:pointer; transition:transform .12s ease, box-shadow .2s ease, border-color .15s ease; }
+    .nearby .card:hover{ transform:translateY(-1px); box-shadow:var(--shadow-2); border-color:#333; }
+
+    .weather-grid{ display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); }
+    .w-row{ background:#161616; border:1px solid var(--line); border-radius:12px; padding:10px 12px; }
+    .w-title{ font-weight:700; }
+    .w-sub{ color:var(--muted); font-size:.9rem; }
+
+    /* More details tiles */
+    .kv-list{ display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
+    .kv{ background:#161616; border:1px solid var(--line); border-radius:12px; padding:10px 12px; }
+    .kv .label{ color:var(--muted); font-size:.9rem; }
+    .kv .value{ white-space:pre-wrap; word-break:break-word; }
+  </style>
+
+  <script is:inline>
+    (function () {
+      const titleEl = document.getElementById("poi-title");
+      const subEl   = document.getElementById("poi-sub");
+      const descEl  = document.getElementById("poi-desc");
+      const badges  = document.getElementById("poi-badges");
+      const stats   = document.getElementById("poi-stats");
+      const copyLL  = document.getElementById("copyLL");
+      const gmaps   = document.getElementById("gmaps");
+      const permalink = document.getElementById("permalink");
+
+      const moreHead = document.getElementById("moreHead");
+      const moreList = document.getElementById("moreList");
+
+      const weatherCard = document.getElementById("weatherCard");
+      const weatherRows = document.getElementById("weatherRows");
+      const weatherNote = document.getElementById("weatherNote");
+      const radarBox    = document.getElementById("radarBox");
+      const radarMount  = document.getElementById("radarMount");
+
+      const nearbyList  = document.getElementById("nearbyList");
+
+      const slug = (location.pathname.split("/").pop() || "").toLowerCase();
+
+      /* ---------- Helpers ---------- */
+      const fmt = v => (v==null ? null : String(v).trim());
+      const clean = (v) => {
+        const s = fmt(v);
+        if (!s) return null;
+        const bad = ["|", "| |", "-", "—", "Not specified"].map(x => x.toLowerCase());
+        return bad.includes(s.toLowerCase()) ? null : s.replace(/\s+\|\s*$/,'');
+      };
+      const addStat = (label, value) => {
+        const v = clean(value);
+        if (!v && v !== 0) return;
+        const el = document.createElement("div");
+        el.className = "stat";
+        el.innerHTML = `<div class="label">${label}</div><div class="value">${v}</div>`;
+        stats.appendChild(el);
+      };
+      const makeBadge = (txt) => {
+        const v = clean(txt); if (!v) return null;
+        const b = document.createElement("span");
+        b.className = "badge";
+        b.textContent = v;
+        return b;
+      };
+      const renderPairs = (pairs=[]) => {
+        moreList.innerHTML = "";
+        if (!pairs.length) { moreHead.style.display = "none"; return; }
+        moreHead.style.display = "";
+        pairs.forEach(({label, value, href}) => {
+          const v = clean(value); if (!v) return;
+          const el = document.createElement("div");
+          el.className = "kv";
+          const val = href ? `<a href="${href}" target="_blank" rel="noopener">${v}</a>` : v;
+          el.innerHTML = `<div class="label">${label}</div><div class="value">${val}</div>`;
+          moreList.appendChild(el);
+        });
+      };
+      const slugify = s => String(s || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+
+      // Normalize lat/lon → latitude/longitude on the fly (don’t mutate original)
+      const getLat = p => Number(p.latitude ?? p.lat);
+      const getLon = p => Number(p.longitude ?? p.lon);
+
+      const DATASETS = [
+        "trailheads-usfs.json",
+        "trailheads-ridb.json",
+        "campgrounds-usfs-ridb.json",
+        "freecamping.json",
+        "freecamping-usfs.json",
+        "swimming-holes.json",
+        "at-points.json",
+        "backpackcamping-usfs.json",
+      ];
+
+      async function findPointBySlug(theSlug) {
+        for (const file of DATASETS) {
+          try {
+            const res = await fetch(`/data/${file}`);
+            if (!res.ok) continue;
+            const arr = await res.json();
+            const hit = arr.find(p => {
+              const s = p.slug || slugify(p.name || p.trail_name || p.site_name);
+              return s === theSlug;
+            });
+            if (hit) return hit;
+          } catch (_) {}
+        }
+        return null;
+      }
+
+      function whenLeaflet() {
+        return new Promise(resolve => {
+          if (window.L) resolve();
+          else window.addEventListener("load", () => resolve(), { once:true });
+        });
+      }
+
+      function initMaps(lat, lon, name) {
+        whenLeaflet()
+          .then(() => {
+            const baseLayers = () => {
+              const usgsTopo = L.tileLayer("https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}", { attribution:"USGS Topo", maxZoom:16 });
+              const usgsImag = L.tileLayer("https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}", { attribution:"USGS Imagery", maxZoom:16 });
+              const openTopo = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", { attribution:"OpenTopoMap", maxZoom:17 });
+              const osm      = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution:"© OpenStreetMap", maxZoom:19 });
+              const esriHill = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}", { attribution:"Esri Hillshade", maxZoom:16 });
+              return {usgsTopo, usgsImag, openTopo, osm, esriHill};
+            };
+
+            const {usgsTopo, usgsImag, openTopo, osm, esriHill} = baseLayers();
+
+            // main map
+            const main = L.map("detailMap", { center:[lat,lon], zoom:12, layers:[usgsTopo] });
+            L.control.layers({
+              "🗺️ USGS Topo":usgsTopo, "🛰️ USGS Imagery":usgsImag, "🗻 OpenTopo":openTopo, "🧭 OSM":osm, "⛰️ Hillshade":esriHill
+            }, null, {collapsed:true}).addTo(main);
+            L.marker([lat,lon]).addTo(main).bindPopup(name);
+            setTimeout(()=>main.invalidateSize(),80);
+
+            // nearby map
+            const b2 = baseLayers();
+            const topo = L.map("nearbyMap", { center:[lat,lon], zoom:12, layers:[b2.openTopo] });
+            L.control.layers({
+              "🗻 OpenTopo":b2.openTopo, "🗺️ USGS Topo":b2.usgsTopo, "🛰️ USGS Imagery":b2.usgsImag, "🧭 OSM":b2.osm, "⛰️ Hillshade":b2.esriHill
+            }, null, {collapsed:true}).addTo(topo);
+            const hereIcon = L.icon({ iconUrl:"/images/markers/default.png", iconSize:[40,40], iconAnchor:[20,38] });
+            L.marker([lat,lon], {icon:hereIcon}).addTo(topo).bindPopup(name);
+
+            // nearby points (~8km)
+            const datasets = [
+              { file: "trailheads-usfs.json",       icon:"hiking"      },
+              { file: "trailheads-ridb.json",       icon:"hiking"      },
+              { file: "campgrounds-usfs-ridb.json", icon:"camping"     },
+              { file: "freecamping.json",           icon:"freecamping" },
+              { file: "freecamping-usfs.json",      icon:"freecamping" },
+              { file: "swimming-holes.json",        icon:"swimming"    },
+            ];
+            const toRad = d => d*Math.PI/180, R=6371;
+            const distKm = (a,b) => {
+              const dLat=toRad(b.lat-a.lat), dLon=toRad(b.lon-a.lon);
+              const la1=toRad(a.lat), la2=toRad(b.lat);
+              const h=Math.sin(dLat/2)**2 + Math.cos(la1)*Math.cos(la2)*Math.sin(dLon/2)**2;
+              return 2*R*Math.asin(Math.sqrt(h));
+            };
+            const here = {lat,lon};
+            const group = L.featureGroup().addTo(topo);
+
+            Promise.all(
+              datasets.map(({file,icon}) =>
+                fetch(`/data/${file}`).then(r=>r.json()).then(arr =>
+                  arr
+                    .map(p => ({...p, __dist: distKm(here,{lat:Number(p.latitude ?? p.lat),lon:Number(p.longitude ?? p.lon)}), __icon:icon}))
+                    .filter(p => Number.isFinite(p.__dist) && p.__dist <= 8)
+                )
+              )
+            ).then(chunks => {
+              const all = chunks.flat().sort((a,b)=>a.__dist-b.__dist).slice(0,14);
+              nearbyList.innerHTML = all.length ? "" : `<div class="card"><p class="small">No nearby points within ~5 miles.</p></div>`;
+              all.forEach((p) => {
+                const icon = L.icon({ iconUrl:`/images/markers/${p.__icon}.png`, iconSize:[34,34], iconAnchor:[17,32] });
+                const m = L.marker([p.latitude ?? p.lat, p.longitude ?? p.lon], {icon}).bindPopup(p.name || "Spot").addTo(group);
+
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
+                  <div class="row">
+                    <img src="/images/markers/${p.__icon}.png" width="28" height="28" style="border-radius:6px" alt="">
+                    <div class="col"><strong>${p.name || "Unnamed"}</strong><span class="small">${p.__icon} • ${p.__dist.toFixed(1)} km</span></div>
+                  </div>`;
+                card.addEventListener("mouseenter", ()=>m.openPopup());
+                card.addEventListener("mouseleave", ()=>m.closePopup());
+                card.addEventListener("click", ()=>{ topo.setView(m.getLatLng(), 14); m.openPopup(); });
+                nearbyList.appendChild(card);
+              });
+              try { const b = group.getBounds(); if (b && b.isValid()) topo.fitBounds(b.pad(0.2)); } catch {}
+              setTimeout(()=>topo.invalidateSize(),80);
+            });
+          })
+          .catch(()=>{});
+      }
+
+      async function initWeather(lat, lon) {
+        try {
+          const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max,windspeed_10m_max,sunrise,sunset&timezone=auto`;
+          const res = await fetch(url);
+          const data = await res.json();
+
+          if (Number.isFinite(data.elevation)) addStat("Elevation", `${Math.round(data.elevation)} m`);
+          if (data?.daily?.sunrise?.length && data?.daily?.sunset?.length) {
+            const sr = new Date(data.daily.sunrise[0]);
+            const ss = new Date(data.daily.sunset[0]);
+            const t = d => d.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
+            addStat("Sunrise/Sunset", `${t(sr)} / ${t(ss)}`);
+          }
+
+          const d = data.daily;
+          if (!d || !d.time) return;
+          weatherCard.style.display = "";
+          weatherRows.innerHTML = "";
+
+          const codeToText = c => ({0:"Clear",1:"Mostly clear",2:"Partly cloudy",3:"Cloudy",45:"Fog",48:"Rime fog",51:"Drizzle",61:"Rain",71:"Snow",95:"Thunder"}[c] || "—");
+
+          for (let i = 0; i < Math.min(5, d.time.length); i++) {
+            const row = document.createElement("div");
+            row.className = "w-row";
+            const day = new Date(d.time[i]).toLocaleDateString(undefined, { weekday:"short", month:"short", day:"numeric" });
+            row.innerHTML = `
+              <div class="w-title">${day}</div>
+              <div class="w-sub">${codeToText(d.weathercode[i])}</div>
+              <div class="w-sub">🌡️ ${Math.round(d.temperature_2m_min[i])}° / ${Math.round(d.temperature_2m_max[i])}°</div>
+              <div class="w-sub">💨 ${Math.round(d.windspeed_10m_max[i])} mph • ☔ ${d.precipitation_probability_max?.[i] ?? "—"}%</div>
+            `;
+            weatherRows.appendChild(row);
+          }
+          weatherNote.textContent = "Forecast via Open-Meteo.";
+
+          // live radar
+          radarBox.style.display = "";
+          const iframe = document.createElement("iframe");
+          iframe.title = "Live radar";
+          iframe.width = "100%";
+          iframe.height = "100%";
+          iframe.frameBorder = "0";
+          iframe.referrerPolicy = "no-referrer";
+          iframe.src = `https://embed.windy.com/embed2.html?lat=${lat}&lon=${lon}&detailLat=${lat}&detailLon=${lon}&zoom=8&level=surface&overlay=radar&menu=&message=false&type=map&location=coordinates&metricWind=mph&metricTemp=%C2%B0F`;
+          radarMount.appendChild(iframe);
+        } catch {}
+      }
+
+      // Excel serial (USFS "last_verified") -> YYYY-MM-DD
+      const excelSerialToISO = (s) => {
+        const n = Number(s);
+        if (!Number.isFinite(n)) return null;
+        const base = new Date(Date.UTC(1899, 11, 30));
+        base.setUTCDate(base.getUTCDate() + n);
+        return base.toISOString().slice(0, 10);
+      };
+
+      // ---------- Resolve point (sessionStorage validated → dataset fallback) ----------
+      (async () => {
+        let point = null;
+        try { point = JSON.parse(sessionStorage.getItem("selectedPoint") || "null"); } catch {}
+        const fromSessionSlug = slugify(
+          point?.slug || point?.name || point?.trail_name || point?.site_name || ""
+        );
+        if (!point || !slug || fromSessionSlug !== slug) {
+          point = await findPointBySlug(slug);
+          try { if (point) sessionStorage.setItem("selectedPoint", JSON.stringify({...point, slug})); } catch {}
+        }
+
+        if (!point) {
+          titleEl.textContent = "Not found";
+          subEl.textContent   = "Open a marker on Explore and click “View Details”.";
+          descEl.textContent  = "We couldn’t resolve this location from the URL.";
+          return;
+        }
+
+        // Title, subtitle, description
+        const name = clean(point.name || point.trail_name || point.site_name) || "Unnamed";
+        titleEl.textContent = name;
+        subEl.textContent   = clean(point.location || point.agency || point.region) || "";
+        descEl.textContent  = clean(point.description || point.notes) || "No description available yet.";
+
+        // Badges
+        const type = clean(point.site_type || point.type || point.category || point.ridbtype);
+        const src  = clean(point.source);
+        const tb = makeBadge(type); if (tb) badges.appendChild(tb);
+        const sb = makeBadge(src ? `Source: ${src}` : null); if (sb) badges.appendChild(sb);
+
+        // Coords
+        const lat = getLat(point);
+        const lon = getLon(point);
+        if (Number.isFinite(lat) && Number.isFinite(lon)) {
+          addStat("Latitude",  lat.toFixed(5));
+          addStat("Longitude", lon.toFixed(5));
+          copyLL.addEventListener("click", async () => {
+            try { await navigator.clipboard.writeText(`${lat.toFixed(5)}, ${lon.toFixed(5)}`); copyLL.textContent="✅ Copied!"; setTimeout(()=>copyLL.textContent="📍 Copy coords",1000);} catch {}
+          });
+          gmaps.href = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
+          permalink.addEventListener("click", async () => {
+            try { await navigator.clipboard.writeText(location.href); permalink.textContent="✅ Link copied"; setTimeout(()=>permalink.textContent="🔗 Copy link",1000);} catch {}
+          });
+
+          initMaps(lat, lon, name);
+          initWeather(lat, lon);
+        }
+
+   // ---- Pull extra fields if present (USFS / RIDB / Swimming / etc.) ----
+
+// helpers
+const pick = (...keys) => {
+  for (const k of keys) { const v = clean(point[k]); if (v || v === 0) return v; }
+  return null;
+};
+const raw = (k) => point[k] ?? null;
+const add = (label, value, href) => {
+  const v = value;                               // value will be cleaned by renderPairs
+  if (v != null && String(v).trim() !== "") {
+    pairs.push(href ? { label, value: v, href } : { label, value: v });
+  }
+};
+
+// Excel serials → ISO; ignore null/base
+const excelSerialToISO = (s) => {
+  const n = Number(s);
+  if (!Number.isFinite(n) || n <= 0) return null;
+  const base = new Date(Date.UTC(1899,11,30)); base.setUTCDate(base.getUTCDate()+n);
+  const iso = base.toISOString().slice(0,10);
+  return iso === "1899-12-30" ? null : iso;
+};
+
+const pairs = [];
+
+/* ======== Details BELOW the description ======== */
+// Core fields we want under “About this place”
+add("Fee",           pick("fee"));
+add("Fee details",   pick("fee_description"));
+add("Sites",         pick("site_count","sites"));
+
+// Preserve “Not specified” for these by passing the raw value;
+// (Step 2 below tweaks clean() so it's not stripped.)
+add("Water",         raw("water"));
+add("Bathrooms",     raw("bathrooms"));
+
+// Pets / dogs
+add("Dogs",          pick("dogs","dogs_allowed","pets_allowed","pet_policy","pets"));
+
+// Other useful details
+// Access (type + notes combined if both exist)
+(() => {
+  const a = pick("access_type","road_access","vehicle_access","access");
+  const notes = pick("access_notes");
+  const combo = a && notes ? `${a} — ${notes}` : (a || notes);
+  if (combo) add("Access", combo);
+})();
+
+add("Restrictions",  pick("restrictions"));
+add("Hours",         pick("operation_hours","hours"));
+add("Season",        pick("season","open_season"));
+add("Closest town",  pick("closest_town","nearest_town"));
+add("Operator",      pick("operator","managing_agency","agency"));
+
+(() => {
+  const url = pick("link","url","website","homepage");
+  if (url) add("Website", url.replace(/^https?:\/\//,''), (point.link||point.url||point.website||point.homepage));
+})();
+
+// RIDB extras (RecAreas)
+(() => {
+  const t = pick("ridbtype");
+  if (t) add("RIDB type", t);
+
+  // Opportunistic fee line from long description if no structured fee shown
+  const desc = pick("description");
+  if (!pick("fee") && desc && /\$\d/.test(desc)) {
+    const feeLine = desc.split(/\r?\n/).find(l => /\$\d/.test(l));
+    if (feeLine) add("Fee", feeLine.replace(/\s+/g,' ').trim());
+  }
+})();
+
+// Last verified (USFS serials)
+(() => {
+  const iso = excelSerialToISO(point.last_verified ?? point.lastVerified ?? null);
+  if (iso) add("Last verified", iso);
+})();
+
+// Minimal fallback so the section never looks empty
+if (!pairs.length) {
+  const src = pick("source") || (point.ridbtype ? "RIDB" : "USFS");
+  if (src) add("Data source", src);
+  add("Website", pick("link","url","website","homepage"));
+  const iso = excelSerialToISO(point.last_verified ?? point.lastVerified ?? null);
+  if (iso) add("Last verified", iso);
+  if (!pairs.length) add("More details", "Not provided by the source.");
+}
+
+// Render collected extras
+renderPairs(pairs);
+
+
+
+        // print button
+        document.getElementById("printPkt")?.addEventListener("click", () => window.print());
+      })();
+    })();
+  </script>
+</BaseLayout>
+

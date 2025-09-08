@@ -1,0 +1,2654 @@
+[
+  {
+    "name": "Springer Mt (3782 ft)",
+    "latitude": 34.62673,
+    "longitude": -84.193656,
+    "description": "Feature | Elevation: 3782 ft"
+  },
+  {
+    "name": "Springer Mountain Shelter",
+    "latitude": 34.6292728,
+    "longitude": -84.192975,
+    "description": "Shelter | Elevation: 3730 ft"
+  },
+  {
+    "name": "Black Gap Shelter",
+    "latitude": 34.6176819,
+    "longitude": -84.198711,
+    "description": "Shelter | Elevation: 3300 ft"
+  },
+  {
+    "name": "Stover Creek Shelter",
+    "latitude": 34.6495767,
+    "longitude": -84.1997597,
+    "description": "Shelter | Elevation: 2870 ft"
+  },
+  {
+    "name": "Hawk Mountain Shelter",
+    "latitude": 34.6659577,
+    "longitude": -84.1363386,
+    "description": "Shelter | Elevation: 3200 ft"
+  },
+  {
+    "name": "Gooch Mountain Shelter",
+    "latitude": 34.6533256,
+    "longitude": -84.0342084,
+    "description": "Shelter | Elevation: 3000 ft"
+  },
+  {
+    "name": "Suches, GA 30572",
+    "latitude": 34.68,
+    "longitude": -84.02,
+    "description": "Town"
+  },
+  {
+    "name": "Woods Hole Shelter",
+    "latitude": 34.7372479,
+    "longitude": -83.954924,
+    "description": "Shelter | Elevation: 3600 ft"
+  },
+  {
+    "name": "Blood Mountain Shelter",
+    "latitude": 34.7400792,
+    "longitude": -83.9374442,
+    "description": "Shelter | Elevation: 4450 ft"
+  },
+  {
+    "name": "Blood Mt (4458 ft)",
+    "latitude": 34.7398,
+    "longitude": -83.9369,
+    "description": "Feature | Elevation: 4458 ft"
+  },
+  {
+    "name": "Whitley Gap Shelter",
+    "latitude": 34.7125074,
+    "longitude": -83.8342857,
+    "description": "Shelter | Elevation: 3370 ft"
+  },
+  {
+    "name": "Low Gap Shelter",
+    "latitude": 34.7763053,
+    "longitude": -83.8245496,
+    "description": "Shelter | Elevation: 2990 ft"
+  },
+  {
+    "name": "Blue Mountain Shelter",
+    "latitude": 34.8172349,
+    "longitude": -83.7667067,
+    "description": "Shelter | Elevation: 3900 ft"
+  },
+  {
+    "name": "Helen, GA 30545",
+    "latitude": 34.7,
+    "longitude": -83.73,
+    "description": "Town"
+  },
+  {
+    "name": "Tray Mountain Shelter",
+    "latitude": 34.8040756,
+    "longitude": -83.6767785,
+    "description": "Shelter | Elevation: 4200 ft"
+  },
+  {
+    "name": "Deep Gap Shelter",
+    "latitude": 34.8824641,
+    "longitude": -83.6460608,
+    "description": "Shelter | Elevation: 3440 ft"
+  },
+  {
+    "name": "Hiawassee, GA 30546",
+    "latitude": 34.95,
+    "longitude": -83.75,
+    "description": "Town"
+  },
+  {
+    "name": "Plumorchard Gap Shelter",
+    "latitude": 34.9461587,
+    "longitude": -83.5881925,
+    "description": "Shelter | Elevation: 3050 ft"
+  },
+  {
+    "name": "Muskrat Creek Shelter",
+    "latitude": 35.020655,
+    "longitude": -83.5815196,
+    "description": "Shelter | Elevation: 4600 ft"
+  },
+  {
+    "name": "Standing Indian Shelter",
+    "latitude": 35.0419474,
+    "longitude": -83.5480465,
+    "description": "Shelter | Elevation: 4760 ft"
+  },
+  {
+    "name": "Standing Indian Mt (5490 ft)",
+    "latitude": 35.035482,
+    "longitude": -83.537977,
+    "description": "Feature | Elevation: 5490 ft"
+  },
+  {
+    "name": "Carter Gap Shelter (new)",
+    "latitude": 34.9999868,
+    "longitude": -83.4947667,
+    "description": "Shelter | Elevation: 4540 ft"
+  },
+  {
+    "name": "Carter Gap Shelter (old)",
+    "latitude": 34.9990187,
+    "longitude": -83.4941516,
+    "description": "Shelter | Elevation: 4540 ft"
+  },
+  {
+    "name": "Big Spring Shelter",
+    "latitude": 35.0590267,
+    "longitude": -83.4787948,
+    "description": "Shelter | Elevation: 4940 ft"
+  },
+  {
+    "name": "Rock Gap Shelter",
+    "latitude": 35.0915531,
+    "longitude": -83.5229901,
+    "description": "Shelter | Elevation: 760 ft"
+  },
+  {
+    "name": "Franklin, NC 28734",
+    "latitude": 35.18,
+    "longitude": -83.38,
+    "description": "Town"
+  },
+  {
+    "name": "Siler Bald Shelter",
+    "latitude": 35.1442503,
+    "longitude": -83.5724347,
+    "description": "Shelter | Elevation: 4600 ft"
+  },
+  {
+    "name": "Wayah Bald (5342 ft)",
+    "latitude": 35.1802,
+    "longitude": -83.5608,
+    "description": "Feature | Elevation: 5342 ft"
+  },
+  {
+    "name": "Cold Spring Shelter",
+    "latitude": 35.2310157,
+    "longitude": -83.5597518,
+    "description": "Shelter | Elevation: 4920 ft"
+  },
+  {
+    "name": "Wesser Bald Shelter",
+    "latitude": 35.2824621,
+    "longitude": -83.5821123,
+    "description": "Shelter | Elevation: 4115 ft"
+  },
+  {
+    "name": "A. Rufus Morgan Shelter",
+    "latitude": 35.3242861,
+    "longitude": -83.5901033,
+    "description": "Shelter | Elevation: 2300 ft"
+  },
+  {
+    "name": "Sassafras Gap Shelter",
+    "latitude": 35.33079,
+    "longitude": -83.6668628,
+    "description": "Shelter | Elevation: 4330 ft"
+  },
+  {
+    "name": "Brown Fork Gap Shelter",
+    "latitude": 35.3743478,
+    "longitude": -83.7338086,
+    "description": "Shelter | Elevation: 3800 ft"
+  },
+  {
+    "name": "Cable Gap Shelter",
+    "latitude": 35.4153251,
+    "longitude": -83.7734737,
+    "description": "Shelter | Elevation: 2880 ft"
+  },
+  {
+    "name": "Fontana Dam, NC 28733",
+    "latitude": 35.43,
+    "longitude": -83.83,
+    "description": "Town"
+  },
+  {
+    "name": "Fontana Dam Shelter",
+    "latitude": 35.448432,
+    "longitude": -83.7940435,
+    "description": "Shelter | Elevation: 1775 ft"
+  },
+  {
+    "name": "Mollies Ridge Shelter",
+    "latitude": 35.5458893,
+    "longitude": -83.7935136,
+    "description": "Shelter | Elevation: 4570 ft"
+  },
+  {
+    "name": "Russell Field Shelter",
+    "latitude": 35.5618399,
+    "longitude": -83.7665112,
+    "description": "Shelter | Elevation: 4360 ft"
+  },
+  {
+    "name": "Spence Field Shelter",
+    "latitude": 35.5619025,
+    "longitude": -83.7326211,
+    "description": "Shelter | Elevation: 4915 ft"
+  },
+  {
+    "name": "Derrick Knob Shelter",
+    "latitude": 35.5663517,
+    "longitude": -83.6417974,
+    "description": "Shelter | Elevation: 4880 ft"
+  },
+  {
+    "name": "Silers Bald Shelter",
+    "latitude": 35.5643093,
+    "longitude": -83.5682326,
+    "description": "Shelter | Elevation: 5460 ft"
+  },
+  {
+    "name": "Double Spring Gap Shelter",
+    "latitude": 35.5652725,
+    "longitude": -83.5427482,
+    "description": "Shelter | Elevation: 5505 ft"
+  },
+  {
+    "name": "Clingmans Dome (6643 ft)",
+    "latitude": 35.55,
+    "longitude": -83.5,
+    "description": "Feature | Elevation: 6643 ft"
+  },
+  {
+    "name": "Mt. Collins Shelter",
+    "latitude": 35.5938466,
+    "longitude": -83.4713028,
+    "description": "Shelter | Elevation: 5870 ft"
+  },
+  {
+    "name": "Gatlinburg, TN 37738",
+    "latitude": 35.72,
+    "longitude": -83.52,
+    "description": "Town"
+  },
+  {
+    "name": "Icewater Spring Shelter",
+    "latitude": 35.6297885,
+    "longitude": -83.3862811,
+    "description": "Shelter | Elevation: 5920 ft"
+  },
+  {
+    "name": "Charlies Bunion (5375 ft)",
+    "latitude": 35.639259,
+    "longitude": -83.371878,
+    "description": "Feature | Elevation: 5375 ft"
+  },
+  {
+    "name": "Pecks Corner Shelter",
+    "latitude": 35.6508443,
+    "longitude": -83.3084848,
+    "description": "Shelter | Elevation: 5280 ft"
+  },
+  {
+    "name": "Tricorner Knob Shelter",
+    "latitude": 35.6937717,
+    "longitude": -83.2565301,
+    "description": "Shelter | Elevation: 5920 ft"
+  },
+  {
+    "name": "Mt Guyot (6621 ft)",
+    "latitude": 35.705311,
+    "longitude": -83.257683,
+    "description": "Feature | Elevation: 6621 ft"
+  },
+  {
+    "name": "Cosby Knob Shelter",
+    "latitude": 35.7271836,
+    "longitude": -83.182078,
+    "description": "Shelter | Elevation: 4700 ft"
+  },
+  {
+    "name": "Davenport Gap Shelter",
+    "latitude": 35.7693221,
+    "longitude": -83.1235547,
+    "description": "Shelter | Elevation: 2600 ft"
+  },
+  {
+    "name": "Groundhog Creek Shelter",
+    "latitude": 35.7817559,
+    "longitude": -83.0261885,
+    "description": "Shelter | Elevation: 2850 ft"
+  },
+  {
+    "name": "Max Patch Mt (4629 ft)",
+    "latitude": 35.797272,
+    "longitude": -82.956848,
+    "description": "Feature | Elevation: 4629 ft"
+  },
+  {
+    "name": "Roaring Fork Shelter",
+    "latitude": 35.8224413,
+    "longitude": -82.9384923,
+    "description": "Shelter | Elevation: 3530 ft"
+  },
+  {
+    "name": "Walnut Mountain Shelter",
+    "latitude": 35.836546,
+    "longitude": -82.9365471,
+    "description": "Shelter | Elevation: 4260 ft"
+  },
+  {
+    "name": "Deer Park Mountain Shelter",
+    "latitude": 35.8759289,
+    "longitude": -82.8612434,
+    "description": "Shelter | Elevation: 2330 ft"
+  },
+  {
+    "name": "Hot Springs, NC 28743",
+    "latitude": 35.9,
+    "longitude": -82.83,
+    "description": "Town"
+  },
+  {
+    "name": "Spring Mountain Shelter",
+    "latitude": 35.9515781,
+    "longitude": -82.7901046,
+    "description": "Shelter | Elevation: 3300 ft"
+  },
+  {
+    "name": "Little Laurel Shelter",
+    "latitude": 36.015082,
+    "longitude": -82.7357905,
+    "description": "Shelter | Elevation: 3620 ft"
+  },
+  {
+    "name": "Jerry Cabin",
+    "latitude": 36.0565607,
+    "longitude": -82.6572202,
+    "description": "Shelter | Elevation: 4150 ft"
+  },
+  {
+    "name": "Flint Mountain Shelter",
+    "latitude": 36.0348823,
+    "longitude": -82.5967225,
+    "description": "Shelter | Elevation: 3570 ft"
+  },
+  {
+    "name": "Hogback Ridge Shelter",
+    "latitude": 35.96405,
+    "longitude": -82.5870327,
+    "description": "Shelter | Elevation: 4255 ft"
+  },
+  {
+    "name": "Big Bald (5519 ft)",
+    "latitude": 35.989967,
+    "longitude": -82.490312,
+    "description": "Feature | Elevation: 5519 ft"
+  },
+  {
+    "name": "Bald Mountain Shelter",
+    "latitude": 36.0000923,
+    "longitude": -82.4781872,
+    "description": "Shelter | Elevation: 5100 ft"
+  },
+  {
+    "name": "No Business Knob Shelter",
+    "latitude": 36.0668644,
+    "longitude": -82.4334487,
+    "description": "Shelter | Elevation: 3180 ft"
+  },
+  {
+    "name": "Erwin, TN 37650",
+    "latitude": 36.15,
+    "longitude": -82.42,
+    "description": "Town"
+  },
+  {
+    "name": "Curley Maple Gap Shelter",
+    "latitude": 36.1042581,
+    "longitude": -82.3968395,
+    "description": "Shelter | Elevation: 3070 ft"
+  },
+  {
+    "name": "Cherry Gap Shelter",
+    "latitude": 36.1293282,
+    "longitude": -82.2640074,
+    "description": "Shelter | Elevation: 3900 ft"
+  },
+  {
+    "name": "Clyde Smith Shelter",
+    "latitude": 36.1485359,
+    "longitude": -82.1611868,
+    "description": "Shelter | Elevation: 4400 ft"
+  },
+  {
+    "name": "Roan High Knob Shelter",
+    "latitude": 36.1050516,
+    "longitude": -82.1225425,
+    "description": "Cabin | Elevation: 6275 ft"
+  },
+  {
+    "name": "Roan High Knob (6285 ft)",
+    "latitude": 36.1044,
+    "longitude": -82.1225,
+    "description": "Feature | Elevation: 6285 ft"
+  },
+  {
+    "name": "Stan Murray Shelter",
+    "latitude": 36.1123643,
+    "longitude": -82.0657368,
+    "description": "Shelter | Elevation: 5050 ft"
+  },
+  {
+    "name": "Overmountain Shelter",
+    "latitude": 36.1236332,
+    "longitude": -82.0542594,
+    "description": "Shelter | Elevation: 4550 ft"
+  },
+  {
+    "name": "Apple House Shelter",
+    "latitude": 36.1721768,
+    "longitude": -82.0111785,
+    "description": "Shelter | Elevation: 3000 ft"
+  },
+  {
+    "name": "Roan Mountain, TN 37687",
+    "latitude": 36.2,
+    "longitude": -82.07,
+    "description": "Town"
+  },
+  {
+    "name": "Elk Park, NC 28622",
+    "latitude": 36.15,
+    "longitude": -81.98,
+    "description": "Town"
+  },
+  {
+    "name": "Moreland Gap Shelter",
+    "latitude": 36.2202123,
+    "longitude": -82.0883647,
+    "description": "Shelter | Elevation: 3815 ft"
+  },
+  {
+    "name": "Laurel Fork Shelter",
+    "latitude": 36.2786447,
+    "longitude": -82.1362319,
+    "description": "Shelter | Elevation: 2450 ft"
+  },
+  {
+    "name": "Hampton, TN 37658",
+    "latitude": 36.28,
+    "longitude": -82.17,
+    "description": "Town"
+  },
+  {
+    "name": "Watauga Lake Shelter",
+    "latitude": 36.3139645,
+    "longitude": -82.1293868,
+    "description": "Shelter | Elevation: 2130 ft"
+  },
+  {
+    "name": "Vandeventer Shelter",
+    "latitude": 36.3670304,
+    "longitude": -82.0588044,
+    "description": "Shelter | Elevation: 3620 ft"
+  },
+  {
+    "name": "Iron Mountain Shelter",
+    "latitude": 36.4356175,
+    "longitude": -81.9908857,
+    "description": "Shelter | Elevation: 4125 ft"
+  },
+  {
+    "name": "Double Springs Shelter",
+    "latitude": 36.5090586,
+    "longitude": -81.9860558,
+    "description": "Shelter | Elevation: 4060 ft"
+  },
+  {
+    "name": "Shady Valley, TN 37688",
+    "latitude": 36.52,
+    "longitude": -81.93,
+    "description": "Town"
+  },
+  {
+    "name": "Abingdon Gap Shelter",
+    "latitude": 36.5810973,
+    "longitude": -81.902055,
+    "description": "Shelter | Elevation: 3785 ft"
+  },
+  {
+    "name": "The Place",
+    "latitude": 36.633898,
+    "longitude": -81.7872829,
+    "description": "Hostel | Elevation: 3310 ft"
+  },
+  {
+    "name": "Damascus, VA 24236",
+    "latitude": 36.63,
+    "longitude": -81.78,
+    "description": "Town"
+  },
+  {
+    "name": "Saunders Shelter",
+    "latitude": 36.6377834,
+    "longitude": -81.7129853,
+    "description": "Shelter | Elevation: 3310 ft"
+  },
+  {
+    "name": "Lost Mountain Shelter",
+    "latitude": 36.6441387,
+    "longitude": -81.6561153,
+    "description": "Shelter | Elevation: 3360 ft"
+  },
+  {
+    "name": "Mt Rogers (5729 ft)",
+    "latitude": 36.6597,
+    "longitude": -81.5447,
+    "description": "Feature | Elevation: 5729 ft"
+  },
+  {
+    "name": "Thomas Knob Shelter",
+    "latitude": 36.6566421,
+    "longitude": -81.5351811,
+    "description": "Shelter | Elevation: 5400 ft"
+  },
+  {
+    "name": "Wise Shelter",
+    "latitude": 36.6540027,
+    "longitude": -81.4984093,
+    "description": "Shelter | Elevation: 4460 ft"
+  },
+  {
+    "name": "Old Orchard Shelter",
+    "latitude": 36.6832923,
+    "longitude": -81.5110583,
+    "description": "Shelter | Elevation: 4050 ft"
+  },
+  {
+    "name": "Troutdale, VA 24378",
+    "latitude": 36.69,
+    "longitude": -81.44,
+    "description": "Town"
+  },
+  {
+    "name": "Raccoon Branch Shelter",
+    "latitude": 36.7309988,
+    "longitude": -81.4718118,
+    "description": "Shelter | Elevation: 3570 ft"
+  },
+  {
+    "name": "Trimpi Shelter",
+    "latitude": 36.7492587,
+    "longitude": -81.480436,
+    "description": "Shelter | Elevation: 2900 ft"
+  },
+  {
+    "name": "Partnership Shelter",
+    "latitude": 36.8094783,
+    "longitude": -81.422411,
+    "description": "Shelter | Elevation: 3360 ft"
+  },
+  {
+    "name": "Sugar Grove, VA 24375",
+    "latitude": 36.78,
+    "longitude": -81.42,
+    "description": "Town"
+  },
+  {
+    "name": "Chatfield Shelter",
+    "latitude": 36.8499831,
+    "longitude": -81.3631238,
+    "description": "Shelter | Elevation: 3150 ft"
+  },
+  {
+    "name": "Atkins, VA 24311",
+    "latitude": 36.87,
+    "longitude": -81.42,
+    "description": "Town"
+  },
+  {
+    "name": "Davis Path Shelter",
+    "latitude": 36.9145127,
+    "longitude": -81.3767313,
+    "description": "Shelter | Elevation: 2840 ft"
+  },
+  {
+    "name": "Knot Maul Branch Shelter",
+    "latitude": 37.000737,
+    "longitude": -81.4043773,
+    "description": "Shelter | Elevation: 2880 ft"
+  },
+  {
+    "name": "Chestnut Knob Shelter",
+    "latitude": 37.0577631,
+    "longitude": -81.3993256,
+    "description": "Shelter | Elevation: 4409 ft"
+  },
+  {
+    "name": "Jenkins Shelter",
+    "latitude": 37.0934615,
+    "longitude": -81.2476124,
+    "description": "Shelter | Elevation: 2500 ft"
+  },
+  {
+    "name": "Bland, VA 24315",
+    "latitude": 37.1,
+    "longitude": -81.12,
+    "description": "Town"
+  },
+  {
+    "name": "Bastian, VA 24314",
+    "latitude": 37.15,
+    "longitude": -81.15,
+    "description": "Town"
+  },
+  {
+    "name": "Helveys Mill Shelter",
+    "latitude": 37.1326964,
+    "longitude": -81.1042278,
+    "description": "Shelter | Elevation: 3090 ft"
+  },
+  {
+    "name": "Jenny Knob Shelter",
+    "latitude": 37.155056,
+    "longitude": -80.9800855,
+    "description": "Shelter | Elevation: 2800 ft"
+  },
+  {
+    "name": "Wapiti Shelter",
+    "latitude": 37.2240141,
+    "longitude": -80.8239444,
+    "description": "Shelter | Elevation: 2640 ft"
+  },
+  {
+    "name": "Doc's Knob Shelter",
+    "latitude": 37.2702763,
+    "longitude": -80.836224,
+    "description": "Shelter | Elevation: 3555 ft"
+  },
+  {
+    "name": "Pearisburg, VA 24134",
+    "latitude": 37.33,
+    "longitude": -80.73,
+    "description": "Town"
+  },
+  {
+    "name": "Rice Field Shelter",
+    "latitude": 37.3748614,
+    "longitude": -80.7583543,
+    "description": "Shelter | Elevation: 3375 ft"
+  },
+  {
+    "name": "Pine Swamp Branch Shelter",
+    "latitude": 41.8816194,
+    "longitude": -73.3916426,
+    "description": "Shelter | Elevation: 2530 ft"
+  },
+  {
+    "name": "Bailey Gap Shelter",
+    "latitude": 37.4009267,
+    "longitude": -80.5770362,
+    "description": "Shelter | Elevation: 3525 ft"
+  },
+  {
+    "name": "War Spur Shelter",
+    "latitude": 37.3976093,
+    "longitude": -80.4738348,
+    "description": "Shelter | Elevation: 2340 ft"
+  },
+  {
+    "name": "Laurel Creek Shelter",
+    "latitude": 37.3589782,
+    "longitude": -80.4209807,
+    "description": "Shelter | Elevation: 2720 ft"
+  },
+  {
+    "name": "Sarver Hollow Shelter",
+    "latitude": 37.3554515,
+    "longitude": -80.3351967,
+    "description": "Shelter | Elevation: 3000 ft"
+  },
+  {
+    "name": "Niday Shelter",
+    "latitude": 37.3875539,
+    "longitude": -80.2642126,
+    "description": "Shelter | Elevation: 1800 ft"
+  },
+  {
+    "name": "Pickle Branch Shelter",
+    "latitude": 37.3881068,
+    "longitude": -80.1911152,
+    "description": "Shelter | Elevation: 1845 ft"
+  },
+  {
+    "name": "Catawba, VA 24070",
+    "latitude": 37.38,
+    "longitude": -80.12,
+    "description": "Town"
+  },
+  {
+    "name": "Boy Scout Shelter",
+    "latitude": 37.3853788,
+    "longitude": -80.073909,
+    "description": "Shelter | Elevation: 1980 ft"
+  },
+  {
+    "name": "Catawba Mountain Shelter",
+    "latitude": 37.3882625,
+    "longitude": -80.0571996,
+    "description": "Shelter | Elevation: 2145 ft"
+  },
+  {
+    "name": "McAfee Knob (3197 ft)",
+    "latitude": 37.392421,
+    "longitude": -80.036987,
+    "description": "Feature | Elevation: 3197 ft"
+  },
+  {
+    "name": "Campbell Shelter",
+    "latitude": 37.3908569,
+    "longitude": -80.0292814,
+    "description": "Shelter | Elevation: 2580 ft"
+  },
+  {
+    "name": "Lamberts Meadow Shelter",
+    "latitude": 37.4346261,
+    "longitude": -79.9875626,
+    "description": "Shelter | Elevation: 2080 ft"
+  },
+  {
+    "name": "Cloverdale, VA 24077",
+    "latitude": 37.37,
+    "longitude": -79.9,
+    "description": "Town"
+  },
+  {
+    "name": "Daleville, VA 24083",
+    "latitude": 37.42,
+    "longitude": -79.92,
+    "description": "Town"
+  },
+  {
+    "name": "Troutville, VA 24175",
+    "latitude": 37.42,
+    "longitude": -79.88,
+    "description": "Town"
+  },
+  {
+    "name": "Fullhardt Knob Shelter",
+    "latitude": 37.3985317,
+    "longitude": -79.8537058,
+    "description": "Shelter | Elevation: 2670 ft"
+  },
+  {
+    "name": "Wilson Creek Shelter",
+    "latitude": 37.4193262,
+    "longitude": -79.7855048,
+    "description": "Shelter | Elevation: 1830 ft"
+  },
+  {
+    "name": "Bobblets Gap Shelter",
+    "latitude": 37.4672608,
+    "longitude": -79.7012044,
+    "description": "Shelter | Elevation: 1920 ft"
+  },
+  {
+    "name": "Buchanan, VA 24066",
+    "latitude": 37.53,
+    "longitude": -79.68,
+    "description": "Town"
+  },
+  {
+    "name": "Cove Mountain Shelter",
+    "latitude": 37.5117698,
+    "longitude": -79.6508263,
+    "description": "Shelter | Elevation: 1925 ft"
+  },
+  {
+    "name": "Bryant Ridge Shelter",
+    "latitude": 37.5301026,
+    "longitude": -79.585326,
+    "description": "Shelter | Elevation: 1320 ft"
+  },
+  {
+    "name": "Cornelius Creek Shelter",
+    "latitude": 37.4939756,
+    "longitude": -79.5469707,
+    "description": "Shelter | Elevation: 3145 ft"
+  },
+  {
+    "name": "Apple Orchard Mtn (4063 ft)",
+    "latitude": 37.5167,
+    "longitude": -79.5,
+    "description": "Feature | Elevation: 4063 ft"
+  },
+  {
+    "name": "Thunder Hill Shelter",
+    "latitude": 37.5274386,
+    "longitude": -79.5039496,
+    "description": "Shelter | Elevation: 3960 ft"
+  },
+  {
+    "name": "Matts Creek Shelter",
+    "latitude": 37.5995108,
+    "longitude": -79.4132249,
+    "description": "Shelter | Elevation: 835 ft"
+  },
+  {
+    "name": "Glasgow, VA 24555",
+    "latitude": 37.63,
+    "longitude": -79.45,
+    "description": "Town"
+  },
+  {
+    "name": "Big Island, VA 24526",
+    "latitude": 37.53,
+    "longitude": -79.37,
+    "description": "Town"
+  },
+  {
+    "name": "Johns Hollow Shelter",
+    "latitude": 37.6130592,
+    "longitude": -79.3918448,
+    "description": "Shelter | Elevation: 1020 ft"
+  },
+  {
+    "name": "Punchbowl Shelter",
+    "latitude": 37.6778118,
+    "longitude": -79.3385164,
+    "description": "Shelter | Elevation: 2500 ft"
+  },
+  {
+    "name": "Brown Mountain Creek Shelter",
+    "latitude": 37.7102862,
+    "longitude": -79.2679286,
+    "description": "Shelter | Elevation: 1395 ft"
+  },
+  {
+    "name": "Buena Vista, VA 24416",
+    "latitude": 37.73,
+    "longitude": -79.35,
+    "description": "Town"
+  },
+  {
+    "name": "Cow Camp Shelter",
+    "latitude": 37.7466787,
+    "longitude": -79.2130641,
+    "description": "Shelter | Elevation: 3160 ft"
+  },
+  {
+    "name": "Seeley-Woodworth Shelter",
+    "latitude": 37.8189848,
+    "longitude": -79.1548883,
+    "description": "Shelter | Elevation: 3770 ft"
+  },
+  {
+    "name": "Montebello, VA 24464",
+    "latitude": 37.87,
+    "longitude": -79.13,
+    "description": "Town"
+  },
+  {
+    "name": "The Priest Shelter",
+    "latitude": 37.8178045,
+    "longitude": -79.0703443,
+    "description": "Shelter | Elevation: 3840 ft"
+  },
+  {
+    "name": "The Priest (4063 ft)",
+    "latitude": 37.8197,
+    "longitude": -79.0628,
+    "description": "Feature | Elevation: 4063 ft"
+  },
+  {
+    "name": "Harpers Creek Shelter",
+    "latitude": 37.8564688,
+    "longitude": -79.0009732,
+    "description": "Shelter | Elevation: 1800 ft"
+  },
+  {
+    "name": "Maupin Field Shelter",
+    "latitude": 37.8849346,
+    "longitude": -78.9935968,
+    "description": "Shelter | Elevation: 2720 ft"
+  },
+  {
+    "name": "Paul C. Wolfe Shelter",
+    "latitude": 37.9856889,
+    "longitude": -78.8836462,
+    "description": "Shelter | Elevation: 1700 ft"
+  },
+  {
+    "name": "Waynesboro, VA 22980",
+    "latitude": 38.07,
+    "longitude": -78.88,
+    "description": "Town"
+  },
+  {
+    "name": "Calf Mountain Shelter",
+    "latitude": 38.0855703,
+    "longitude": -78.7865632,
+    "description": "Shelter | Elevation: 2700 ft"
+  },
+  {
+    "name": "Blackrock Hut",
+    "latitude": 38.2141322,
+    "longitude": -78.7423944,
+    "description": "Shelter | Elevation: 2645 ft"
+  },
+  {
+    "name": "Pinefield Hut",
+    "latitude": 38.2905971,
+    "longitude": -78.6457316,
+    "description": "Shelter | Elevation: 2430 ft"
+  },
+  {
+    "name": "Hightop Hut",
+    "latitude": 38.3330855,
+    "longitude": -78.5583619,
+    "description": "Shelter | Elevation: 3175 ft"
+  },
+  {
+    "name": "Bearfence Mountain Hut",
+    "latitude": 38.4441242,
+    "longitude": -78.4704345,
+    "description": "Shelter | Elevation: 3110 ft"
+  },
+  {
+    "name": "Hazeltop Mt (3812 ft)",
+    "latitude": 38.479782,
+    "longitude": -78.449997,
+    "description": "Feature | Elevation: 3812 ft"
+  },
+  {
+    "name": "Rock Spring Hut",
+    "latitude": 38.5531171,
+    "longitude": -78.408309,
+    "description": "Shelter | Elevation: 3465 ft"
+  },
+  {
+    "name": "Stony Man Mt (4011 ft)",
+    "latitude": 38.597886,
+    "longitude": -78.371919,
+    "description": "Feature | Elevation: 4011 ft"
+  },
+  {
+    "name": "Pass Mountain Hut",
+    "latitude": 38.6766102,
+    "longitude": -78.3189085,
+    "description": "Shelter | Elevation: 2690 ft"
+  },
+  {
+    "name": "Gravel Springs Hut",
+    "latitude": 38.7635129,
+    "longitude": -78.2342133,
+    "description": "Shelter | Elevation: 2480 ft"
+  },
+  {
+    "name": "Tom Floyd Wayside Shelter",
+    "latitude": 38.8504311,
+    "longitude": -78.1636383,
+    "description": "Shelter | Elevation: 1900 ft"
+  },
+  {
+    "name": "Front Royal, VA 22630",
+    "latitude": 38.92,
+    "longitude": -78.2,
+    "description": "Town"
+  },
+  {
+    "name": "Jim & Molly Denton Shelter",
+    "latitude": 38.8899997,
+    "longitude": -78.0830451,
+    "description": "Shelter | Elevation: 1310 ft"
+  },
+  {
+    "name": "Linden, VA 22642",
+    "latitude": 38.92,
+    "longitude": -78.08,
+    "description": "Town"
+  },
+  {
+    "name": "Manassas Gap Shelter",
+    "latitude": 38.9306324,
+    "longitude": -78.0327781,
+    "description": "Shelter | Elevation: 1655 ft"
+  },
+  {
+    "name": "Dick's Dome Shelter",
+    "latitude": 38.969954,
+    "longitude": -77.9967334,
+    "description": "Shelter | Elevation: 1230 ft"
+  },
+  {
+    "name": "Rod Hollow Shelter",
+    "latitude": 39.0478551,
+    "longitude": -77.9440873,
+    "description": "Shelter | Elevation: 840 ft"
+  },
+  {
+    "name": "Bears Den Hostel",
+    "latitude": 39.1109872,
+    "longitude": -77.8541454,
+    "description": "Hostel | Elevation: 1380 ft"
+  },
+  {
+    "name": "Sam Moore Shelter",
+    "latitude": 39.0906766,
+    "longitude": -77.8862848,
+    "description": "Shelter | Elevation: 990 ft"
+  },
+  {
+    "name": "Bluemont, VA 20135",
+    "latitude": 39.12,
+    "longitude": -77.83,
+    "description": "Town"
+  },
+  {
+    "name": "Blackburn Trail Center",
+    "latitude": 39.1878927,
+    "longitude": -77.7973796,
+    "description": "Hostel | Elevation: 1420 ft"
+  },
+  {
+    "name": "David Lesser Shelter",
+    "latitude": 39.227215,
+    "longitude": -77.7792448,
+    "description": "Shelter | Elevation: 1430 ft"
+  },
+  {
+    "name": "Harpers Ferry, WV 25425",
+    "latitude": 39.3254,
+    "longitude": -77.7393,
+    "description": "Town"
+  },
+  {
+    "name": "Ed Garvey Shelter",
+    "latitude": 39.356454,
+    "longitude": -77.6642532,
+    "description": "Shelter | Elevation: 650 ft"
+  },
+  {
+    "name": "Crampton Gap Shelter",
+    "latitude": 39.4125585,
+    "longitude": -77.63734,
+    "description": "Shelter | Elevation: 1000 ft"
+  },
+  {
+    "name": "Rocky Run Shelter",
+    "latitude": 39.4608415,
+    "longitude": -77.631046,
+    "description": "Shelter | Elevation: 970 ft"
+  },
+  {
+    "name": "Pine Knob Shelter",
+    "latitude": 39.5425312,
+    "longitude": -77.6020871,
+    "description": "Shelter | Elevation: 1360 ft"
+  },
+  {
+    "name": "Smithsburg, MD 21783",
+    "latitude": 39.65,
+    "longitude": -77.57,
+    "description": "Town"
+  },
+  {
+    "name": "Ensign Cowall Shelter",
+    "latitude": 39.6277409,
+    "longitude": -77.5576192,
+    "description": "Shelter | Elevation: 1430 ft"
+  },
+  {
+    "name": "Devils Racecourse Shelter",
+    "latitude": 39.6720608,
+    "longitude": -77.52433,
+    "description": "Shelter | Elevation: 1480 ft"
+  },
+  {
+    "name": "Cascade, MD 21719",
+    "latitude": 39.72,
+    "longitude": -77.48,
+    "description": "Town"
+  },
+  {
+    "name": "Mason Dixon Line (1250 ft)",
+    "latitude": 39.719,
+    "longitude": -77.506,
+    "description": "Feature | Elevation: 1250 ft"
+  },
+  {
+    "name": "Deer Lick Shelters",
+    "latitude": 39.766212,
+    "longitude": -77.4848896,
+    "description": "Shelter | Elevation: 1420 ft"
+  },
+  {
+    "name": "Antietam Shelter",
+    "latitude": 39.7938314,
+    "longitude": -77.4826513,
+    "description": "Shelter | Elevation: 890 ft"
+  },
+  {
+    "name": "Tumbling Run Shelters",
+    "latitude": 39.805027,
+    "longitude": -77.4779358,
+    "description": "Shelter | Elevation: 1120 ft"
+  },
+  {
+    "name": "South Mountain, PA 17261",
+    "latitude": 39.85,
+    "longitude": -77.48,
+    "description": "Town"
+  },
+  {
+    "name": "Rocky Mountain Shelters",
+    "latitude": 39.8685824,
+    "longitude": -77.5005762,
+    "description": "Shelter | Elevation: 1520 ft"
+  },
+  {
+    "name": "Fayetteville, PA 17222",
+    "latitude": 39.92,
+    "longitude": -77.55,
+    "description": "Town"
+  },
+  {
+    "name": "Quarry Gap Shelters",
+    "latitude": 39.9319782,
+    "longitude": -77.486416,
+    "description": "Shelter | Elevation: 1455 ft"
+  },
+  {
+    "name": "Birch Run Shelters",
+    "latitude": 39.9846095,
+    "longitude": -77.4204207,
+    "description": "Shelter | Elevation: 1795 ft"
+  },
+  {
+    "name": "Toms Run Shelters",
+    "latitude": 40.0343123,
+    "longitude": -77.3569912,
+    "description": "Shelter | Elevation: 1300 ft"
+  },
+  {
+    "name": "James Fry Shelter",
+    "latitude": 40.0629915,
+    "longitude": -77.2060616,
+    "description": "Shelter | Elevation: 805 ft"
+  },
+  {
+    "name": "Mt. Holly Springs, PA 17065",
+    "latitude": 40.12,
+    "longitude": -77.18,
+    "description": "Town"
+  },
+  {
+    "name": "Alec Kennedy Shelter",
+    "latitude": 40.1119419,
+    "longitude": -77.1039282,
+    "description": "Shelter | Elevation: 850 ft"
+  },
+  {
+    "name": "Boiling Springs, PA 17007",
+    "latitude": 40.15,
+    "longitude": -77.13,
+    "description": "Town"
+  },
+  {
+    "name": "Darlington Shelter",
+    "latitude": 40.301999,
+    "longitude": -77.0870194,
+    "description": "Shelter | Elevation: 1170 ft"
+  },
+  {
+    "name": "Duncannon, PA 17020",
+    "latitude": 40.4,
+    "longitude": -77.02,
+    "description": "Town"
+  },
+  {
+    "name": "Clarks Ferry Shelter",
+    "latitude": 40.3922413,
+    "longitude": -76.993699,
+    "description": "Shelter | Elevation: 1060 ft"
+  },
+  {
+    "name": "Peters Mountain Shelter",
+    "latitude": 40.4258053,
+    "longitude": -76.8793499,
+    "description": "Shelter | Elevation: 1180 ft"
+  },
+  {
+    "name": "Rausch Gap Shelter",
+    "latitude": 40.4985403,
+    "longitude": -76.6001781,
+    "description": "Shelter | Elevation: 970 ft"
+  },
+  {
+    "name": "William Penn Shelter",
+    "latitude": 40.4956167,
+    "longitude": -76.4140005,
+    "description": "Shelter | Elevation: 1300 ft"
+  },
+  {
+    "name": "Pine Grove, PA 17963",
+    "latitude": 40.55,
+    "longitude": -76.38,
+    "description": "Town"
+  },
+  {
+    "name": "501 Shelter",
+    "latitude": 40.5125193,
+    "longitude": -76.3465319,
+    "description": "Shelter | Elevation: 1460 ft"
+  },
+  {
+    "name": "Eagles Nest Shelter",
+    "latitude": 40.5493069,
+    "longitude": -76.1523183,
+    "description": "Shelter | Elevation: 1510 ft"
+  },
+  {
+    "name": "Port Clinton, PA 19549",
+    "latitude": 40.58,
+    "longitude": -76.02,
+    "description": "Town"
+  },
+  {
+    "name": "Windsor Furnace Shelter",
+    "latitude": 40.5903023,
+    "longitude": -75.9419384,
+    "description": "Shelter | Elevation: 880 ft"
+  },
+  {
+    "name": "The Pinnacle (1615 ft)",
+    "latitude": 40.612732,
+    "longitude": -75.912438,
+    "description": "Feature | Elevation: 1615 ft"
+  },
+  {
+    "name": "Eckville Shelter",
+    "latitude": 40.632854,
+    "longitude": -75.958437,
+    "description": "Shelter | Elevation: 535 ft"
+  },
+  {
+    "name": "Allentown Shelter",
+    "latitude": 40.6830742,
+    "longitude": -75.8740029,
+    "description": "Shelter | Elevation: 1350 ft"
+  },
+  {
+    "name": "Bake Oven Knob Shelter",
+    "latitude": 40.7541307,
+    "longitude": -75.727027,
+    "description": "Shelter | Elevation: 1380 ft"
+  },
+  {
+    "name": "George W. Outerbridge Shelter",
+    "latitude": 40.7824958,
+    "longitude": -75.6179417,
+    "description": "Shelter | Elevation: 1000 ft"
+  },
+  {
+    "name": "Slatington, PA 18080",
+    "latitude": 40.75,
+    "longitude": -75.62,
+    "description": "Town"
+  },
+  {
+    "name": "Palmerton, PA 18071",
+    "latitude": 40.8,
+    "longitude": -75.62,
+    "description": "Town"
+  },
+  {
+    "name": "Danielsville, PA 18038",
+    "latitude": 40.8,
+    "longitude": -75.53,
+    "description": "Town"
+  },
+  {
+    "name": "Leroy A. Smith Shelter",
+    "latitude": 40.8393601,
+    "longitude": -75.3594183,
+    "description": "Shelter | Elevation: 1410 ft"
+  },
+  {
+    "name": "Wind Gap, PA 18091",
+    "latitude": 40.85,
+    "longitude": -75.3,
+    "description": "Town"
+  },
+  {
+    "name": "Kirkridge Shelter",
+    "latitude": 40.9367036,
+    "longitude": -75.1864659,
+    "description": "Shelter | Elevation: 1480 ft"
+  },
+  {
+    "name": "Delaware Water Gap, PA 18327",
+    "latitude": 41.0,
+    "longitude": -75.15,
+    "description": "Town"
+  },
+  {
+    "name": "Sunfish Pond (1280 ft)",
+    "latitude": 41.0029,
+    "longitude": -75.0733,
+    "description": "Feature | Elevation: 1280 ft"
+  },
+  {
+    "name": "Brink Road Shelter",
+    "latitude": 41.1532025,
+    "longitude": -74.8377673,
+    "description": "Shelter | Elevation: 1110 ft"
+  },
+  {
+    "name": "Branchville, NJ 07826",
+    "latitude": 41.15,
+    "longitude": -74.75,
+    "description": "Town"
+  },
+  {
+    "name": "Gren Anderson Shelter",
+    "latitude": 41.1993948,
+    "longitude": -74.7526601,
+    "description": "Shelter | Elevation: 1320 ft"
+  },
+  {
+    "name": "Mashipacong Shelter",
+    "latitude": 41.2521191,
+    "longitude": -74.6864109,
+    "description": "Shelter | Elevation: 1425 ft"
+  },
+  {
+    "name": "Rutherford Shelter",
+    "latitude": 41.2774709,
+    "longitude": -74.678038,
+    "description": "Shelter | Elevation: 1345 ft"
+  },
+  {
+    "name": "High Point Shelter",
+    "latitude": 41.3277535,
+    "longitude": -74.643334,
+    "description": "Shelter | Elevation: 1280 ft"
+  },
+  {
+    "name": "Unionville, NY 10988",
+    "latitude": 41.3,
+    "longitude": -74.57,
+    "description": "Town"
+  },
+  {
+    "name": "Pochuck Mountain Shelter",
+    "latitude": 41.271666,
+    "longitude": -74.5158464,
+    "description": "Shelter | Elevation: 840 ft"
+  },
+  {
+    "name": "Pochuck Mt (985 ft)",
+    "latitude": 41.268912,
+    "longitude": -74.514512,
+    "description": "Feature | Elevation: 985 ft"
+  },
+  {
+    "name": "Glenwood, NJ 07418",
+    "latitude": 41.25,
+    "longitude": -74.48,
+    "description": "Town"
+  },
+  {
+    "name": "Vernon, NJ 07462",
+    "latitude": 41.2,
+    "longitude": -74.48,
+    "description": "Town"
+  },
+  {
+    "name": "Wawayanda Mt (1280 ft)",
+    "latitude": 41.204842,
+    "longitude": -74.403629,
+    "description": "Feature | Elevation: 1280 ft"
+  },
+  {
+    "name": "Wawayanda Shelter",
+    "latitude": 41.2021897,
+    "longitude": -74.3980628,
+    "description": "Shelter | Elevation: 1200 ft"
+  },
+  {
+    "name": "Greenwood Lake, NY 10925",
+    "latitude": 41.22,
+    "longitude": -74.3,
+    "description": "Town"
+  },
+  {
+    "name": "Bellvale, NY 10912",
+    "latitude": 41.25,
+    "longitude": -74.32,
+    "description": "Town"
+  },
+  {
+    "name": "Wildcat Shelter",
+    "latitude": 41.2683493,
+    "longitude": -74.2678444,
+    "description": "Shelter | Elevation: 1180 ft"
+  },
+  {
+    "name": "Southfields, NY 10975",
+    "latitude": 41.25,
+    "longitude": -74.18,
+    "description": "Town"
+  },
+  {
+    "name": "Arden, NY 10910",
+    "latitude": 41.27,
+    "longitude": -74.15,
+    "description": "Town"
+  },
+  {
+    "name": "Fingerboard Shelter",
+    "latitude": 41.2632811,
+    "longitude": -74.1039993,
+    "description": "Shelter | Elevation: 1300 ft"
+  },
+  {
+    "name": "William Brien Memorial Shelter",
+    "latitude": 41.2796995,
+    "longitude": -74.0594404,
+    "description": "Shelter | Elevation: 1070 ft"
+  },
+  {
+    "name": "West Mountain Shelter",
+    "latitude": 41.2840954,
+    "longitude": -74.0106693,
+    "description": "Shelter | Elevation: 1240 ft"
+  },
+  {
+    "name": "Bear Mountain (1305 ft)",
+    "latitude": 41.312778,
+    "longitude": -74.006667,
+    "description": "Feature | Elevation: 1305 ft"
+  },
+  {
+    "name": "Bear Mountain, NY 10911",
+    "latitude": 41.32,
+    "longitude": -73.98,
+    "description": "Town"
+  },
+  {
+    "name": "Bear Mountain Zoo (124 ft)",
+    "latitude": 41.319,
+    "longitude": -73.988,
+    "description": "Feature | Elevation: 124 ft"
+  },
+  {
+    "name": "Fort Montgomery, NY 10922",
+    "latitude": 41.32,
+    "longitude": -73.98,
+    "description": "Town"
+  },
+  {
+    "name": "Peekskill, NY 10566",
+    "latitude": 41.28,
+    "longitude": -73.92,
+    "description": "Town"
+  },
+  {
+    "name": "RPH Shelter",
+    "latitude": 41.5143776,
+    "longitude": -73.7924771,
+    "description": "Shelter | Elevation: 360 ft"
+  },
+  {
+    "name": "Stormville, NY 12582",
+    "latitude": 41.57,
+    "longitude": -73.75,
+    "description": "Town"
+  },
+  {
+    "name": "Morgan Stewart Memorial Shelter",
+    "latitude": 41.5645419,
+    "longitude": -73.6916941,
+    "description": "Shelter | Elevation: 1285 ft"
+  },
+  {
+    "name": "Poughquag, NY 12570",
+    "latitude": 41.62,
+    "longitude": -73.68,
+    "description": "Town"
+  },
+  {
+    "name": "Telephone Pioneers Shelter",
+    "latitude": 41.6042669,
+    "longitude": -73.6188684,
+    "description": "Shelter | Elevation: 910 ft"
+  },
+  {
+    "name": "Pawling, NY 12564",
+    "latitude": 41.57,
+    "longitude": -73.6,
+    "description": "Town"
+  },
+  {
+    "name": "Wiley Shelter",
+    "latitude": 41.6377394,
+    "longitude": -73.5322772,
+    "description": "Shelter | Elevation: 740 ft"
+  },
+  {
+    "name": "Windgdale, NY 12594",
+    "latitude": 41.65,
+    "longitude": -73.57,
+    "description": "Town"
+  },
+  {
+    "name": "Ten Mile River Lean-to",
+    "latitude": 41.6650626,
+    "longitude": -73.5094805,
+    "description": "Shelter | Elevation: 290 ft"
+  },
+  {
+    "name": "Mt. Algo Lean-to",
+    "latitude": 41.7316445,
+    "longitude": -73.4961982,
+    "description": "Shelter | Elevation: 655 ft"
+  },
+  {
+    "name": "Kent, CT 06757",
+    "latitude": 41.72,
+    "longitude": -73.48,
+    "description": "Town"
+  },
+  {
+    "name": "Stewart Hollow Brook Lean-to",
+    "latitude": 41.7785903,
+    "longitude": -73.4193254,
+    "description": "Shelter | Elevation: 425 ft"
+  },
+  {
+    "name": "Cornwall Bridge, CT 06754",
+    "latitude": 41.82,
+    "longitude": -73.37,
+    "description": "Town"
+  },
+  {
+    "name": "West Cornwell, CT 06796",
+    "latitude": 41.87,
+    "longitude": -73.37,
+    "description": "Town"
+  },
+  {
+    "name": "Pine Swamp Brook Lean-to",
+    "latitude": 37.4221543,
+    "longitude": -80.608555,
+    "description": "Shelter | Elevation: 1075 ft"
+  },
+  {
+    "name": "Falls Village, CT 06031",
+    "latitude": 41.95,
+    "longitude": -73.37,
+    "description": "Town"
+  },
+  {
+    "name": "Limestone Spring Lean-to",
+    "latitude": 41.9751184,
+    "longitude": -73.3918416,
+    "description": "Shelter | Elevation: 980 ft"
+  },
+  {
+    "name": "Salisbury, CT 06068",
+    "latitude": 41.98,
+    "longitude": -73.42,
+    "description": "Town"
+  },
+  {
+    "name": "Riga Lean-to",
+    "latitude": 42.0145809,
+    "longitude": -73.4477093,
+    "description": "Shelter | Elevation: 1610 ft"
+  },
+  {
+    "name": "Brassie Brook Lean-to",
+    "latitude": 42.0283133,
+    "longitude": -73.4531448,
+    "description": "Shelter | Elevation: 1705 ft"
+  },
+  {
+    "name": "Bear Mountain (2316 ft)",
+    "latitude": 42.044861,
+    "longitude": -73.454394,
+    "description": "Feature | Elevation: 2316 ft"
+  },
+  {
+    "name": "Mt Everett (2602 ft)",
+    "latitude": 42.101906,
+    "longitude": -73.432637,
+    "description": "Feature | Elevation: 2602 ft"
+  },
+  {
+    "name": "The Hemlocks Lean-to",
+    "latitude": 42.1099058,
+    "longitude": -73.4290072,
+    "description": "Shelter | Elevation: 1880 ft"
+  },
+  {
+    "name": "Glen Brook Lean-to",
+    "latitude": 42.1111405,
+    "longitude": -73.4283271,
+    "description": "Shelter | Elevation: 1885 ft"
+  },
+  {
+    "name": "South Egremont, MA 01258",
+    "latitude": 42.17,
+    "longitude": -73.42,
+    "description": "Town"
+  },
+  {
+    "name": "Sheffield, MA 01157",
+    "latitude": 42.12,
+    "longitude": -73.35,
+    "description": "Town"
+  },
+  {
+    "name": "Tom Leonard Lean-to",
+    "latitude": 42.1648154,
+    "longitude": -73.3057738,
+    "description": "Shelter | Elevation: 1540 ft"
+  },
+  {
+    "name": "Monterey, MA 01245",
+    "latitude": 42.18,
+    "longitude": -73.22,
+    "description": "Town"
+  },
+  {
+    "name": "Great Barrington, MA 01230",
+    "latitude": 42.2,
+    "longitude": -73.37,
+    "description": "Town"
+  },
+  {
+    "name": "Mt. Wilcox South Lean-to",
+    "latitude": 42.2077997,
+    "longitude": -73.2680723,
+    "description": "Shelter | Elevation: 1720 ft"
+  },
+  {
+    "name": "Mt. Wilcox North Lean-to",
+    "latitude": 42.2210009,
+    "longitude": -73.2500875,
+    "description": "Shelter | Elevation: 1950 ft"
+  },
+  {
+    "name": "Tyringham, MA 01264",
+    "latitude": 42.25,
+    "longitude": -73.2,
+    "description": "Town"
+  },
+  {
+    "name": "Upper Goose Pond Cabin",
+    "latitude": 42.2886577,
+    "longitude": -73.1812741,
+    "description": "Cabin | Elevation: 1483 ft"
+  },
+  {
+    "name": "Lee, MA 01238",
+    "latitude": 42.3,
+    "longitude": -73.25,
+    "description": "Town"
+  },
+  {
+    "name": "October Mountain Lean-to",
+    "latitude": 42.3548505,
+    "longitude": -73.1540631,
+    "description": "Shelter | Elevation: 1930 ft"
+  },
+  {
+    "name": "Becket, MA 01223",
+    "latitude": 42.33,
+    "longitude": -73.08,
+    "description": "Town"
+  },
+  {
+    "name": "Kay Wood Lean-to",
+    "latitude": 42.4524847,
+    "longitude": -73.1614318,
+    "description": "Shelter | Elevation: 1860 ft"
+  },
+  {
+    "name": "Dalton, MA 01226",
+    "latitude": 42.47,
+    "longitude": -73.17,
+    "description": "Town"
+  },
+  {
+    "name": "Chesire, MA 01225",
+    "latitude": 42.56,
+    "longitude": -73.16,
+    "description": "Town"
+  },
+  {
+    "name": "Bascom Lodge",
+    "latitude": 42.6368722,
+    "longitude": -73.1673664,
+    "description": "Lodge | Elevation: 3491 ft"
+  },
+  {
+    "name": "Mark Noepel Lean-to",
+    "latitude": 42.6085306,
+    "longitude": -73.1840666,
+    "description": "Shelter | Elevation: 2750 ft"
+  },
+  {
+    "name": "Mt Greylock (3491 ft)",
+    "latitude": 42.6376,
+    "longitude": -73.1662,
+    "description": "Feature | Elevation: 3491 ft"
+  },
+  {
+    "name": "Wilbur Clearing Lean-to",
+    "latitude": 42.6684803,
+    "longitude": -73.169763,
+    "description": "Shelter | Elevation: 2325 ft"
+  },
+  {
+    "name": "Williamstown, MA 01267",
+    "latitude": 42.72,
+    "longitude": -73.2,
+    "description": "Town"
+  },
+  {
+    "name": "North Adams, MA 01247",
+    "latitude": 42.7,
+    "longitude": -73.12,
+    "description": "Town"
+  },
+  {
+    "name": "Seth Warner Shelter",
+    "latitude": 42.7718212,
+    "longitude": -73.1371042,
+    "description": "Shelter | Elevation: 2180 ft"
+  },
+  {
+    "name": "Congdon Shelter",
+    "latitude": 42.848027,
+    "longitude": -73.1098984,
+    "description": "Shelter | Elevation: 2060 ft"
+  },
+  {
+    "name": "Bennington, VT 05201",
+    "latitude": 42.88,
+    "longitude": -73.2,
+    "description": "Town"
+  },
+  {
+    "name": "Melville Nauheim Shelter",
+    "latitude": 42.8877598,
+    "longitude": -73.0957097,
+    "description": "Shelter | Elevation: 2330 ft"
+  },
+  {
+    "name": "Goddard Shelter",
+    "latitude": 42.9741132,
+    "longitude": -73.072156,
+    "description": "Shelter | Elevation: 3540 ft"
+  },
+  {
+    "name": "Glastenbury Mtn (3748 ft)",
+    "latitude": 42.977928,
+    "longitude": -73.071635,
+    "description": "Feature | Elevation: 3748 ft"
+  },
+  {
+    "name": "Kid Gore Shelter",
+    "latitude": 43.013011,
+    "longitude": -73.0410989,
+    "description": "Shelter | Elevation: 2795 ft"
+  },
+  {
+    "name": "Caughnawaga Shelter",
+    "latitude": 43.0149833,
+    "longitude": -73.0436322,
+    "description": "Shelter | Elevation: 2795 ft"
+  },
+  {
+    "name": "Story Spring Shelter",
+    "latitude": 43.0505177,
+    "longitude": -73.0125342,
+    "description": "Shelter | Elevation: 2810 ft"
+  },
+  {
+    "name": "Stratton Mtn (3936 ft)",
+    "latitude": 43.086218,
+    "longitude": -72.925101,
+    "description": "Feature | Elevation: 3936 ft"
+  },
+  {
+    "name": "Stratton Pond Shelter",
+    "latitude": 43.1013834,
+    "longitude": -72.9683113,
+    "description": "Shelter | Elevation: 2565 ft"
+  },
+  {
+    "name": "William B. Douglas Shelter",
+    "latitude": 43.1444805,
+    "longitude": -72.9909392,
+    "description": "Shelter | Elevation: 2210 ft"
+  },
+  {
+    "name": "Spruce Peak Shelter",
+    "latitude": 43.1785732,
+    "longitude": -72.9952017,
+    "description": "Shelter | Elevation: 2180 ft"
+  },
+  {
+    "name": "Manchester Center, VT 05255",
+    "latitude": 43.17,
+    "longitude": -73.07,
+    "description": "Town"
+  },
+  {
+    "name": "Bromley Mtn (3260 ft)",
+    "latitude": 43.227942,
+    "longitude": -72.940079,
+    "description": "Feature | Elevation: 3260 ft"
+  },
+  {
+    "name": "Peru Peak Shelter",
+    "latitude": 43.3012945,
+    "longitude": -72.9523941,
+    "description": "Shelter | Elevation: 2605 ft"
+  },
+  {
+    "name": "Old Job Shelter",
+    "latitude": 43.3540508,
+    "longitude": -72.9284574,
+    "description": "Shelter | Elevation: 1665 ft"
+  },
+  {
+    "name": "Big Branch Shelter",
+    "latitude": 43.3640482,
+    "longitude": -72.9464144,
+    "description": "Shelter | Elevation: 1460 ft"
+  },
+  {
+    "name": "Danby, VT 05739",
+    "latitude": 43.35,
+    "longitude": -73.0,
+    "description": "Town"
+  },
+  {
+    "name": "Lula Tye Shelter",
+    "latitude": 43.395432,
+    "longitude": -72.9547876,
+    "description": "Shelter | Elevation: 1920 ft"
+  },
+  {
+    "name": "Little Rock Pond Shelter",
+    "latitude": 43.4041957,
+    "longitude": -72.9531293,
+    "description": "Shelter | Elevation: 1885 ft"
+  },
+  {
+    "name": "Greenwall Shelter",
+    "latitude": 43.4404004,
+    "longitude": -72.9286539,
+    "description": "Shelter | Elevation: 2025 ft"
+  },
+  {
+    "name": "Wallingford, VT 05773",
+    "latitude": 43.47,
+    "longitude": -72.98,
+    "description": "Town"
+  },
+  {
+    "name": "Minerva Hinchey Shelter",
+    "latitude": 43.4877651,
+    "longitude": -72.924512,
+    "description": "Shelter | Elevation: 1605 ft"
+  },
+  {
+    "name": "Clarendon Shelter",
+    "latitude": 43.5235048,
+    "longitude": -72.9126323,
+    "description": "Shelter | Elevation: 1190 ft"
+  },
+  {
+    "name": "Governor Clement Shelter",
+    "latitude": 43.5645389,
+    "longitude": -72.8482911,
+    "description": "Shelter | Elevation: 1900 ft"
+  },
+  {
+    "name": "Killington Peak (4235 ft)",
+    "latitude": 43.604717,
+    "longitude": -72.820177,
+    "description": "Feature | Elevation: 4235 ft"
+  },
+  {
+    "name": "Cooper Lodge",
+    "latitude": 43.6059204,
+    "longitude": -72.8224568,
+    "description": "Shelter | Elevation: 3900 ft"
+  },
+  {
+    "name": "Pico Camp Shelter",
+    "latitude": 43.6390052,
+    "longitude": -72.8304753,
+    "description": "Shelter | Elevation: 3510 ft"
+  },
+  {
+    "name": "Gifford Woods State Park",
+    "latitude": 43.6760768,
+    "longitude": -72.8112152,
+    "description": "Shelter | Elevation: 1620 ft"
+  },
+  {
+    "name": "Tucker Johnson Shelter",
+    "latitude": 43.6791776,
+    "longitude": -72.8431249,
+    "description": "Shelter | Elevation: 2300 ft"
+  },
+  {
+    "name": "Killington, VT 05751",
+    "latitude": 43.67,
+    "longitude": -72.77,
+    "description": "Town"
+  },
+  {
+    "name": "Stony Brook Shelter",
+    "latitude": 43.6917617,
+    "longitude": -72.7300992,
+    "description": "Shelter | Elevation: 1380 ft"
+  },
+  {
+    "name": "Wintturi Shelter",
+    "latitude": 43.6621517,
+    "longitude": -72.6220788,
+    "description": "Shelter | Elevation: 1910 ft"
+  },
+  {
+    "name": "Woodstock, VT 05091",
+    "latitude": 43.62,
+    "longitude": -72.52,
+    "description": "Town"
+  },
+  {
+    "name": "South Pomfret, VT 05067",
+    "latitude": 43.67,
+    "longitude": -72.53,
+    "description": "Town"
+  },
+  {
+    "name": "Thistle Hill Shelter",
+    "latitude": 43.6951404,
+    "longitude": -72.4752994,
+    "description": "Shelter | Elevation: 1740 ft"
+  },
+  {
+    "name": "West Hartford, VT 05084",
+    "latitude": 43.72,
+    "longitude": -72.42,
+    "description": "Town"
+  },
+  {
+    "name": "Happy Hill Shelter",
+    "latitude": 43.7238454,
+    "longitude": -72.3651575,
+    "description": "Shelter | Elevation: 1420 ft"
+  },
+  {
+    "name": "Norwich, VT 05055",
+    "latitude": 43.72,
+    "longitude": -72.32,
+    "description": "Town"
+  },
+  {
+    "name": "Hanover, NH 03755",
+    "latitude": 43.7,
+    "longitude": -72.28,
+    "description": "Town"
+  },
+  {
+    "name": "Velvet Rocks Shelter",
+    "latitude": 43.7024433,
+    "longitude": -72.2646545,
+    "description": "Shelter | Elevation: 1040 ft"
+  },
+  {
+    "name": "Moose Mountain Shelter",
+    "latitude": 43.7277929,
+    "longitude": -72.1469437,
+    "description": "Shelter | Elevation: 1850 ft"
+  },
+  {
+    "name": "Trapper John Shelter",
+    "latitude": 43.7829969,
+    "longitude": -72.1114604,
+    "description": "Shelter | Elevation: 1345 ft"
+  },
+  {
+    "name": "Lyme, NH 03768",
+    "latitude": 43.82,
+    "longitude": -72.15,
+    "description": "Town"
+  },
+  {
+    "name": "Smarts Mtn (3240 ft)",
+    "latitude": 43.825735,
+    "longitude": -72.038638,
+    "description": "Feature | Elevation: 3240 ft"
+  },
+  {
+    "name": "Smarts Mountain Cabin",
+    "latitude": 43.8252602,
+    "longitude": -72.0373284,
+    "description": "Cabin | Elevation: 3220 ft"
+  },
+  {
+    "name": "Hexacuba Shelter",
+    "latitude": 43.8739725,
+    "longitude": -72.0290049,
+    "description": "Shelter | Elevation: 1980 ft"
+  },
+  {
+    "name": "Mt Cube (2911 ft)",
+    "latitude": 43.885455,
+    "longitude": -72.023951,
+    "description": "Feature | Elevation: 2911 ft"
+  },
+  {
+    "name": "Wentworth, NH 03282",
+    "latitude": 43.87,
+    "longitude": -71.92,
+    "description": "Town"
+  },
+  {
+    "name": "Ore Hill Shelter",
+    "latitude": 43.9635708,
+    "longitude": -71.9404758,
+    "description": "Shelter | Elevation: 1580 ft"
+  },
+  {
+    "name": "Warren, HH 03279",
+    "latitude": 43.92,
+    "longitude": -71.9,
+    "description": "Town"
+  },
+  {
+    "name": "Glencliff, NH 03238",
+    "latitude": 43.98,
+    "longitude": -71.9,
+    "description": "Town"
+  },
+  {
+    "name": "Jeffers Brook Shelter",
+    "latitude": 43.9965228,
+    "longitude": -71.888904,
+    "description": "Shelter | Elevation: 1305 ft"
+  },
+  {
+    "name": "Mt Moosilauke (4830 ft)",
+    "latitude": 44.0244,
+    "longitude": -71.8314,
+    "description": "Feature | Elevation: 4830 ft"
+  },
+  {
+    "name": "Beaver Brook Shelter",
+    "latitude": 44.0329294,
+    "longitude": -71.811269,
+    "description": "Shelter | Elevation: 3800 ft"
+  },
+  {
+    "name": "Eliza Brook Campsite Shelter",
+    "latitude": 44.1007461,
+    "longitude": -71.7418222,
+    "description": "Shelter | Elevation: 2400 ft"
+  },
+  {
+    "name": "South Kinsman Mtn (4358 ft)",
+    "latitude": 44.122965,
+    "longitude": -71.736553,
+    "description": "Feature | Elevation: 4358 ft"
+  },
+  {
+    "name": "North Kinsman Mtn (4293 ft)",
+    "latitude": 44.13337,
+    "longitude": -71.736915,
+    "description": "Feature | Elevation: 4293 ft"
+  },
+  {
+    "name": "Kinsman Pond Campsite Shelter",
+    "latitude": 44.1368156,
+    "longitude": -71.732298,
+    "description": "Shelter | Elevation: 3750 ft"
+  },
+  {
+    "name": "Lonesome Lake Hut",
+    "latitude": 44.138424,
+    "longitude": -71.7031204,
+    "description": "Hut | Elevation: 2760 ft"
+  },
+  {
+    "name": "North Woodstock, NH 03262",
+    "latitude": 44.03,
+    "longitude": -71.68,
+    "description": "Town"
+  },
+  {
+    "name": "Little Haystack (4840 ft)",
+    "latitude": 44.1406,
+    "longitude": -71.645,
+    "description": "Feature | Elevation: 4840 ft"
+  },
+  {
+    "name": "Mt Lincoln (5089 ft)",
+    "latitude": 44.1488,
+    "longitude": -71.6445,
+    "description": "Feature | Elevation: 5089 ft"
+  },
+  {
+    "name": "Greenleaf Hut",
+    "latitude": 44.1602416,
+    "longitude": -71.6602422,
+    "description": "Hut | Elevation: 4200 ft"
+  },
+  {
+    "name": "Mt Lafayette (5249 ft)",
+    "latitude": 44.1608,
+    "longitude": -71.6444,
+    "description": "Feature | Elevation: 5249 ft"
+  },
+  {
+    "name": "Mt Garfield (4488 ft)",
+    "latitude": 44.187219,
+    "longitude": -71.610836,
+    "description": "Feature | Elevation: 4488 ft"
+  },
+  {
+    "name": "Garfield Ridge Campsite Shelter",
+    "latitude": 44.1905969,
+    "longitude": -71.6082785,
+    "description": "Shelter | Elevation: 3560 ft"
+  },
+  {
+    "name": "Galehead Hut",
+    "latitude": 44.1877771,
+    "longitude": -71.5688513,
+    "description": "Hut | Elevation: 3800 ft"
+  },
+  {
+    "name": "South Twin Mtn (4902 ft)",
+    "latitude": 44.188,
+    "longitude": -71.555,
+    "description": "Feature | Elevation: 4902 ft"
+  },
+  {
+    "name": "Guyot Campsite Shelter",
+    "latitude": 44.1609388,
+    "longitude": -71.5350304,
+    "description": "Shelter | Elevation: 4160 ft"
+  },
+  {
+    "name": "Zealand Falls Hut",
+    "latitude": 44.1956787,
+    "longitude": -71.4942788,
+    "description": "Hut | Elevation: 2450 ft"
+  },
+  {
+    "name": "Ethan Pond Campsite Shelter",
+    "latitude": 44.1771552,
+    "longitude": -71.4265946,
+    "description": "Shelter | Elevation: 2850 ft"
+  },
+  {
+    "name": "Mt Webster (3910 ft)",
+    "latitude": 44.194751,
+    "longitude": -71.388224,
+    "description": "Feature | Elevation: 3910 ft"
+  },
+  {
+    "name": "Mizpah Spring Hut",
+    "latitude": 44.2193032,
+    "longitude": -71.3695671,
+    "description": "Hut | Elevation: 3800 ft"
+  },
+  {
+    "name": "Lake of the Clouds Hut",
+    "latitude": 44.2589059,
+    "longitude": -71.3187937,
+    "description": "Hut | Elevation: 5050 ft"
+  },
+  {
+    "name": "Mt Washington (6288 ft)",
+    "latitude": 44.270527,
+    "longitude": -71.303423,
+    "description": "Feature | Elevation: 6288 ft"
+  },
+  {
+    "name": "Mt. Washington, NH 03589",
+    "latitude": 44.27,
+    "longitude": -71.3,
+    "description": "Town"
+  },
+  {
+    "name": "The Perch Shelter",
+    "latitude": 44.3244639,
+    "longitude": -71.3104851,
+    "description": "Shelter | Elevation: 4000 ft"
+  },
+  {
+    "name": "Madison Springs Hut",
+    "latitude": 44.3277294,
+    "longitude": -71.2829311,
+    "description": "Hut | Elevation: 4800 ft"
+  },
+  {
+    "name": "Mt Madison (5363 ft)",
+    "latitude": 44.3283,
+    "longitude": -71.2783,
+    "description": "Feature | Elevation: 5363 ft"
+  },
+  {
+    "name": "Wildcat Mtn Peak A (4380 ft)",
+    "latitude": 44.2592,
+    "longitude": -71.202,
+    "description": "Feature | Elevation: 4380 ft"
+  },
+  {
+    "name": "Carter Notch Hut",
+    "latitude": 44.2592664,
+    "longitude": -71.1953306,
+    "description": "Hut | Elevation: 3288 ft"
+  },
+  {
+    "name": "Carter Dome (4832 ft)",
+    "latitude": 44.2673,
+    "longitude": -71.179,
+    "description": "Feature | Elevation: 4832 ft"
+  },
+  {
+    "name": "South Carter Mtn (4458 ft)",
+    "latitude": 44.289823,
+    "longitude": -71.176483,
+    "description": "Feature | Elevation: 4458 ft"
+  },
+  {
+    "name": "Middle Carter Mtn (4600 ft)",
+    "latitude": 44.303054,
+    "longitude": -71.167757,
+    "description": "Feature | Elevation: 4600 ft"
+  },
+  {
+    "name": "North Carter Mtn (4539 ft)",
+    "latitude": 44.31306,
+    "longitude": -71.165,
+    "description": "Feature | Elevation: 4539 ft"
+  },
+  {
+    "name": "Imp Campsite Shelter",
+    "latitude": 44.3288655,
+    "longitude": -71.1500395,
+    "description": "Shelter | Elevation: 3300 ft"
+  },
+  {
+    "name": "Mt Moriah (4049 ft)",
+    "latitude": 44.340522,
+    "longitude": -71.131776,
+    "description": "Feature | Elevation: 4049 ft"
+  },
+  {
+    "name": "Rattle River Shelter",
+    "latitude": 44.3799002,
+    "longitude": -71.107435,
+    "description": "Shelter | Elevation: 1260 ft"
+  },
+  {
+    "name": "Gorham, NH 03581",
+    "latitude": 44.38,
+    "longitude": -71.17,
+    "description": "Town"
+  },
+  {
+    "name": "Gentian Pond Campsite Shelter",
+    "latitude": 44.4517145,
+    "longitude": -71.069334,
+    "description": "Shelter | Elevation: 2165 ft"
+  },
+  {
+    "name": "Carlo Col Shelter",
+    "latitude": 44.4885558,
+    "longitude": -71.0161254,
+    "description": "Shelter | Elevation: 2945 ft"
+  },
+  {
+    "name": "Goose Eye Mtn (3794 ft)",
+    "latitude": 44.50282,
+    "longitude": -70.999506,
+    "description": "Feature | Elevation: 3794 ft"
+  },
+  {
+    "name": "Full Goose Shelter",
+    "latitude": 44.5250632,
+    "longitude": -70.9807987,
+    "description": "Shelter | Elevation: 3030 ft"
+  },
+  {
+    "name": "Mahoosic Notch (2400 ft)",
+    "latitude": 44.5384,
+    "longitude": -70.9894,
+    "description": "Feature | Elevation: 2400 ft"
+  },
+  {
+    "name": "Mahoosic Arm (3770 ft)",
+    "latitude": 44.5601,
+    "longitude": -70.9763,
+    "description": "Feature | Elevation: 3770 ft"
+  },
+  {
+    "name": "Speck Pond Shelter",
+    "latitude": 44.56458,
+    "longitude": -70.9735313,
+    "description": "Shelter | Elevation: 3500 ft"
+  },
+  {
+    "name": "Baldpate Lean-to",
+    "latitude": 44.598335,
+    "longitude": -70.9117305,
+    "description": "Shelter | Elevation: 2645 ft"
+  },
+  {
+    "name": "Baldpate Mtn (3812 ft)",
+    "latitude": 44.609287,
+    "longitude": -70.892316,
+    "description": "Feature | Elevation: 3812 ft"
+  },
+  {
+    "name": "Frye Notch Lean-to",
+    "latitude": 44.6276852,
+    "longitude": -70.9002766,
+    "description": "Shelter | Elevation: 2280 ft"
+  },
+  {
+    "name": "Andover, ME 04216",
+    "latitude": 44.63,
+    "longitude": -70.75,
+    "description": "Town"
+  },
+  {
+    "name": "Wyman Mtn (2945 ft)",
+    "latitude": 44.680597,
+    "longitude": -70.83522,
+    "description": "Feature | Elevation: 2945 ft"
+  },
+  {
+    "name": "Hall Mountain Lean-to",
+    "latitude": 44.7007999,
+    "longitude": -70.8245467,
+    "description": "Shelter | Elevation: 2635 ft"
+  },
+  {
+    "name": "Old Blue Mtn (3600 ft)",
+    "latitude": 44.747119,
+    "longitude": -70.765595,
+    "description": "Feature | Elevation: 3600 ft"
+  },
+  {
+    "name": "Bemis Mtn (3580 ft)",
+    "latitude": 44.7965,
+    "longitude": -70.7667,
+    "description": "Feature | Elevation: 3580 ft"
+  },
+  {
+    "name": "Bemis Mountain Lean-to",
+    "latitude": 44.8102572,
+    "longitude": -70.7558946,
+    "description": "Shelter | Elevation: 2790 ft"
+  },
+  {
+    "name": "Oquossoc, ME 04964",
+    "latitude": 44.97,
+    "longitude": -70.77,
+    "description": "Town"
+  },
+  {
+    "name": "Sabbath Day Pond Lean-to",
+    "latitude": 44.8409974,
+    "longitude": -70.6622897,
+    "description": "Shelter | Elevation: 2390 ft"
+  },
+  {
+    "name": "Rangely, ME 04970",
+    "latitude": 44.97,
+    "longitude": -70.65,
+    "description": "Town"
+  },
+  {
+    "name": "Piazza Rock Lean-to",
+    "latitude": 44.9040736,
+    "longitude": -70.530834,
+    "description": "Shelter | Elevation: 2080 ft"
+  },
+  {
+    "name": "Saddleback Mtn (4116 ft)",
+    "latitude": 44.936559,
+    "longitude": -70.504671,
+    "description": "Feature | Elevation: 4116 ft"
+  },
+  {
+    "name": "Poplar Ridge Lean-to",
+    "latitude": 44.9699884,
+    "longitude": -70.4457569,
+    "description": "Shelter | Elevation: 2920 ft"
+  },
+  {
+    "name": "Spaulding Mountain Lean-to",
+    "latitude": 44.9957089,
+    "longitude": -70.3412371,
+    "description": "Shelter | Elevation: 3140 ft"
+  },
+  {
+    "name": "Spaulding Mtn (3988 ft)",
+    "latitude": 45.003004,
+    "longitude": -70.333539,
+    "description": "Feature | Elevation: 3988 ft"
+  },
+  {
+    "name": "Sugarloaf Mtn (4237 ft)",
+    "latitude": 45.031808,
+    "longitude": -70.313247,
+    "description": "Feature | Elevation: 4237 ft"
+  },
+  {
+    "name": "Crocker Mtn North (4168 ft)",
+    "latitude": 45.047233,
+    "longitude": -70.382836,
+    "description": "Feature | Elevation: 4168 ft"
+  },
+  {
+    "name": "Stratton, ME 04982",
+    "latitude": 45.13,
+    "longitude": -70.43,
+    "description": "Town"
+  },
+  {
+    "name": "Horns Pond Lean-tos",
+    "latitude": 45.1441906,
+    "longitude": -70.3300384,
+    "description": "Shelter | Elevation: 3160 ft"
+  },
+  {
+    "name": "Mt Bigelow W. Peak (4150 ft)",
+    "latitude": 45.146771,
+    "longitude": -70.288172,
+    "description": "Feature | Elevation: 4150 ft"
+  },
+  {
+    "name": "Little Bigelow Lean-to",
+    "latitude": 45.1390726,
+    "longitude": -70.1910519,
+    "description": "Shelter | Elevation: 1760 ft"
+  },
+  {
+    "name": "West Carry Pond Lean-to",
+    "latitude": 45.1580262,
+    "longitude": -70.0997616,
+    "description": "Shelter | Elevation: 1340 ft"
+  },
+  {
+    "name": "Pierce Pond Lean-to",
+    "latitude": 45.2402893,
+    "longitude": -70.0554481,
+    "description": "Shelter | Elevation: 1150 ft"
+  },
+  {
+    "name": "Caratunk, ME 04925",
+    "latitude": 45.23,
+    "longitude": -69.98,
+    "description": "Town"
+  },
+  {
+    "name": "Pleasant Pond Lean-to",
+    "latitude": 45.2705515,
+    "longitude": -69.9161821,
+    "description": "Shelter | Elevation: 1320 ft"
+  },
+  {
+    "name": "Bald Mountain Brook Lean-to",
+    "latitude": 45.25854,
+    "longitude": -69.79993,
+    "description": "Shelter | Elevation: 1280 ft"
+  },
+  {
+    "name": "Moxie Bald Lean-to",
+    "latitude": 45.270545,
+    "longitude": -69.7451641,
+    "description": "Shelter | Elevation: 1220 ft"
+  },
+  {
+    "name": "Horseshoe Canyon Lean-to",
+    "latitude": 45.2827428,
+    "longitude": -69.6275041,
+    "description": "Shelter | Elevation: 880 ft"
+  },
+  {
+    "name": "Monson, ME 04464",
+    "latitude": 45.28,
+    "longitude": -69.5,
+    "description": "Town"
+  },
+  {
+    "name": "Leeman Brook Lean-to",
+    "latitude": 45.3515279,
+    "longitude": -69.4986392,
+    "description": "Shelter | Elevation: 1070 ft"
+  },
+  {
+    "name": "Wilson Valley Lean-to",
+    "latitude": 45.3979119,
+    "longitude": -69.4594822,
+    "description": "Shelter | Elevation: 1000 ft"
+  },
+  {
+    "name": "Long Pond Stream Lean-to",
+    "latitude": 45.4218846,
+    "longitude": -69.4095334,
+    "description": "Shelter | Elevation: 930 ft"
+  },
+  {
+    "name": "Barren Mtn (3696 ft)",
+    "latitude": 45.415646,
+    "longitude": -69.370468,
+    "description": "Feature | Elevation: 3696 ft"
+  },
+  {
+    "name": "Cloud Pond Lean-to",
+    "latitude": 45.4188708,
+    "longitude": -69.3515998,
+    "description": "Shelter | Elevation: 2420 ft"
+  },
+  {
+    "name": "Chairback Gap Lean-to",
+    "latitude": 45.4528768,
+    "longitude": -69.2620895,
+    "description": "Shelter | Elevation: 2000 ft"
+  },
+  {
+    "name": "Chairback Mtn (2180 ft)",
+    "latitude": 45.456459,
+    "longitude": -69.256117,
+    "description": "Feature | Elevation: 2180 ft"
+  },
+  {
+    "name": "Carl A. Newhall Lean-to",
+    "latitude": 45.5304459,
+    "longitude": -69.3149014,
+    "description": "Shelter | Elevation: 1840 ft"
+  },
+  {
+    "name": "White Cap Mtn (3644 ft)",
+    "latitude": 45.554633,
+    "longitude": -69.246405,
+    "description": "Feature | Elevation: 3644 ft"
+  },
+  {
+    "name": "Logan Brook Lean-to",
+    "latitude": 45.5610952,
+    "longitude": -69.2347481,
+    "description": "Shelter | Elevation: 2530 ft"
+  },
+  {
+    "name": "East Branch Lean-to",
+    "latitude": 45.5967135,
+    "longitude": -69.1981668,
+    "description": "Shelter | Elevation: 1240 ft"
+  },
+  {
+    "name": "Cooper Brook Falls Lean-to",
+    "latitude": 45.6404803,
+    "longitude": -69.0873432,
+    "description": "Shelter | Elevation: 910 ft"
+  },
+  {
+    "name": "Potaywadjo Spring Lean-to",
+    "latitude": 45.7065263,
+    "longitude": -69.0072718,
+    "description": "Shelter | Elevation: 620 ft"
+  },
+  {
+    "name": "Wadleigh Stream Lean-to",
+    "latitude": 45.7472798,
+    "longitude": -69.1445512,
+    "description": "Shelter | Elevation: 685 ft"
+  },
+  {
+    "name": "Rainbow Stream Lean-to",
+    "latitude": 45.7990376,
+    "longitude": -69.1704068,
+    "description": "Shelter | Elevation: 1005 ft"
+  },
+  {
+    "name": "Hurd Brook Lean-to",
+    "latitude": 45.8184781,
+    "longitude": -69.0184048,
+    "description": "Shelter | Elevation: 715 ft"
+  },
+  {
+    "name": "The Birches Shelters",
+    "latitude": 45.8815981,
+    "longitude": -68.995052,
+    "description": "Shelter | Elevation: 1080 ft"
+  },
+  {
+    "name": "Mt Katahdin (5268 ft)",
+    "latitude": 45.904362,
+    "longitude": -68.921392,
+    "description": "Feature | Elevation: 5268 ft"
+  },
+  {
+    "name": "Millinocket, ME 04462",
+    "latitude": 45.65,
+    "longitude": -68.72,
+    "description": "Town"
+  }
+]

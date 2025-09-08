@@ -1,0 +1,179 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { loadAllPoints } from "../../../lib/load-data";
+
+const all = await loadAllPoints();
+const free = all.filter((p) => p.type === "freecamp");
+
+// Count by state (unknown bucket OK)
+const counts = new Map<string, number>();
+for (const p of free) {
+  const st = (p.state || "unknown").toLowerCase();
+  counts.set(st, (counts.get(st) || 0) + 1);
+}
+
+// Pretty names
+const STATE_NAMES: Record<string, string> = {
+  al:"Alabama", ak:"Alaska", az:"Arizona", ar:"Arkansas", ca:"California",
+  co:"Colorado", ct:"Connecticut", de:"Delaware", fl:"Florida", ga:"Georgia",
+  hi:"Hawaii", id:"Idaho", il:"Illinois", in:"Indiana", ia:"Iowa", ks:"Kansas",
+  ky:"Kentucky", la:"Louisiana", me:"Maine", md:"Maryland", ma:"Massachusetts",
+  mi:"Michigan", mn:"Minnesota", ms:"Mississippi", mo:"Missouri", mt:"Montana",
+  ne:"Nebraska", nv:"Nevada", nh:"New Hampshire", nj:"New Jersey",
+  nm:"New Mexico", ny:"New York", nc:"North Carolina", nd:"North Dakota",
+  oh:"Ohio", ok:"Oklahoma", or:"Oregon", pa:"Pennsylvania", ri:"Rhode Island",
+  sc:"South Carolina", sd:"South Dakota", tn:"Tennessee", tx:"Texas", ut:"Utah",
+  vt:"Vermont", va:"Virginia", wa:"Washington", wv:"West Virginia",
+  wi:"Wisconsin", wy:"Wyoming", dc:"District of Columbia", unknown:"Unknown",
+};
+const pretty = (st:string) => STATE_NAMES[st] || st.toUpperCase();
+
+// Sort A–Z, push “unknown” last
+const entries = Array.from(counts.entries()).sort((a,b) => {
+  if (a[0] === "unknown" && b[0] !== "unknown") return 1;
+  if (b[0] === "unknown" && a[0] !== "unknown") return -1;
+  return pretty(a[0]).localeCompare(pretty(b[0]));
+});
+
+const totalFree = free.length;
+const unknownFree = counts.get("unknown") || 0;
+
+const title = "Free Camping by State";
+---
+
+<BaseLayout title={title}>
+  <!-- NOTE: no /seo.css link here; styles are page-scoped below -->
+  <main class="seo-scope seo-listing container">
+    <header class="hero">
+      <span class="hero-art" aria-hidden="true"></span>
+      <h1>{title}</h1>
+      <p class="muted">
+        No fees. No paywalls. Just coordinates.
+        <strong class="ml">Total: {totalFree.toLocaleString()} places</strong>
+        <span class="ml dim">• Unknown: {unknownFree}</span>
+      </p>
+    </header>
+
+    <section class="grid">
+      {entries.map(([st, count]) => (
+        <a class="card" href={`/seo/free-camping/${st}/1`}>
+          <div class="title">{pretty(st)}</div>
+          <div class="meta">
+            {count} {count === 1 ? "place" : "places"}
+          </div>
+        </a>
+      ))}
+    </section>
+  </main>
+
+  <style>
+    /* ---------------- Page-scoped styles (STATE LIST ONLY) ---------------- */
+    .seo-listing {
+      --brand-yellow: #f5b638;
+      --brand-orange: #ff7a1a;
+      --text-100: #f5f5f5;
+      --text-400: #c7c7c7;
+      --card-800: #1a140b;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; color: var(--text-100); }
+
+    /* HERO — bright, flipped art, full height, text left */
+    .seo-listing .hero {
+      position: relative;               /* creates a stacking context */
+      min-height: 320px;
+      padding: 56px 16px 28px;
+      background: radial-gradient(1200px 360px at 8% -80px, rgba(246,183,62,0.22), transparent 60%);
+      overflow: hidden;
+    }
+
+    /* Art on the right (Topo faces the title) */
+    .seo-listing .hero .hero-art {
+      position: absolute;
+      right: -5vw;                      /* nudge off the edge a bit */
+      top: 50%;
+      width: min(50vw, 820px);          /* responsive size with desktop cap */
+      height: auto;
+      aspect-ratio: 16 / 9;
+      transform: translateY(-50%) scaleX(-1);
+      background: url("/images/hero/background-mountains2.png") center / contain no-repeat;
+      filter: brightness(1.25) contrast(1.08) saturate(1.08);
+      opacity: .95;
+      pointer-events: none;
+      z-index: 0;                        /* sits under vignette + text */
+    }
+
+    /* Gentle left-side vignette to keep the title readable */
+    .seo-listing .hero::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,.38) 0%, rgba(0,0,0,0) 45%);
+      pointer-events: none;
+      z-index: 1;                        /* above art, below text */
+    }
+
+    /* Text always above art/vignette */
+    .seo-listing .hero h1,
+    .seo-listing .hero .muted {
+      position: relative; z-index: 2;
+    }
+
+    .seo-listing .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(34px, 6vw, 64px);
+      line-height: 1.05;
+      letter-spacing: .4px;
+      text-shadow: 0 2px 0 rgba(0,0,0,.35);
+    }
+    .seo-listing .hero .muted { color: var(--text-400); font-size: 15px; }
+    .seo-listing .hero .ml { margin-left: 10px; }
+    .seo-listing .hero .dim { opacity: .75; }
+
+    /* CARD GRID */
+    .seo-listing .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      margin: 18px 0 32px;
+    }
+    .seo-listing .card {
+      background:
+        linear-gradient(180deg, rgba(255,183,56,.06), rgba(0,0,0,.2)),
+        var(--card-800);
+      border: 1px solid rgba(255,183,56,.10);
+      border-radius: 18px;
+      padding: 18px 20px;
+      text-decoration: none;
+      color: var(--text-100);
+      transition: transform .12s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .seo-listing .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,183,56,.25);
+      box-shadow: 0 6px 24px rgba(255,122,26,.18);
+    }
+    .seo-listing .card .title { font-weight: 800; font-size: 20px; letter-spacing: .2px; }
+    .seo-listing .card .meta  { color: var(--text-400); margin-top: 6px; }
+
+    /* ------- Mobile tweaks: keep subtitle clear & art smaller ------- */
+    @media (max-width: 980px) {
+      .seo-listing .hero { min-height: 260px; padding: 44px 14px 22px; }
+      .seo-listing .hero .hero-art {
+        right: -8vw;
+        width: 76vw;
+        transform: translateY(-45%) scaleX(-1);
+      }
+      .seo-listing .hero::after {
+        background: linear-gradient(90deg, rgba(0,0,0,.50) 0%, rgba(0,0,0,0) 48%);
+      }
+    }
+    @media (max-width: 520px) {
+      .seo-listing .hero { min-height: 240px; }
+      .seo-listing .hero .hero-art {
+        right: -12vw;
+        width: 68vw;                     /* smaller art on narrow phones */
+        transform: translateY(-40%) scaleX(-1);
+      }
+      .seo-listing .hero .muted { line-height: 1.35; }
+    }
+  </style>
+</BaseLayout>

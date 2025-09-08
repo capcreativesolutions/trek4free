@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Trek4Free — Events JSON Editor & Bulk Updater</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root{
+    --bg:#0f1113; --panel:#15181c; --ink:#e7e7e7; --muted:#aab0b6;
+    --gold:#FFB224; --orange:#FF8B1A; --red:#ff5a5a; --green:#38d39f; --blue:#7db3ff;
+    --border:#22262b;
+  }
+  html,body{background:var(--bg); color:var(--ink); font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; margin:0;}
+  .wrap{max-width:1200px; margin:32px auto; padding:0 14px;}
+  h1{margin:0 0 8px; font-size:clamp(1.6rem,2.6vw,2.2rem);}
+  p.lead{color:var(--muted); margin:0 0 18px;}
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:16px; margin:14px 0; box-shadow:0 10px 24px rgba(0,0,0,.25);}
+  .row{display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start;}
+  .col{flex:1 1 300px;}
+  input[type="file"]{display:block; width:100%; padding:10px; border:1px dashed var(--border); border-radius:10px; background:#111418;}
+  input[type="text"], input[type="number"], textarea, select {
+    width:100%; background:#0f1216; color:#e7e7e7; border:1px solid var(--border); border-radius:8px; padding:8px;
+  }
+  textarea{min-height:92px}
+  label{font-weight:700;}
+  .btn{background:linear-gradient(90deg,var(--gold),var(--orange)); color:#111; border:0; padding:10px 14px; border-radius:10px; font-weight:800; cursor:pointer;}
+  .btn:disabled{opacity:.55; cursor:not-allowed;}
+  .btn.secondary{background:#1b1f24; color:#d9dfe6; border:1px solid var(--border);}
+  .btn.small{padding:6px 10px; font-weight:700; border-radius:8px}
+  .tiny{font-size:.9rem; color:var(--muted);}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px;}
+  .ok{color:var(--green);} .bad{color:var(--red);} .warn{color:#ffcc66;}
+  pre{white-space:pre-wrap; word-wrap:break-word; background:#0c0f12; border:1px solid #1a1d21; border-radius:10px; padding:12px; color:#dfe4ea; overflow:auto;}
+  .tag{display:inline-flex; padding:2px 6px; border-radius:999px; background:#1b1f24; border:1px solid var(--border); margin-right:6px;}
+  table{width:100%; border-collapse:collapse;} th,td{border-bottom:1px solid #1d2227; padding:8px 6px; vertical-align:top;} th{color:#cfd6dd; text-align:left;}
+  .pill{display:inline-flex; align-items:center; gap:6px; padding:2px 8px; border-radius:999px; background:#111418; border:1px solid var(--border); margin:2px 6px 2px 0;}
+  .imgcheck{display:flex; gap:8px; align-items:center; margin:6px 0;}
+  .imgcheck img{width:48px; height:32px; object-fit:cover; border-radius:6px; border:1px solid #20242a}
+  .flex{display:flex; gap:8px; align-items:center;}
+  .grow{flex:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Events JSON Editor & Bulk Updater</h1>
+  <p class="lead">Load your events JSON, validate, bulk-edit fields (like <code>images</code> and <code>tags</code>), and export a clean dataset. Runs fully in your browser.</p>
+
+  <!-- LOAD / MERGE -->
+  <div class="card">
+    <div class="row">
+      <div class="col">
+        <label for="files">Select events JSON file(s)</label>
+        <input id="files" type="file" accept=".json" multiple>
+        <div class="tiny">Tip: choose one or more files; later edits are performed on the merged set.</div>
+      </div>
+      <div class="col">
+        <label for="outName">Output filename</label>
+        <input id="outName" type="text" value="events.json">
+      </div>
+      <div class="col">
+        <label>&nbsp;</label><br>
+        <button id="mergeBtn" class="btn">Load & Merge</button>
+      </div>
+    </div>
+    <div class="grid" style="margin-top:8px">
+      <div>
+        <label><input id="dupeFirst" type="radio" name="dupe" value="first" checked> Duplicate strategy: First wins</label><br>
+        <label><input id="dupeLast"  type="radio" name="dupe" value="last"> Last wins</label>
+      </div>
+      <div>
+        <label><input id="normId" type="checkbox"> Auto-kebab <code>id</code></label><br>
+        <label><input id="normState" type="checkbox" checked> Uppercase <code>state</code></label><br>
+        <label><input id="coerceNums" type="checkbox" checked> Coerce <code>lat/lon</code> to numbers</label>
+      </div>
+      <div>
+        <label><input id="trimStr" type="checkbox" checked> Trim strings</label><br>
+        <label><input id="stripProv" type="checkbox" checked> Strip stray <code>provenance</code></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- BULK TOOLS -->
+  <div class="card">
+    <h3>Bulk Tools</h3>
+    <div class="grid">
+      <div>
+        <h4>1) Image URL Fix — Prefix/Regex</h4>
+        <label>Replace in <code>images[]</code> URLs</label>
+        <input id="imgFind" type="text" placeholder="Find (text or regex e.g. ^/images/)" />
+        <input id="imgReplace" type="text" placeholder="Replace (e.g. https://cdn.trek4free.com/images/)" />
+        <div class="tiny">Prefix swap example: <code>^/images/</code> ➜ <code>https://cdn.trek4free.com/images/</code></div>
+        <div class="flex" style="margin-top:6px">
+          <button id="imgReplaceBtn" class="btn small">Apply to all events</button>
+          <button id="imgCheckBtn" class="btn secondary small">Check image load status</button>
+        </div>
+        <div id="imgStatus" class="tiny"></div>
+      </div>
+
+      <div>
+        <h4>2) Add/Replace Any Field</h4>
+        <label>Field path (dot notation)</label>
+        <input id="fieldPath" type="text" placeholder="e.g. level or tags or venue" />
+        <label>Value (JSON)</label>
+        <input id="fieldValue" type="text" placeholder="e.g. &quot;Beginner-Friendly&quot; or [ &quot;Sunset&quot; ]" />
+        <div class="flex" style="margin-top:6px">
+          <button id="setFieldBtn" class="btn small">Set on all events</button>
+          <button id="setFilterBtn" class="btn secondary small">Set on filtered events only</button>
+        </div>
+        <div class="tiny">Value is parsed as JSON. For strings, wrap in quotes.</div>
+      </div>
+
+      <div>
+        <h4>3) Quick Tagger</h4>
+        <label>Add tag to <code>tags[]</code></label>
+        <input id="tagText" type="text" placeholder="e.g. Sunset" />
+        <div class="flex" style="margin-top:6px">
+          <button id="addTagAllBtn" class="btn small">Add to all</button>
+          <button id="addTagFilterBtn" class="btn secondary small">Add to filtered</button>
+        </div>
+        <div class="tiny">Duplicates are ignored automatically.</div>
+      </div>
+
+      <div>
+        <h4>4) Filter Events</h4>
+        <label>By text (id/name/city/state)</label>
+        <input id="q" type="text" placeholder="search…" />
+        <label>By type</label>
+        <input id="qType" type="text" placeholder='e.g. "Rock Climbing" or "Aerial/Balloons"' />
+        <label>By state (2-letter)</label>
+        <input id="qState" type="text" placeholder="e.g. CO" />
+        <div class="flex" style="margin-top:6px">
+          <button id="applyFilterBtn" class="btn small">Apply Filter</button>
+          <button id="clearFilterBtn" class="btn secondary small">Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PER-EVENT QUICK EDITOR -->
+  <div class="card">
+    <h3>Per-Event Quick Editor</h3>
+    <div class="row">
+      <div class="col">
+        <label for="pick">Choose event</label>
+        <select id="pick"></select>
+      </div>
+      <div class="col grow">
+        <label>Add image URL(s) (one per line)</label>
+        <textarea id="newImgs" placeholder="https://…"></textarea>
+        <div class="flex" style="margin-top:6px">
+          <button id="addImgsBtn" class="btn small">Append to images[]</button>
+          <button id="clearImgsBtn" class="btn secondary small">Clear images[]</button>
+        </div>
+        <div id="imgList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VALIDATE / EXPORT -->
+  <div class="card">
+    <h3>Validate & Export</h3>
+    <div class="row">
+      <div class="col">
+        <button id="validateBtn" class="btn">Validate</button>
+      </div>
+      <div class="col">
+        <button id="downloadBtn" class="btn secondary" disabled>Download Merged JSON</button>
+        <button id="copyBtn" class="btn secondary" disabled>Copy to Clipboard</button>
+      </div>
+    </div>
+    <div id="summary" style="margin-top:10px"></div>
+    <div id="errors"></div>
+    <div id="preview"></div>
+  </div>
+</div>
+
+<script>
+/* ===== Schema / helpers (compatible with your validator) ===== */
+const LEVELS = ["Beginner-Friendly","Intermediate","Advanced","Expert"];
+const TYPES = [
+  "Ultrarun","Trail Run","Paddle Race","Whitewater","Rock Climbing","Festival",
+  "Basejump","Hang Gliding","Paragliding","Skydiving","Aerial/Balloons",
+  "Mountain Bike","Off-Road/Vehicle","Multi-sport","Other"
+];
+const REQUIRED = ["id","name","type","city","state","lat","lon","usualDate","freq","level","hook","url"];
+
+const $ = s => document.querySelector(s);
+const toKebab = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+const isKebab = s => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(s||"");
+const isISO = s => /^\d{4}-\d{2}-\d{2}$/.test(s||"");
+const isIana = s => /^[A-Za-z_]+(?:\/[A-Za-z0-9_\-+]+)+$/.test(s||"");
+const isHttp = s => /^https?:\/\//i.test(s||"");
+const isEmail = s => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s||"");
+const isPhone = s => /^[+()\-.\s0-9]{7,}$/.test(s||"");
+
+/* ===== State ===== */
+let events = [];        // merged array
+let filteredIdx = null; // array of indexes currently filtered (or null)
+let pickSelect = $("#pick");
+let mergedBlobText = "";
+
+/* ===== Load & Merge ===== */
+async function readText(file){
+  const fr = new FileReader();
+  return new Promise((res,rej)=>{ fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsText(file); });
+}
+function extractArray(json){
+  if (Array.isArray(json)) return json;
+  if (json && Array.isArray(json.data)) return json.data;
+  if (json && Array.isArray(json.events)) return json.events;
+  return [];
+}
+function normalize(ev, opts){
+  let e = structuredClone(ev);
+  if (opts.trimStr){
+    for (const k in e){ if (typeof e[k]==="string") e[k]=e[k].trim(); }
+  }
+  if (opts.normId && e.id && !isKebab(e.id)) e.id = toKebab(e.id);
+  if (opts.normState && e.state) e.state = String(e.state).toUpperCase();
+  if (opts.coerceNums){
+    if (e.lat!==undefined) e.lat = Number(e.lat);
+    if (e.lon!==undefined) e.lon = Number(e.lon);
+  }
+  return e;
+}
+$("#mergeBtn").addEventListener("click", async ()=>{
+  const files = Array.from($("#files").files||[]);
+  if (!files.length) { alert("Choose one or more JSON files."); return; }
+  const opts = {
+    normId: $("#normId").checked, normState: $("#normState").checked,
+    coerceNums: $("#coerceNums").checked, trimStr: $("#trimStr").checked,
+    stripProv: $("#stripProv").checked,
+    dupeMode: $("#dupeLast").checked ? "last" : "first"
+  };
+  const bags = [];
+  for (const f of files){
+    const txt = await readText(f);
+    let js; try { js = JSON.parse(txt); } catch(e){ alert(`${f.name} is not valid JSON`); return; }
+    if (opts.stripProv && js && js.provenance) delete js.provenance;
+    const arr = extractArray(js);
+    if (!Array.isArray(arr)){ alert(`${f.name} must be an array or {data:[…]}`); return; }
+    bags.push(arr);
+  }
+  const map = new Map();
+  const order = opts.dupeMode==="first" ? bags : [...bags].reverse();
+  for (const arr of order){
+    for (const raw of arr){
+      if (!raw || typeof raw!=="object" || !raw.id) continue;
+      const e = normalize(raw, opts);
+      if (opts.dupeMode==="first"){ if (!map.has(e.id)) map.set(e.id, e); }
+      else { map.set(e.id, e); }
+    }
+  }
+  events = [...map.values()];
+  events.sort((a,b)=> String(a.state||"").localeCompare(String(b.state||"")) || String(a.name||"").localeCompare(String(b.name||"")));
+  filteredIdx = null;
+  refreshPick();
+  alert(`Merged ${events.length} events. Ready to edit.`);
+});
+
+/* ===== Filtering ===== */
+function applyFilter(){
+  const q = $("#q").value.trim().toLowerCase();
+  const t = $("#qType").value.trim();
+  const s = $("#qState").value.trim().toUpperCase();
+  filteredIdx = [];
+  events.forEach((e,i)=>{
+    let ok = true;
+    if (q){
+      const blob = [e.id,e.name,e.city,e.state].map(x=>String(x||"").toLowerCase()).join(" ");
+      ok = blob.includes(q);
+    }
+    if (ok && t) ok = Array.isArray(e.type) && e.type.includes(t);
+    if (ok && s) ok = (e.state===s);
+    if (ok) filteredIdx.push(i);
+  });
+  refreshPick();
+}
+$("#applyFilterBtn").addEventListener("click", applyFilter);
+$("#clearFilterBtn").addEventListener("click", ()=>{ filteredIdx=null; refreshPick(); });
+
+/* ===== Pick list & per-event UI ===== */
+function refreshPick(){
+  pickSelect.innerHTML = "";
+  const idxs = filteredIdx ?? events.map((_,i)=>i);
+  idxs.forEach(i=>{
+    const e = events[i];
+    const opt = document.createElement("option");
+    opt.value = i; opt.textContent = `${e.id} — ${e.name}`;
+    pickSelect.appendChild(opt);
+  });
+  showImages();
+}
+pickSelect.addEventListener("change", showImages);
+
+function showImages(){
+  const i = Number(pickSelect.value || 0);
+  const e = events[i]; if (!e) { $("#imgList").innerHTML=""; return; }
+  const imgs = Array.isArray(e.images) ? e.images : [];
+  const wrap = document.createElement("div");
+  imgs.forEach((u,idx)=>{
+    const row = document.createElement("div"); row.className="imgcheck";
+    const img = new Image(); img.src = u; img.loading="lazy";
+    const status = document.createElement("span"); status.textContent = "checking…"; status.className="tiny";
+    img.onload = ()=>{ status.textContent="ok"; status.className="tiny ok"; };
+    img.onerror = ()=>{ status.textContent="broken"; status.className="tiny bad"; };
+    const url = document.createElement("span"); url.textContent = u; url.className="tiny";
+    const rm = document.createElement("button"); rm.textContent="remove"; rm.className="btn secondary small";
+    rm.onclick = ()=>{ e.images.splice(idx,1); showImages(); };
+    row.append(img, status, url, rm);
+    wrap.appendChild(row);
+  });
+  $("#imgList").innerHTML = ""; $("#imgList").appendChild(wrap);
+}
+$("#addImgsBtn").addEventListener("click", ()=>{
+  const i = Number(pickSelect.value || 0); const e = events[i]; if (!e) return;
+  const lines = $("#newImgs").value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  e.images = Array.isArray(e.images) ? e.images : [];
+  for (const u of lines){ if (isHttp(u) && !e.images.includes(u)) e.images.push(u); }
+  $("#newImgs").value = "";
+  showImages();
+});
+$("#clearImgsBtn").addEventListener("click", ()=>{
+  const i = Number(pickSelect.value || 0); const e = events[i]; if (!e) return;
+  e.images = [];
+  showImages();
+});
+
+/* ===== Bulk: image replace & check ===== */
+$("#imgReplaceBtn").addEventListener("click", ()=>{
+  const find = $("#imgFind").value; const repl = $("#imgReplace").value;
+  if (!find){ alert("Enter a find pattern (text or regex)."); return; }
+  const regex = find.startsWith("/") && find.lastIndexOf("/")>0
+    ? new RegExp(find.slice(1, find.lastIndexOf("/")), find.slice(find.lastIndexOf("/")+1))
+    : new RegExp(find);
+  let changed = 0;
+  events.forEach(e=>{
+    if (!Array.isArray(e.images)) return;
+    e.images = e.images.map(u => String(u||"").replace(regex, repl));
+  });
+  alert("Image URL replacement applied. Validate or preview to confirm.");
+});
+
+$("#imgCheckBtn").addEventListener("click", ()=>{
+  const idxs = filteredIdx ?? events.map((_,i)=>i);
+  let total=0, broken=0;
+  $("#imgStatus").textContent = "Checking images…";
+  idxs.forEach(i=>{
+    const e = events[i]; if (!Array.isArray(e.images)) return;
+    e.images.forEach(u=>{
+      total++;
+      const img = new Image();
+      img.onload = ()=>{ if (--total===broken) {} };
+      img.onerror = ()=>{ broken++; };
+      img.src = u;
+    });
+  });
+  setTimeout(()=> $("#imgStatus").textContent = "Image checks triggered (results show per event preview).", 800);
+});
+
+/* ===== Bulk: set any field ===== */
+function setFieldOn(arr){
+  const path = $("#fieldPath").value.trim();
+  if (!path){ alert("Enter a field path (e.g., images, level, tags)"); return; }
+  let valRaw = $("#fieldValue").value;
+  let val;
+  try{ val = JSON.parse(valRaw); }
+  catch{
+    // If not JSON, treat as string literal
+    val = valRaw;
+  }
+  arr.forEach(i=>{
+    const e = events[i];
+    const parts = path.split(".");
+    let cur = e;
+    for (let p=0;p<parts.length-1;p++){
+      const k = parts[p];
+      if (typeof cur[k] !== "object" || cur[k]==null) cur[k] = {};
+      cur = cur[k];
+    }
+    cur[parts.at(-1)] = val;
+  });
+  alert("Field updated.");
+}
+$("#setFieldBtn").addEventListener("click", ()=>{
+  const idxs = events.map((_,i)=>i);
+  setFieldOn(idxs);
+});
+$("#setFilterBtn").addEventListener("click", ()=>{
+  const idxs = filteredIdx ?? events.map((_,i)=>i);
+  setFieldOn(idxs);
+});
+
+/* ===== Bulk: quick tagger ===== */
+function addTagOn(arr){
+  const t = $("#tagText").value.trim();
+  if (!t){ alert("Enter a tag text."); return; }
+  arr.forEach(i=>{
+    const e = events[i];
+    if (!Array.isArray(e.tags)) e.tags = [];
+    if (!e.tags.includes(t)) e.tags.push(t);
+  });
+  alert(`Tag "${t}" added.`);
+}
+$("#addTagAllBtn").addEventListener("click", ()=> addTagOn(events.map((_,i)=>i)));
+$("#addTagFilterBtn").addEventListener("click", ()=> addTagOn(filteredIdx ?? events.map((_,i)=>i)));
+
+/* ===== Validation ===== */
+function validate(arr){
+  const errs = [];
+  const seen = new Set();
+  arr.forEach((ev,i)=>{
+    const w = `[#${i} id=${ev.id ?? "?"}]`;
+    for (const f of REQUIRED){
+      if (ev[f]===undefined || ev[f]===null || (typeof ev[f]==="string" && ev[f].trim()===""))
+        errs.push(`❌ ${w} missing/empty "${f}"`);
+    }
+    if (ev.id && !isKebab(ev.id)) errs.push(`❌ ${w} id must be kebab-case ("${ev.id}")`);
+    if (ev.id){ if (seen.has(ev.id)) errs.push(`❌ ${w} duplicate id "${ev.id}"`); seen.add(ev.id); }
+    if (ev.type && !Array.isArray(ev.type)) errs.push(`❌ ${w} "type" must be an array`);
+    else if (Array.isArray(ev.type)) ev.type.forEach(t=>{ if (!TYPES.includes(t)) errs.push(`❌ ${w} invalid type "${t}"`); });
+    if (ev.level && !LEVELS.includes(ev.level)) errs.push(`❌ ${w} invalid level "${ev.level}"`);
+    if (ev.state && !/^[A-Z]{2}$/.test(ev.state)) errs.push(`❌ ${w} invalid state "${ev.state}"`);
+    if (typeof ev.lat!=="number" || ev.lat<-90 || ev.lat>90) errs.push(`❌ ${w} bad latitude "${ev.lat}"`);
+    if (typeof ev.lon!=="number" || ev.lon<-180 || ev.lon>180) errs.push(`❌ ${w} bad longitude "${ev.lon}"`);
+    if (ev.url && !isHttp(ev.url)) errs.push(`❌ ${w} url must start with http(s)`);
+    if (ev.dateStart!==null && ev.dateStart!==undefined && !isISO(ev.dateStart)) errs.push(`❌ ${w} dateStart must be YYYY-MM-DD or null`);
+    if (ev.dateEnd!==null && ev.dateEnd!==undefined && !isISO(ev.dateEnd)) errs.push(`❌ ${w} dateEnd must be YYYY-MM-DD or null`);
+    if (ev.dateStart && ev.dateEnd && ev.dateEnd < ev.dateStart) errs.push(`❌ ${w} dateEnd is before dateStart`);
+    if (ev.timezone!==null && ev.timezone!==undefined && !isIana(ev.timezone)) errs.push(`❌ ${w} timezone must be IANA format`);
+    if (ev.registrationUrl && !isHttp(ev.registrationUrl)) errs.push(`❌ ${w} registrationUrl must be http(s)`);
+    ["campingNearby","dogFriendly","spectatorFriendly"].forEach(k=>{
+      if (ev[k]!==null && ev[k]!==undefined && typeof ev[k]!=="boolean") errs.push(`❌ ${w} "${k}" must be boolean or null`);
+    });
+    if (ev.tags!==null && ev.tags!==undefined){
+      if (!Array.isArray(ev.tags)) errs.push(`❌ ${w} "tags" must be an array of strings or null`);
+      else ev.tags.forEach(t=>{ if (typeof t!=="string") errs.push(`❌ ${w} "tags" entries must be strings`); });
+    }
+    if (ev.images!==null && ev.images!==undefined){
+      if (!Array.isArray(ev.images)) errs.push(`❌ ${w} "images" must be an array of http(s) URLs or null`);
+      else ev.images.forEach(u=>{ if (!isHttp(u)) errs.push(`❌ ${w} images entry is not a http(s) URL`); });
+    }
+    if (ev.sources!==null && ev.sources!==undefined){
+      if (!Array.isArray(ev.sources)) errs.push(`❌ ${w} "sources" must be an array of http(s) URLs or null`);
+      else ev.sources.forEach(u=>{ if (!isHttp(u)) errs.push(`❌ ${w} sources entry is not a http(s) URL`); });
+    }
+    if (ev.contactEmail!==null && ev.contactEmail!==undefined && !isEmail(ev.contactEmail)) errs.push(`❌ ${w} contactEmail is not valid`);
+    if (ev.contactPhone!==null && ev.contactPhone!==undefined && !isPhone(ev.contactPhone)) errs.push(`❌ ${w} contactPhone looks invalid`);
+    if (ev.lastUpdated!==null && ev.lastUpdated!==undefined && !isISO(ev.lastUpdated)) errs.push(`❌ ${w} lastUpdated must be YYYY-MM-DD or null`);
+  });
+  return errs;
+}
+$("#validateBtn").addEventListener("click", ()=>{
+  const errs = validate(events);
+  $("#summary").innerHTML = `<p>${errs.length ? '<span class="bad">❌ Validation found issues</span>' : '<span class="ok">✅ Validation passed</span>'}</p>
+    <p><span class="tag">${events.length} events</span>${filteredIdx ? ' • filter active' : ''}</p>`;
+  $("#errors").innerHTML = errs.length ? `<h4>Errors / Warnings</h4><pre class="bad">${errs.join('\n')}</pre>` : `<p class="ok">No errors.</p>`;
+  const sample = events.slice(0,5);
+  $("#preview").innerHTML = `<h4>Preview (first ${sample.length} records)</h4><pre>${JSON.stringify(sample,null,2)}</pre>`;
+  mergedBlobText = JSON.stringify(events, null, 2) + "\n";
+  $("#downloadBtn").disabled = false; $("#copyBtn").disabled = false;
+});
+
+/* ===== Export ===== */
+$("#downloadBtn").addEventListener("click", ()=>{
+  if (!mergedBlobText) return;
+  const blob = new Blob([mergedBlobText], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = ($("#outName").value.trim()||"events.json");
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+$("#copyBtn").addEventListener("click", async ()=>{
+  if (!mergedBlobText) return;
+  await navigator.clipboard.writeText(mergedBlobText);
+  $("#copyBtn").textContent = "Copied!";
+  setTimeout(()=> $("#copyBtn").textContent = "Copy to Clipboard", 1200);
+});
+
+/* ===== Init ===== */
+(function boot(){
+  $("#dupeFirst").checked = true;
+})();
+</script>
+</body>
+</html>

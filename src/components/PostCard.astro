@@ -1,0 +1,61 @@
+
+---
+export interface Props {
+  href: string;
+  title: string;
+  date?: string;
+  cover?: string;
+  coverAlt?: string;
+  tags?: string[];
+  excerpt?: string;
+}
+const {
+  href,
+  title,
+  date,
+  cover = '/images/hero/topo-dark4.png',
+  coverAlt = title,
+  tags = [],
+  excerpt = ''
+} = Astro.props;
+---
+
+<article class="card" data-title={title} data-excerpt={excerpt} data-tags={(tags ?? []).join(',')}>
+  <a class="media" href={href} aria-label={title}>
+    <img src={cover} alt={coverAlt} loading="lazy" />
+  </a>
+  <div class="body">
+    <div class="meta">
+      {date ? <time>{new Date(date).toLocaleDateString()}</time> : null}
+      {tags.length ? <span>• {tags.join(' · ')}</span> : null}
+    </div>
+    <h3 class="title"><a href={href}>{title}</a></h3>
+    {excerpt && <p class="excerpt">{excerpt}</p>}
+    <a class="more" href={href}>Read more →</a>
+  </div>
+
+  <style>
+    .card{
+      grid-column: span 4;
+      display:flex; flex-direction:column; overflow:hidden;
+      background: linear-gradient(180deg, #151617, #121315);
+      border:1px solid #222426; border-radius:16px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.30);
+      transition: transform .18s ease, border-color .18s ease;
+    }
+    @media (max-width: 820px){ .card{ grid-column: span 6;} }
+    @media (max-width: 560px){ .card{ grid-column: span 2;} }
+
+    .card:hover{ transform: translateY(-2px); border-color:#2a2c2f; }
+    .media{ display:block; position:relative; aspect-ratio: 16 / 9; overflow:hidden; }
+    .media img{ width:100%; height:100%; object-fit:cover; filter:saturate(.95) contrast(1.05); }
+
+    .body{ padding:14px 14px 16px; display:flex; flex-direction:column; gap:6px; }
+    .meta{ color:#b8b8b8; font-size:.88rem; }
+    .title{ margin:0; font-size:1.1rem; line-height:1.2; }
+    .title a{ color:#f3f3f3; text-decoration:none; }
+    .title a:hover{ color:#FFD27A; }
+    .excerpt{ color:#d5d5d5; margin:.25rem 0 .25rem; }
+    .more{ color:#FFB224; font-weight:800; text-decoration:none; margin-top:auto; }
+  </style>
+</article>

@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Explore" bodyClass="map-page">
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <h2>Popular Filters</h2>
+
+    <div id="filters" class="filter-group">
+      <div class="filter-row">
+        <label class="filter-chip">
+          <input type="checkbox" id="hiking" class="filter" checked />
+          Hiking
+        </label>
+        <label class="filter-chip">
+          <input type="checkbox" id="camping" class="filter" />
+          Camping
+        </label>
+        <label class="filter-chip">
+          <input type="checkbox" id="at" class="filter" />
+          Appalachian Trail
+        </label>
+        <label class="filter-chip">
+          <input type="checkbox" id="freecamping" class="filter" checked />
+          Free Camping
+        </label>
+        <label class="filter-chip">
+          <input type="checkbox" id="swimming" class="filter" />
+          Swimming Holes
+        </label>
+        <label class="filter-chip">
+          <input type="checkbox" id="backpackcamping-usfs" class="filter" />
+          Backpack Campground
+        </label>
+      </div>
+
+      <button id="clearFilters" class="btn btn-ghost mt-12">Clear Filters</button>
+
+      <div class="mt-16">
+        <input type="text" id="search-box" class="input" placeholder="🔍 Search locations..." />
+        <ul id="search-results" class="search-results"></ul>
+      </div>
+    </div>
+
+    <div class="mt-16">
+      <select id="moreCategoriesDropdown" class="input">
+        <option>Show More Categories</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Map -->
+  <div class="map-wrap">
+    <!-- Mobile toggle -->
+    <button id="sidebarToggle" class="map-toggle map-toggle--left" aria-expanded="false" aria-controls="sidebar">☰ Filters</button>
+    <div id="map" class="leaflet-map"></div>
+  </div>
+
+  <script type="module" src="/map.js"></script>
+</BaseLayout>

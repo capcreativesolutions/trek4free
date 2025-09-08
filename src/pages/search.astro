@@ -1,0 +1,363 @@
+
+
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const title = "Search | Trek4Free";
+---
+
+<BaseLayout title={title}>
+  <main class="notes-page">
+    <h1 class="page-title"></h1>
+    <p class="page-subtitle">
+      One searchable list for all Trek4Free points — trailheads, camps, swims, and more.
+      <span id="count" aria-live="polite">(0 results)</span>
+    </p>
+
+    <!-- Compact pill links (kept tiny so results stay visible) -->
+    <nav class="pillbar" aria-label="Browse SEO directories">
+      <a class="chip chip-primary" href="/seo/free-camping/">Free camping by state</a>
+      <!-- Enable these when you add the routes:
+      <a class="chip" href="/seo/hiking/">Hiking by state</a>
+      <a class="chip" href="/seo/swimming/">Water holes by state</a>
+      <a class="chip" href="/seo/backpack-camping/">Backpack camping by state</a>
+      -->
+    </nav>
+
+    <!-- Controls -->
+    <form class="notes-controls" id="controls" onsubmit="return false">
+      <!-- Top: keyword search (words only) -->
+      <div class="tn-stack">
+        <label for="q" class="tn-label">Search by words</label>
+        <input
+          type="search"
+          id="q"
+          class="tn-input tn-pill"
+          placeholder="waterfall, rim, vault toilet, dog friendly"
+          autocomplete="off" />
+        <small class="tn-help">Finds words in names & details. Use plain words—no place needed.</small>
+      </div>
+
+      <!-- Bottom: location + radius (+ type) -->
+      <div class="tn-stack" id="adv">
+        <div class="tn-grid">
+          <div class="tn-cell tn-span-2">
+            <label for="near" class="tn-label">Near</label>
+            <input
+              type="search"
+              id="near"
+              class="tn-input tn-pill"
+              placeholder="City, park, or landmark (e.g., Cloudcroft NM)"
+              autocomplete="off" />
+          </div>
+
+          <div class="tn-cell">
+            <label for="radius" class="tn-label">Distance</label>
+            <select id="radius" class="tn-input tn-pill" aria-label="Radius">
+              <option value="10">10 mi</option>
+              <option value="20">20 mi</option>
+              <option value="30" selected>30 mi</option>
+              <option value="50">50 mi</option>
+              <option value="100">100 mi</option>
+            </select>
+          </div>
+
+          <div class="tn-cell">
+            <label for="type" class="tn-label">Type</label>
+            <select id="type" class="tn-input tn-pill" aria-label="Type">
+              <option value="">All</option>
+              <option value="trailhead">Trailheads</option>
+              <option value="campground">Campgrounds</option>
+              <option value="freecamp">Free Camping</option>
+              <option value="backpackcamp">Backpack Camping</option>
+              <option value="swimming">Swimming Holes</option>
+              <option value="epic">Epic Trails</option>
+              <option value="feature">AT Features</option>
+            </select>
+          </div>
+        </div>
+
+        <small class="tn-help">Use both bars to narrow results: words AND a place + distance.</small>
+      </div>
+    </form>
+
+    <!-- Results -->
+    <div class="trail-card-container" id="grid"></div>
+    <button id="load-more" class="btn" style="display:none;margin:1rem auto;">Load more</button>
+  </main>
+
+  <!-- Page-scoped styles -->
+  <style>
+    /* Page shell */
+    .notes-page { --tn-accent:#ffb81c; --tn-accent-2:#ff9300; --tn-ink:#0f0f0f; }
+    .notes-page { padding: 2rem; max-width: 1100px; margin: 0 auto; }
+    .page-subtitle { color: var(--muted); }
+
+    /* Pillbar (compact, above controls) */
+    .pillbar { display:flex; flex-wrap:wrap; gap:.5rem; margin:.25rem 0 1rem; }
+    .chip {
+      display:inline-block; padding:.35rem .75rem; border-radius:999px;
+      background:#1e1e1e; border:1px solid #333; color:#f6f6f6; font-weight:700;
+      box-shadow:none; text-decoration:none; transition:transform .12s, background .15s, border-color .15s;
+    }
+    .chip:hover { transform:translateY(-1px); background:#242424; border-color:#3a3a3a; }
+    .chip-primary {
+      color: var(--tn-ink);
+      border-color: var(--tn-accent);
+      background: linear-gradient(180deg, var(--tn-accent), var(--tn-accent-2));
+      box-shadow: 0 8px 22px rgba(255,184,28,.25);
+    }
+    .chip-primary:hover { filter:brightness(1.05); }
+
+    /* Controls */
+    .notes-controls{ max-width:980px; margin:1.25rem auto 1.5rem; display:grid; gap:.9rem; }
+    .tn-stack{ background:rgba(255,184,28,.05); border:1px solid rgba(255,184,28,.20); border-radius:16px; padding:14px; }
+    .tn-grid{ display:grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap:.6rem; }
+    @media (max-width:980px){ .tn-grid{ grid-template-columns:1fr 1fr; } }
+    @media (max-width:640px){ .tn-grid{ grid-template-columns:1fr; } }
+    .tn-cell{ display:flex; flex-direction:column; }
+    .tn-span-2{ grid-column: span 2; }
+    .tn-label{ font-weight:700; color:#ffd28a; margin:.15rem 0 .35rem; }
+    .tn-help{ display:block; color:#cfae7a; margin:.35rem 0 0; font-size:.92rem; }
+
+    .tn-input{
+      width:100%; padding:.8rem 1rem; border-radius:12px; border:1px solid #2b2b2b;
+      background:#121212; color:#f6f6f6; outline:none;
+      transition: box-shadow .15s, border-color .15s;
+    }
+    .tn-pill{ border-radius:999px; }
+    .tn-input:focus{
+      border-color: var(--tn-accent);
+      box-shadow: 0 0 0 3px rgba(255,184,28,.35), 0 4px 16px rgba(255,184,28,.18);
+    }
+
+    /* Result cards */
+    .notes-page .trail-card {
+      display: block; text-decoration: none; color: var(--text);
+      background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 1rem; box-shadow: var(--shadow-1); transition: background .2s, box-shadow .2s, transform .12s;
+    }
+    .notes-page .trail-card:hover { background: var(--card-hover); box-shadow: var(--shadow-2); transform: translateY(-1px); }
+    .notes-page .thumb { width: 100%; height: 160px; border-radius: 12px; object-fit: cover; background:#1b1d21; }
+    .notes-page .thumb--fallback { display:flex;align-items:center;justify-content:center;font-size:1.6rem; }
+    .notes-page .card-title { margin:.6rem 0 .35rem; font-weight:800; }
+    .notes-page .tags { margin:.25rem 0 0; }
+    .notes-page .tag { display:inline-block; padding:.15rem .45rem; border-radius:999px; background:#1e293b; border:1px solid #334155; color:#e2e8f0; font-size:.8rem; margin-right:.35rem; }
+    .empty { text-align:center; color: var(--muted); margin: 1rem 0 2rem; }
+    .notes-page .trail-card p.meta { color:#e8c27f !important; }
+    .notes-page .trail-card p.meta .label-type { color:#ffb81c !important; font-weight:800; text-transform:uppercase; letter-spacing:.3px; }
+  </style>
+
+  <script>
+    /* ---------- Config ---------- */
+    const QUERY_MIN = 3;
+    const VISIBLE_STEP = 100;
+    const GLOBAL_HARD_LIMIT = 1000;
+
+    const TYPE_SOURCES = {
+      trailhead: [
+        { path: "/data/trailheads-usfs.json",        type: "trailhead",    source: "usfs" },
+        { path: "/data/trailheads-ridb.json",        type: "trailhead",    source: "ridb" }
+      ],
+      campground: [
+        { path: "/data/campgrounds-usfs-ridb.json",  type: "campground",   source: "usfs-ridb" }
+      ],
+      freecamp: [
+        { path: "/data/freecamping.json",            type: "freecamp",     source: "custom" },
+        { path: "/data/freecamping-usfs.json",       type: "freecamp",     source: "usfs" }
+      ],
+      backpackcamp: [
+        { path: "/data/backpackcamping-usfs.json",   type: "backpackcamp", source: "usfs" }
+      ],
+      swimming: [
+        { path: "/data/swimming-holes.json",         type: "swimming",     source: "custom" }
+      ],
+      epic: [
+        { path: "/data/epic-trails.json",            type: "epic",         source: "custom" }
+      ],
+      feature: [
+        { path: "/data/at-points.json",              type: "feature",      source: "at" }
+      ]
+    };
+
+    /* ---------- DOM ---------- */
+    const $  = (s,r=document)=>r.querySelector(s);
+    const q = $('#q'), typeSel = $('#type');
+    const near = $('#near'), radiusSel = $('#radius');
+    const grid = $('#grid'), countEl = $('#count'), moreBtn = $('#load-more');
+
+    /* ---------- Helpers ---------- */
+    const norm = (s='') =>
+      s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s]/g,' ');
+
+    const slugify = (s)=>String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+    function stableSlug(name, lat, lon){
+      const base = slugify(name||'unnamed');
+      if (Number.isFinite(lat) && Number.isFinite(lon)) return `${base}-${Math.round(lat*100000)}-${Math.round(lon*100000)}`;
+      return base;
+    }
+
+    function normalize(row, defType, src){
+      const lat = row.lat ?? row.latitude ?? row.Latitude ?? row.LAT ?? row.lat_dd ?? null;
+      const lon = row.lon ?? row.lng ?? row.longitude ?? row.Longitude ?? row.LON ?? row.long_dd ?? null;
+      const name = row.name ?? row.title ?? row.Title ?? row.SITE_NAME ?? row.RECAREA_NA ?? row.FacilityName ?? "Unnamed";
+      const stateLike = row.StateProvince ?? row.STATE ?? row.STATE_CODE ?? row.state ?? "";
+      const cityLike  = row.city ?? row.TOWN ?? row.NEAREST_CITY ?? "";
+      const closeTo   = row.location ?? row.CLOSEST_TO ?? "";
+      const location  = closeTo || (cityLike && stateLike ? `${cityLike}, ${stateLike}` : (cityLike || stateLike || ""));
+      const image     = row.image ?? row.photo ?? row.thumbnail ?? null;
+
+      const latNum = lat!=null ? Number(lat) : null;
+      const lonNum = lon!=null ? Number(lon) : null;
+      const slug   = row.slug ?? stableSlug(name, latNum, lonNum);
+
+      const hay = [name, defType, src, row.description ?? row.desc ?? ''].join(' ').toLowerCase();
+      return { slug, name, type:defType, source:src, location, lat:latNum, lon:lonNum, image, hay };
+    }
+
+    function asArray(j){ return Array.isArray(j) ? j : (Object.values(j).find(v=>Array.isArray(v)) || []); }
+    function dedupe(arr){
+      const seen = new Set(), out=[];
+      for (const t of arr){
+        const key=t.slug||t.name;
+        if (!key||seen.has(key)) continue;
+        seen.add(key); out.push(t);
+      }
+      return out.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
+    }
+
+    /* ---------- Distance ---------- */
+    const LAT_MI = 69.0;
+    function withinMiles(center, p, miles){
+      if (!center || !Number.isFinite(p.lat) || !Number.isFinite(p.lon)) return false;
+      const cos = Math.cos(center.lat * Math.PI/180);
+      const dx = (p.lon - center.lon) * LAT_MI * cos;
+      const dy = (p.lat - center.lat) * LAT_MI;
+      return (dx*dx + dy*dy) <= (miles * miles);
+    }
+
+    /* ---------- Geocode ---------- */
+    async function geocodePlace(qStr){
+      const q = (qStr||'').trim();
+      if (!q) return null;
+      try{
+        const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=1&language=en&format=json`;
+        const r = await fetch(url);
+        if (!r.ok) return null;
+        const j = await r.json();
+        const it = j?.results?.[0];
+        if (it) return { lat: it.latitude, lon: it.longitude, label: it.name };
+      }catch{}
+      return null;
+    }
+
+    /* ---------- Fetch / cache ---------- */
+    const cache = new Map();
+    let visibleLimit = VISIBLE_STEP;
+    let lastList = [];
+
+    async function fetchSource(s){
+      if (cache.has(s.path)) return cache.get(s.path);
+      const res = await fetch(s.path);
+      if (!res.ok) return [];
+      const arr = asArray(await res.json()).map(r=>normalize(r, s.type, s.source));
+      cache.set(s.path, arr);
+      return arr;
+    }
+
+    /* ---------- Text filtering ---------- */
+    function filterByText(items, qText, typeVal){
+      const terms = norm(qText||'').split(/\s+/).filter(Boolean);
+      return items.filter(t=>{
+        if (typeVal && t.type !== typeVal) return false;
+        if (!terms.length) return true;
+        const hay = norm([t.hay, t.name, t.type].join(' '));
+        return terms.every(tok => hay.includes(tok));
+      });
+    }
+
+    /* ---------- Render ---------- */
+    function escapeHtml(s=''){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+    function cardHTML(t){
+      const name = escapeHtml(t.name||'');
+      const loc = escapeHtml(t.location||'');
+      return `
+        <a class="trail-card" href="/seo/item/${t.slug}">
+          ${t.image
+            ? `<img class="thumb" src="${t.image}" alt="${name}" loading="lazy" decoding="async" />`
+            : `<div class="thumb thumb--fallback" aria-hidden="true"></div>`}
+          <h3 class="card-title">${name}</h3>
+          <p class="meta">
+            <span class="label-type">${escapeHtml(t.type||'')}</span>
+            ${t.location ? ` • 📍 ${loc}` : ''}
+          </p>
+        </a>`;
+    }
+
+    function render(list){
+      lastList = list;
+      const slice = list.slice(0, Math.min(visibleLimit, GLOBAL_HARD_LIMIT));
+      grid.innerHTML = slice.map(cardHTML).join('');
+      countEl.textContent = `(${list.length.toLocaleString()} results)`;
+      moreBtn.style.display = slice.length < list.length && slice.length < GLOBAL_HARD_LIMIT ? 'block' : 'none';
+    }
+
+    /* ---------- Search runner ---------- */
+    let debounceTimer;
+    async function runSearch(){
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(async ()=>{
+        const qVal = (q?.value || '').trim();
+        const typeVal = typeSel?.value || '';
+        const nearVal = (near?.value || '').trim();
+        const radius = Number(radiusSel?.value || 30);
+
+        const sources = typeVal ? TYPE_SOURCES[typeVal] || [] : Object.values(TYPE_SOURCES).flat();
+        let pool = [];
+        for (const s of sources){
+          try{
+            const arr = await fetchSource(s);
+            pool = pool.concat(arr);
+            if (pool.length >= GLOBAL_HARD_LIMIT * 2) break;
+          }catch{}
+        }
+        pool = dedupe(pool);
+
+        // Resolve center from Near
+        let center = null;
+        if (nearVal) center = await geocodePlace(nearVal);
+
+        // If nothing to search, clear results
+        if (!typeVal && !center && qVal.length < QUERY_MIN){
+          grid.innerHTML = '';
+          countEl.textContent = '(0 results)';
+          moreBtn.style.display='none';
+          return;
+        }
+
+        // Distance filter first (only when we have a center)
+        let out = pool;
+        if (center){
+          out = out.filter(p => withinMiles(center, p, radius));
+        }
+
+        // Keyword/type filter
+        if (qVal.length >= QUERY_MIN || typeVal){
+          out = filterByText(out, qVal, typeVal);
+        }
+
+        visibleLimit = VISIBLE_STEP;
+        render(out);
+      }, 200);
+    }
+
+    /* ---------- UI wiring ---------- */
+    [q, near, radiusSel, typeSel].forEach(el=>el && el.addEventListener('input', runSearch));
+    [q, near].forEach(el=>el && el.addEventListener('keyup', runSearch));
+    runSearch(); // initial paint
+
+    moreBtn?.addEventListener('click', () => {
+      visibleLimit += VISIBLE_STEP;
+      render(lastList);
+    });
+  </script>
+</BaseLayout>

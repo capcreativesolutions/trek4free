@@ -1,0 +1,14 @@
+[
+  {
+    "id": "test-5",
+    "type": "trail",
+    "name": "test 5",
+    "lat": 30.12,
+    "lon": -98.54,
+    "description": "test",
+    "submitted_at": "2025-08-29T20:27:12.443Z",
+    "status": "pending",
+    "source": "user",
+    "dogs": "unknown"
+  }
+]
