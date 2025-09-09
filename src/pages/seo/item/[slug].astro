@@ -11,8 +11,8 @@ const { slug } = Astro.params;
 const all = await loadAllPoints();
 
 /* ---------- Helpers ---------- */
-const slugify = (s: string) =>
-  (s || "")
+const slugify = (s: unknown) =>
+  String(s ?? "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
