@@ -402,9 +402,26 @@ function dedupe(points: Point[]): Point[] {
 }
 
 /* ---------------- File IO ---------------- */
+
 async function readPublicJSON(relPath: string): Promise<any[]> {
-  const fsPath = join(process.cwd(), "public", relPath.replace(/^\/+/, ""));
+  // 1) Try HTTP — works in Netlify Functions and in preview
   try {
+    const origin =
+      process.env.URL ||
+      process.env.DEPLOY_PRIME_URL ||
+      "http://localhost:4321"; // dev default
+    const res = await fetch(new URL(relPath, origin));
+    if (res.ok) {
+      const json = await res.json();
+      return asArray(json);
+    }
+  } catch {
+    // ignore; fall back to FS
+  }
+
+  // 2) Fallback: read from /public during dev/build
+  try {
+    const fsPath = join(process.cwd(), "public", relPath.replace(/^\/+/, ""));
     const raw = await readFile(fsPath, "utf8");
     const json = JSON.parse(raw);
     return asArray(json);
@@ -412,6 +429,7 @@ async function readPublicJSON(relPath: string): Promise<any[]> {
     return [];
   }
 }
+
 
 /* ---------------- Public API ---------------- */
 export async function loadAllPoints(): Promise<Point[]> {
