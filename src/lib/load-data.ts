@@ -114,10 +114,31 @@ type StateFeature = {
 let STATE_FEATURES: StateFeature[] | null = null;
 
 async function readPublicAny(relPath: string): Promise<any> {
+  // HTTP first
+  try {
+    const origin =
+      process.env.URL ||
+      process.env.DEPLOY_PRIME_URL ||
+      "http://localhost:4321";
+    const res = await fetch(new URL(relPath, origin));
+    if (res.ok) return await res.json();
+  } catch {
+    // ignore; fall back below
+  }
+
+  // Skip filesystem inside Netlify Functions
+  if (process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+    throw new Error("public asset unavailable via HTTP");
+  }
+
+  // Local/build fallback via dynamic import
+  const { readFile } = await import("node:fs/promises");
+  const { join } = await import("node:path");
   const fsPath = join(process.cwd(), "public", relPath.replace(/^\/+/, ""));
   const raw = await readFile(fsPath, "utf8");
   return JSON.parse(raw);
 }
+
 
 function ringBBox(r: Ring){
   let minLon=Infinity, maxLon=-Infinity, minLat=Infinity, maxLat=-Infinity;
@@ -404,23 +425,30 @@ function dedupe(points: Point[]): Point[] {
 /* ---------------- File IO ---------------- */
 
 async function readPublicJSON(relPath: string): Promise<any[]> {
-  // 1) Try HTTP — works in Netlify Functions and in preview
+  // Try HTTP first — works on Netlify Functions & in preview/dev
   try {
     const origin =
       process.env.URL ||
       process.env.DEPLOY_PRIME_URL ||
-      "http://localhost:4321"; // dev default
+      "http://localhost:4321";
     const res = await fetch(new URL(relPath, origin));
     if (res.ok) {
       const json = await res.json();
       return asArray(json);
     }
   } catch {
-    // ignore; fall back to FS
+    // ignore; fall back below
   }
 
-  // 2) Fallback: read from /public during dev/build
+  // On Netlify Functions, DO NOT try filesystem — avoids bundling /public/**
+  if (process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+    return [];
+  }
+
+  // Local/build fallback: dynamic import keeps fs/path out of the SSR bundle
   try {
+    const { readFile } = await import("node:fs/promises");
+    const { join } = await import("node:path");
     const fsPath = join(process.cwd(), "public", relPath.replace(/^\/+/, ""));
     const raw = await readFile(fsPath, "utf8");
     const json = JSON.parse(raw);
