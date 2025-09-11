@@ -1,6 +1,4 @@
 // src/lib/load-data.ts
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 
 /* ---------------- Types ---------------- */
 export type PointType =
@@ -25,8 +23,9 @@ export type Point = {
   location?: string;
   image?: string | null;
   description?: string;
-  water?: string;
-  bathrooms?: string;
+  // widen a bit so booleans/strings both fit; keep null-friendly
+  water?: string | boolean | null;
+  bathrooms?: string | boolean | null;
   fee?: string;
 
   distance_miles?: number | null;
@@ -70,14 +69,26 @@ function stableSlug(name: string, lat: number | null, lon: number | null) {
   return base;
 }
 
-function asArray(json: any): any[] {
-  if (Array.isArray(json)) return json;
+function asArray<T = any>(json: any): T[] {
+  if (Array.isArray(json)) return json as T[];
   if (json && typeof json === "object") {
     for (const v of Object.values(json)) {
-      if (Array.isArray(v)) return v;
+      if (Array.isArray(v)) return v as T[];
     }
   }
   return [];
+}
+
+// Where to fetch public assets from at runtime
+function runtimeOrigin(hint?: string) {
+  return (
+    hint ||
+    process.env.PUBLIC_SITE_URL ||       // optional env for local/prod parity
+    process.env.SITE ||                  // Astro's SITE if provided
+    process.env.DEPLOY_PRIME_URL ||      // Netlify previews
+    process.env.URL ||                   // Netlify production
+    "http://localhost:4321"
+  );
 }
 
 /* ---------------- State helpers (names/abbrs) ---------------- */
@@ -100,7 +111,6 @@ const NAME_TO_ABBR: Record<string, string> = Object.fromEntries(
 );
 
 /* ---------------- Accurate polygons (optional) ---------------- */
-/** Reads public/geo/us-states.min.json if present (GeoJSON FeatureCollection). */
 type Ring = [number, number][];         // [lon, lat]
 type Poly = Ring[];                      // [outer, hole1, hole2...]
 type MultiPoly = Poly[];
@@ -113,21 +123,15 @@ type StateFeature = {
 
 let STATE_FEATURES: StateFeature[] | null = null;
 
-async function readPublicAny(relPath: string): Promise<any> {
+async function readPublicAny(relPath: string, originHint?: string): Promise<any> {
   // HTTP first
   try {
-    const origin =
-      process.env.URL ||
-      process.env.DEPLOY_PRIME_URL ||
-      "http://localhost:4321";
-    const res = await fetch(new URL(relPath, origin));
+    const res = await fetch(new URL(relPath, runtimeOrigin(originHint)));
     if (res.ok) return await res.json();
-  } catch {
-    // ignore; fall back below
-  }
+  } catch { /* fall through */ }
 
-  // Skip filesystem inside Netlify Functions
-  if (process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+  // Skip filesystem inside *Lambda only*
+  if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
     throw new Error("public asset unavailable via HTTP");
   }
 
@@ -138,7 +142,6 @@ async function readPublicAny(relPath: string): Promise<any> {
   const raw = await readFile(fsPath, "utf8");
   return JSON.parse(raw);
 }
-
 
 function ringBBox(r: Ring){
   let minLon=Infinity, maxLon=-Infinity, minLat=Infinity, maxLat=-Infinity;
@@ -172,10 +175,10 @@ function pointInPoly(lon:number, lat:number, poly: Poly){
   return true;
 }
 
-async function ensureStateFeatures(){
+async function ensureStateFeatures(originHint?: string){
   if(STATE_FEATURES !== null) return;
   try{
-    const gj = await readPublicAny("/geo/us-states.min.json");
+    const gj = await readPublicAny("/geo/us-states.min.json", originHint);
     const feats = (gj?.type==="FeatureCollection" ? gj.features : gj?.features) || [];
     STATE_FEATURES = feats.map((f:any)=>{
       const abFromName =
@@ -184,11 +187,9 @@ async function ensureStateFeatures(){
       const name = f?.properties?.name;
       let polys: MultiPoly = [];
       if(f?.geometry?.type === "Polygon"){
-        polys = [ (f.geometry.coordinates as number[][][])
-                   .map(r => r.map(([x,y])=>[x,y] as [number,number])) ];
+        polys = [ (f.geometry.coordinates as number[][][]).map(r => r.map(([x,y])=>[x,y] as [number,number])) ];
       }else if(f?.geometry?.type === "MultiPolygon"){
-        polys = (f.geometry.coordinates as number[][][][])
-                 .map(p => p.map(r => r.map(([x,y])=>[x,y] as [number,number])));
+        polys = (f.geometry.coordinates as number[][][][]).map(p => p.map(r => r.map(([x,y])=>[x,y] as [number,number])));
       }
       // bbox of all rings
       let box = {minLon:Infinity,maxLon:-Infinity,minLat:Infinity,maxLat:-Infinity};
@@ -202,7 +203,6 @@ async function ensureStateFeatures(){
       return { abbr, name, polys, bbox: {minLat:box.minLat,maxLat:box.maxLat,minLon:box.minLon,maxLon:box.maxLon} } as StateFeature;
     }).filter(s => s.abbr && s.polys.length>0);
 
-    // verification log
     console.log("[states] polygons loaded:", STATE_FEATURES.length);
   }catch{
     STATE_FEATURES = [];
@@ -423,59 +423,58 @@ function dedupe(points: Point[]): Point[] {
 }
 
 /* ---------------- File IO ---------------- */
-
-async function readPublicJSON(relPath: string): Promise<any[]> {
+async function readPublicJSON(relPath: string, originHint?: string): Promise<any[]> {
   // Try HTTP first — works on Netlify Functions & in preview/dev
   try {
-    const origin =
-      process.env.URL ||
-      process.env.DEPLOY_PRIME_URL ||
-      "http://localhost:4321";
-    const res = await fetch(new URL(relPath, origin));
-    if (res.ok) {
-      const json = await res.json();
-      return asArray(json);
-    }
-  } catch {
-    // ignore; fall back below
-  }
+    const res = await fetch(new URL(relPath, runtimeOrigin(originHint)));
+    if (res.ok) return asArray(await res.json());
+  } catch { /* fall through */ }
 
-  // On Netlify Functions, DO NOT try filesystem — avoids bundling /public/**
-  if (process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+  // In Lambda, DO NOT try filesystem — avoids bundling /public/**
+  if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
     return [];
   }
 
-  // Local/build fallback: dynamic import keeps fs/path out of the SSR bundle
+  // Local/build fallback via dynamic import
   try {
     const { readFile } = await import("node:fs/promises");
     const { join } = await import("node:path");
     const fsPath = join(process.cwd(), "public", relPath.replace(/^\/+/, ""));
     const raw = await readFile(fsPath, "utf8");
-    const json = JSON.parse(raw);
-    return asArray(json);
+    return asArray(JSON.parse(raw));
   } catch {
     return [];
   }
 }
 
+/* ---------------- In-memory cache ---------------- */
+let _cachedPoints: Point[] | null = null;
 
 /* ---------------- Public API ---------------- */
-export async function loadAllPoints(): Promise<Point[]> {
-  await ensureStateFeatures(); // polygons optional; safe if file missing
+export async function loadAllPoints(originHint?: string): Promise<Point[]> {
+  if (_cachedPoints) return _cachedPoints;
 
-  const all: Point[] = [];
-  for (const spec of DATASETS) {
-    const arr = await readPublicJSON(spec.path);
-    for (const row of arr) {
-      all.push(normalizeRow(row, spec.type, spec.source));
-    }
-  }
+  await ensureStateFeatures(originHint); // polygons optional; safe if file missing
 
-  // verification log
+  // fetch all datasets concurrently
+  const chunks = await Promise.all(
+    DATASETS.map(async (spec) => {
+      const arr = await readPublicJSON(spec.path, originHint);
+      return (arr as any[]).map((row) => normalizeRow(row, spec.type, spec.source));
+    })
+  );
+
+  const all: Point[] = ([] as Point[]).concat(...chunks);
   const unknown = all.filter(p => (p.state || "unknown") === "unknown").length;
   console.log(`[points] total=${all.length} unknown=${unknown}`);
 
-  return dedupe(all);
+  _cachedPoints = dedupe(all);
+  return _cachedPoints;
+}
+
+/** Optional helper for dev to clear cache between requests (not used in prod) */
+export function _invalidatePointCache() {
+  _cachedPoints = null;
 }
 
 export function byTypeAndState(points: Point[]) {
@@ -489,3 +488,4 @@ export function byTypeAndState(points: Point[]) {
   }
   return map;
 }
+

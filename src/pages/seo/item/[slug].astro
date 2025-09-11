@@ -8,7 +8,7 @@ export const prerender = false;
 
 
 const { slug } = Astro.params;
-const all = await loadAllPoints();
+const all = await loadAllPoints(Astro.url.origin);
 
 /* ---------- Helpers ---------- */
 const slugify = (s: unknown) =>
